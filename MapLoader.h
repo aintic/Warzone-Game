@@ -1,7 +1,11 @@
 //MapLoader header
-class MapLoader
-{
 
+void loadMap();
+class MapLoader {
     public:
         void loadMap();
+
+   
+
 };
+

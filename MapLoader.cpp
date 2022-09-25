@@ -1,6 +1,7 @@
 //MapLoader.cpp
 #include <iostream>
 #include <vector>
+#include "MapLoader.h"
 #include "Territory.h"
 
 using namespace std;
@@ -11,7 +12,9 @@ using namespace std;
 
 void loadMap(){
     //territory --> pointer
-    // a group of territories --> vector
+    // a group of territories --> vector 
+    cout << "loadmap" << endl;
+
     
 }
 
