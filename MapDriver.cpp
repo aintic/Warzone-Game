@@ -1,7 +1,6 @@
 //MapDriver.cpp
 #include <iostream>
-#include <vector>
-
+#include "MapLoader.h"
 
 using namespace std;
 
