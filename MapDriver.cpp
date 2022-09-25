@@ -9,8 +9,8 @@ int main(){
     //v1.insert(v1.begin() , 5);
     //cout << v1[0] << endl;
     
-    //MapLoader map1;
-    //map1.loadMap();
+    MapLoader map1;
+    map1.loadMap();
 
 
     //loadMap();
