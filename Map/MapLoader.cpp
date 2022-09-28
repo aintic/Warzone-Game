@@ -7,7 +7,7 @@
 
 using namespace std;
 
-
+// Territory
 class Territory{
 public:
     int id;
@@ -30,7 +30,11 @@ void MapLoader::loadMap(){
 
     int t_id = 0;
 
-    std::ifstream file ("/Users/hongsukchoi/CLionProjects/assignment 1/Map/Annys Piratenwelt.map");//should change the path
+    std::ifstream file ("Annys Piratenwelt.map");
+    // TODO: add verification that:
+    //  (1) files does not exist
+    //  (2) file is empty
+    //  (3) file does not have all sections
     std :: string input;
     std::vector <std::string> names;
     vector <Territory> territories;
