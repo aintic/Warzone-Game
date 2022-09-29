@@ -1,12 +1,10 @@
-//MapDriver.cpp
 #include <iostream>
-#include "MapLoader.h"
+#include "Map.h"
 
 using namespace std;
+int main()
+{
+	string filePath = "Annys Piratenwelt.map";
 
-int main(){
-    
-    MapLoader map1;
-    map1.loadMap();
-
+	Map* map = MapLoader::loadMap(filePath);
 }
