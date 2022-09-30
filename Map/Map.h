@@ -14,15 +14,17 @@ class Territory
 	int y;
     int continent_id;
 	string continent_name;
-	string neighbours_string;
+	vector <string> neighbours_strings;
     vector <Territory*> neighbours;
 
 	// member functions
 	// constructor
-	Territory(int id, string name, string continent_name, int x, int y, string neighbours_string);
+	Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
 
     // destructor
 	~Territory();
+
+	void add_neighbours(vector <Territory*> neighbours);
 };
 
 
