@@ -3,16 +3,22 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 // Territory
-Territory::Territory(int id, string name, int x, int y, int continent_id) {
+Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
 	this->id = id;
 	this->name = name;
 	this->x = x;
 	this->y = y;
-    this->continent_id = continent_id;
+    this->continent_name = continent_name;
+    this->neighbours_strings = neighbours_strings;
+}
+
+void Territory::add_neighbours(vector <Territory*> neighbours){
+    this->neighbours = neighbours;
 }
 
 // Continent
@@ -30,7 +36,6 @@ Map::Map(vector<Continent*> continents, vector<Territory*> territories) {
 
 Map* MapLoader::loadMap(string filePath) {
 
-	// Open the file
 	ifstream file(filePath);
 	string line;
 	string territory_delimiter = ",";
@@ -48,6 +53,11 @@ Map* MapLoader::loadMap(string filePath) {
 	vector<Territory*> territories;
     vector<string> territory_variables;
 
+    // map of names to territories to link neighbours to each territory
+	map<string, Territory*> territory_names_to_territories;
+
+
+
     // file does not exist
     if(!file){
         std::cout << filePath << " does not exist."<< endl;
@@ -63,6 +73,7 @@ Map* MapLoader::loadMap(string filePath) {
             // flag parsing continent
             if(line.find("[Continents]") != std::string::npos) {
                 parsing_continents = true;
+                std:: cout << endl << "**************************************" << endl; 
                 std:: cout << endl << "Parsing Continents..." << endl; 
             }
 
@@ -70,6 +81,7 @@ Map* MapLoader::loadMap(string filePath) {
             if(line.find("[Territories]") != std::string::npos) {
                 parsing_continents = false;
                 parsing_territories = true;
+                std:: cout << endl << "**************************************" << endl; 
                 std:: cout << endl  << "Parsing Territories..." << endl; 
             }
 
@@ -87,7 +99,7 @@ Map* MapLoader::loadMap(string filePath) {
                     int index_after_last_delimiter = continent_name.length() + continent_delimiter.length();
 
                     string score = line.substr(index_after_last_delimiter, line.find(continent_delimiter, index_after_last_delimiter));
-                    
+
                     Continent* c = new Continent(continent_id, continent_name, stoi(score));
                     continents.push_back(c);
                     std::cout << "Adding " << continent_name << endl;
@@ -104,24 +116,90 @@ Map* MapLoader::loadMap(string filePath) {
                 }
 
                 else {
-                    int offset = 0;
-                    string territory_name = line.substr(offset, line.find(territory_delimiter, offset) - offset); // Name
-                    offset += territory_name.length() + territory_delimiter.length();
+                    int index_after_last_delimiter = 0;
+                    string territory_name = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
+                    index_after_last_delimiter += territory_name.length() + territory_delimiter.length();
 
-                    string x = line.substr(offset, line.find(territory_delimiter, offset) - offset); // X position
-                    offset += x.length() + territory_delimiter.length();
+                    string x = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
+                    index_after_last_delimiter += x.length() + territory_delimiter.length();
 
-                    string y = line.substr(offset, line.find(territory_delimiter, offset) - offset); // Y position
+                    string y = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
+                    index_after_last_delimiter += y.length() + territory_delimiter.length();
 
-                    string continent = line.substr(offset, line.find(territory_delimiter, offset) - offset); // Continent that it's on
-                    offset += continent.length() + territory_delimiter.length();
+                    string continent_name = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter);
+                    index_after_last_delimiter += continent_name.length() + territory_delimiter.length();
 
-                    Territory* t = new Territory(territory_id, territory_name, stoi(continent), stoi(x), stoi(y));
-                    territories.push_back(t);
-                    territory_id++;
+                    string line_neighbours = line.substr(index_after_last_delimiter); 
+                    vector<string> neighbours_strings;
+                  
+                    std:: cout << endl; 
                     std::cout << "Adding " << territory_name << endl;
+                    std::cout << "x: " << x <<", y: " << y <<", continent name: " << continent_name << endl<< "neighbours: ";
+
+                    string neighbour;
+                    // while there is a delimeter in the string of neighbours add the territory 
+                    while((line_neighbours.find(territory_delimiter) != std::string::npos)){
+                        int delimiter_index = line_neighbours.find(territory_delimiter);
+                        neighbour = line_neighbours.substr(0, delimiter_index);
+                        line_neighbours = line_neighbours.substr(delimiter_index + territory_delimiter.length());
+                        neighbours_strings.push_back(neighbour);
+                        std::cout << neighbour << " ";
+                    }
+
+                    // remove last empty character
+                    line_neighbours = line_neighbours.substr(0, line_neighbours.length()-1);
+                    
+                    // Add last neighbour
+                    neighbours_strings.push_back(line_neighbours);
+                    std::cout << line_neighbours << endl;
+
+                    // construct territory and add it to list
+                    Territory* territory = new Territory(territory_id, territory_name, continent_name, stoi(x), stoi(y), neighbours_strings);
+                    // each id maps to a territory pointer
+
+                    territory_names_to_territories.insert(pair<string, Territory*>(territory_name, territory));
+                    territories.push_back(territory);
+                    
+                    territory_id++;
                 }
             }
+        }
+
+        //test map
+        // for(pair<string, Territory*> pair : territory_names_to_territories){
+        //     std::cout<< pair.first << pair.second->name<<endl;
+        // }
+
+
+        Territory *neighbouring_territory;
+        vector<Territory*> neighbours;
+
+        // Iterrate throught the list of territories to add neighbours
+        for(Territory *terr : territories){
+
+            // clear list of neighbours
+            neighbours.clear();
+
+            // print territory name
+            //std::cout << endl << "name of territory: " << terr->name << endl;
+
+            for(string neighbour_name_string : terr->neighbours_strings){
+                // get neighbour territory and add it to list
+                neighbouring_territory =  territory_names_to_territories[neighbour_name_string];
+                neighbours.push_back(neighbouring_territory);
+            }
+            
+            // add list of its neighbouras to each territory object
+            terr->neighbours = neighbours;
+
+            std:: cout << endl << "**************************************" << endl; 
+            std::cout<< "Linking neighbours of " << terr->name <<  " (";
+
+            for(Territory *neighbour_in_terr_object : terr->neighbours){
+                std::cout << neighbour_in_terr_object->name << " ";
+            }
+            std:: cout << ")" << endl; 
+
         }
     }
 
