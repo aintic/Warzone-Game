@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -52,14 +53,15 @@ class Map
 	// data members
     public:
 	vector<Continent*> continents; // list of continents
-	vector<Territory*> territories; // list of countries
+
+	map<int, Territory*> territories; // list of territories
 	bool valid;
 	
 	// member functions
     // constructors
 	Map();
 	Map(const Map& m);
-	Map(vector<Continent*> continents, vector<Territory*> territories);
+	Map(vector<Continent*> continents, map<int, Territory*> territories);
 
 	// destructor
 	~Map();

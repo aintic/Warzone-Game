@@ -29,7 +29,7 @@ Continent::Continent(int id, string name, int score) {
 }
 
 // Map
-Map::Map(vector<Continent*> continents, vector<Territory*> territories) {
+Map::Map(vector<Continent*> continents, map<int, Territory*> territories) {
 	this->continents = continents;
 	this->territories = territories;
 }
@@ -50,7 +50,7 @@ Map* MapLoader::loadMap(string filePath) {
 	vector<Continent*> continents; 
     vector<string> continent_variables;
 
-	vector<Territory*> territories;
+	map<int, Territory*> territories;
     vector<string> territory_variables;
 
     // map of names to territories to link neighbours to each territory
@@ -158,7 +158,7 @@ Map* MapLoader::loadMap(string filePath) {
                     // each id maps to a territory pointer
 
                     territory_names_to_territories.insert(pair<string, Territory*>(territory_name, territory));
-                    territories.push_back(territory);
+                    territories[territory_id] = territory;
                     
                     territory_id++;
                 }
@@ -175,7 +175,7 @@ Map* MapLoader::loadMap(string filePath) {
         vector<Territory*> neighbours;
 
         // Iterrate throught the list of territories to add neighbours
-        for(Territory *terr : territories){
+        for(pair <int, Territory*> id_and_territory : territories){
 
             // clear list of neighbours
             neighbours.clear();
@@ -183,19 +183,19 @@ Map* MapLoader::loadMap(string filePath) {
             // print territory name
             //std::cout << endl << "name of territory: " << terr->name << endl;
 
-            for(string neighbour_name_string : terr->neighbours_strings){
+            for(string neighbour_name_string : id_and_territory.second->neighbours_strings){
                 // get neighbour territory and add it to list
                 neighbouring_territory =  territory_names_to_territories[neighbour_name_string];
                 neighbours.push_back(neighbouring_territory);
             }
             
             // add list of its neighbouras to each territory object
-            terr->neighbours = neighbours;
+            id_and_territory.second->neighbours = neighbours;
 
             std:: cout << endl << "**************************************" << endl; 
-            std::cout<< "Linking neighbours of " << terr->name <<  " (";
+            std::cout<< "Linking neighbours of " << id_and_territory.second->name <<  " (";
 
-            for(Territory *neighbour_in_terr_object : terr->neighbours){
+            for(Territory *neighbour_in_terr_object : id_and_territory.second->neighbours){
                 std::cout << neighbour_in_terr_object->name << " ";
             }
             std:: cout << ")" << endl; 
