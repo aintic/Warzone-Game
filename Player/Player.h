@@ -13,27 +13,30 @@ using namespace std;
 class Hand;
 class Territory;
 class Order;
-class OrdersList;
 
 class Player{
 
     public:
+        Player();
         Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<Order*> orders);
         int getPlayerID();
-        vector<Order*> getPlayerOrders();
+        vector<Order*> getPlayerOrderList();
         Hand* getHand();
+        string getName();
         vector<Territory*> getTerritories();
         vector<Territory*> toDefend();
         vector<Territory*> toAttack();
+        void issueOrder(string order);
 
 private:
         string name;
         Hand* hand;
         vector<Territory*> territories; // List of owned territories
-        OrdersList* ordersList;
+        vector<Order*> order_list;
         int reinforcement; // Number of armies in the reinforcement pool
         //PlayerStrategy* ps; // Pointer to a player strategy
         int playerID;
-        vector<Order*> orders;
+
+
 
 };
