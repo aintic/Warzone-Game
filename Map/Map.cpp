@@ -8,6 +8,9 @@
 using namespace std;
 
 // Territory
+Territory::Territory(string name) {
+    this-> name = name;}
+
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
 	this->id = id;
 	this->name = name;

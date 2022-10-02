@@ -27,11 +27,14 @@ class Player{
         vector<Territory*> toDefend();
         vector<Territory*> toAttack();
         void issueOrder(string order);
+        void addTerritory(Territory* territory);
+
 
 private:
         string name;
         Hand* hand;
         vector<Territory*> territories; // List of owned territories
+        vector<Territory*> territoriesOwnedByPlayer;
         vector<Order*> order_list;
         int reinforcement; // Number of armies in the reinforcement pool
         //PlayerStrategy* ps; // Pointer to a player strategy
