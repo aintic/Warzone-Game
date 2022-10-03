@@ -29,33 +29,38 @@ Continent::Continent(int id, string name, int score) {
 }
 
 // Map
-Map::Map(vector<Continent*> continents, map<int, Territory*> territories) {
+Map::Map(map<int, Continent*> continents, map<int, Territory*> territories) {
 	this->continents = continents;
 	this->territories = territories;
 }
 
+// loadMap implementation
 Map* MapLoader::loadMap(string filePath) {
 
+    // file variables
 	ifstream file(filePath);
 	string line;
+
+    // parsing variables
 	string territory_delimiter = ",";
     string continent_delimiter = "=";
+    bool parsing_continents = false;
+    bool parsing_territories = false;
     int delimiter_index = 0;
+
+    // ids
 	int continent_id = 0;
     int territory_id = 0;
 
-    bool parsing_continents = false;
-    bool parsing_territories = false;
-
-	vector<Continent*> continents; 
-    vector<string> continent_variables;
-
+    // hashmaps of continents and territories
+	map<int, Continent*> continents; 
 	map<int, Territory*> territories;
-    vector<string> territory_variables;
 
     // map of names to territories to link neighbours to each territory
 	map<string, Territory*> territory_names_to_territories;
 
+    // map of names to continent to add continents to map
+	map<string, Continent*> continent_names_to_continents;
 
 
     // file does not exist
@@ -68,6 +73,13 @@ Map* MapLoader::loadMap(string filePath) {
         std::cout << filePath <<  " exist."<< endl;
         
         // read each line while it exists
+        //
+        // This is going to be the first iteration. In this iteration, a list of territories 
+        // and of continents will be generated along with a hashmap of continent names to continent 
+        // pointers and a hashmap of territory names to territory pointers. The former will 
+        // facilitate adding each territory to its corresponding continent graph object. The latter 
+        // will serve to do the same for the map graph object and to link the neighbours on the second 
+        // iteration.
         while (std::getline(file, line)) {
 
             // flag parsing continent
@@ -89,19 +101,25 @@ Map* MapLoader::loadMap(string filePath) {
             if (parsing_continents && !(line.find("[Continents]") != std::string::npos)) {                
 
                 if (!(line.find(continent_delimiter) != std::string::npos)) { // skip line if does not have the continent delimiter
-                    std::cout << endl  << "Territiries section finished ..." << endl;
+                    std::cout << endl  << "Continent section finished ..." << endl;
                     continue;
                 }
                 
                 else {
-                    // Get continent fields
+                    // Get continent name and calculate delimiter index
                     string continent_name = line.substr(0, line.find(continent_delimiter));
                     int index_after_last_delimiter = continent_name.length() + continent_delimiter.length();
-
+                    
+                    // get continent score
                     string score = line.substr(index_after_last_delimiter, line.find(continent_delimiter, index_after_last_delimiter));
 
+                    // Create a continent and add it to the list of continents that will be added to the map
                     Continent* c = new Continent(continent_id, continent_name, stoi(score));
-                    continents.push_back(c);
+                    continents.insert(pair<int, Continent*>(continent_id, c));
+
+                    // Add the continents name and continent pointer to the hashmap needed to locate the
+                    // continent object based on the continent name once the territories are parsed
+                    continent_names_to_continents.insert(pair<string, Continent*>(continent_name, c));
                     std::cout << "Adding " << continent_name << endl;
                     continent_id++;
                 }
@@ -116,19 +134,24 @@ Map* MapLoader::loadMap(string filePath) {
                 }
 
                 else {
+                    // get territory name and calculate delimiter index
                     int index_after_last_delimiter = 0;
                     string territory_name = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
-                    index_after_last_delimiter += territory_name.length() + territory_delimiter.length();
+                    index_after_last_delimiter = territory_name.length() + territory_delimiter.length();
 
+                    // get territory x coordinate and calculate delimiter index
                     string x = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
                     index_after_last_delimiter += x.length() + territory_delimiter.length();
 
+                    // get territory y coordinate and calculate delimiter index
                     string y = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
                     index_after_last_delimiter += y.length() + territory_delimiter.length();
 
+                    // get territory continent name and calculate delimiter index
                     string continent_name = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter);
                     index_after_last_delimiter += continent_name.length() + territory_delimiter.length();
 
+                    // get territory neighbours as a string
                     string line_neighbours = line.substr(index_after_last_delimiter); 
                     vector<string> neighbours_strings;
                   
@@ -155,22 +178,24 @@ Map* MapLoader::loadMap(string filePath) {
 
                     // construct territory and add it to list
                     Territory* territory = new Territory(territory_id, territory_name, continent_name, stoi(x), stoi(y), neighbours_strings);
-                    // each id maps to a territory pointer
 
+                    // add territory name and territory pointer to hashmap
+                    // this will help with the linking of neighbours
                     territory_names_to_territories.insert(pair<string, Territory*>(territory_name, territory));
-                    territories[territory_id] = territory;
-                    
+
+                    // Add territories to the hashmap that will be added to the map object
+                    territories.insert(pair<int, Territory*>(territory_id, territory));
+
+                    // Add territory to hashmap of territories in the continent that matches the name of the territory continent
+                    continent_names_to_continents[continent_name]->territories.insert(pair<int, Territory*>(territory_id, territory));
+
                     territory_id++;
                 }
             }
         }
 
-        //test map
-        // for(pair<string, Territory*> pair : territory_names_to_territories){
-        //     std::cout<< pair.first << pair.second->name<<endl;
-        // }
-
-
+        // On this second iteration, each territory is linked as to  hold
+        // a list of pointers to its neighbour objects.
         Territory *neighbouring_territory;
         vector<Territory*> neighbours;
 
@@ -180,11 +205,11 @@ Map* MapLoader::loadMap(string filePath) {
             // clear list of neighbours
             neighbours.clear();
 
-            // print territory name
-            //std::cout << endl << "name of territory: " << terr->name << endl;
-
+            // for each of the territories, iterate through its list of territory names 
+            // added in the first teration to find the territory object
             for(string neighbour_name_string : id_and_territory.second->neighbours_strings){
-                // get neighbour territory and add it to list
+
+                // get neighbour territory and add it to list     
                 neighbouring_territory =  territory_names_to_territories[neighbour_name_string];
                 neighbours.push_back(neighbouring_territory);
             }
@@ -199,13 +224,27 @@ Map* MapLoader::loadMap(string filePath) {
                 std::cout << neighbour_in_terr_object->name << " ";
             }
             std:: cout << ")" << endl; 
-
         }
+
+        // Iterrate throught the list of territories to add neighbours
+        for(pair <int, Continent*> id_and_continent : continents){
+
+            // Continent:
+            std::cout<< id_and_continent.second->name<<endl;
+
+
+            for(pair <int, Territory*> t : id_and_continent.second->territories){
+                // Territories in that continent:
+                std::cout << t.second->name << ",";
+            }
+            std::cout<< endl;
+        }    
     }
 
     // close file
     file.close();
 
-    Map* m = new Map(continents, territories);
-    return m;
+    // If file does not exists, return an empty map, otherwise return map with parsed information
+    Map* map_result = new Map(continents, territories);
+    return map_result;
 }
