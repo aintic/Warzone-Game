@@ -4,7 +4,20 @@
 using namespace std;
 int main()
 {
-	string filePath = "Annys Piratenwelt.map";
+	// map files
+	vector<string> filePaths {"Annys Piratenwelt.map"};
 
-	Map* map = MapLoader::loadMap(filePath);
+	// map objects
+	vector <Map*> maps = testLoadMaps(filePaths);
+}
+
+// Test and Load Maps free function
+vector <Map*> testLoadMaps(vector <string> map_files){
+	vector <Map*> maps;
+
+	// read diff map_files and creates a map object
+	for(string map_file: map_files){
+		maps.push_back(MapLoader::loadMap(map_file));
+	}
+	return maps;
 }
