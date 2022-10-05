@@ -23,6 +23,10 @@ void Territory::add_neighbours(vector <Territory*> neighbours){
     this->neighbours = neighbours;
 }
 
+ostream& operator <<(ostream& stream, const Territory& t){
+    return stream << " ..."<< t.name << endl;
+}
+
 // Continent
 Continent::Continent(int id, string name, int score) {
 	this->id = id;

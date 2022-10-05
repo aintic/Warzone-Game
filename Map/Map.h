@@ -10,6 +10,7 @@ class Territory
 	// data members:
     public:
     int id;
+	int army_units;
 
 	string name;
 	int x;
@@ -25,6 +26,8 @@ class Territory
 
     // destructor
 	~Territory();
+
+	friend ostream& operator <<(ostream& stream, const Territory& t);
 
 	void add_neighbours(vector <Territory*> neighbours);
 };
