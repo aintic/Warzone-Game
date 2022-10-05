@@ -23,7 +23,8 @@ class Territory
     vector <Territory*> neighbours;
 
 	// member functions
-	// constructor
+    Territory(string name);
+    // constructor
 	Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
 
     // destructor

@@ -1,3 +1,4 @@
+#pragma once
 #include "Map.h"
 #include <fstream>
 #include <iostream>
@@ -10,6 +11,7 @@
 using namespace std;
 
 // Territory
+
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
 	this->id = id;
 	this->name = name;
