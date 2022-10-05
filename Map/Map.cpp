@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stack>
+#include <set>
 
 using namespace std;
 
@@ -32,6 +34,136 @@ Continent::Continent(int id, string name, int score) {
 Map::Map(map<int, Continent*> continents, map<int, Territory*> territories) {
 	this->continents = continents;
 	this->territories = territories;
+}
+
+// validate method
+void Map::validate(){
+
+    std::cout<< "Starting validation:"<< endl;
+    // (1) Map is connected subgraph
+    
+    // To confirm that the map is a connected graph we start with the first territory in 
+    // the map and visit each of it's territories in a DFS-like manner. we keep a count of 
+    // visited territories and if the count of all visited territories corresponds to the 
+    // number of territories in the map, the graph is indeed connected.
+
+    Territory* current_territory = this->territories.begin()->second; // take first territory in map
+    stack<Territory*> next_territories;
+    set<Territory*> seen_territories;
+
+    next_territories.push(current_territory);
+    seen_territories.insert(current_territory);
+
+    while(!next_territories.empty()){ // loop while there are next nodes
+        Territory* territory = next_territories.top();
+        next_territories.pop();
+        for(Territory* neighbour: territory->neighbours){ // see each neighbour
+
+            const bool territory_is_visited = seen_territories.find(neighbour) != seen_territories.end();
+            if(!territory_is_visited){
+                next_territories.push(neighbour);
+                seen_territories.insert(neighbour);
+            }
+        }
+    }
+
+    // If the number of seen Territories from the initial territory corresponds 
+    // to the number of territories in the map set, the graph is connected!
+    bool map_is_connected_graph = seen_territories.size() == this->territories.size();
+
+    if(map_is_connected_graph){
+        std:: cout<< "(1) Map is a connected graph." << endl;
+    }
+    else{
+        std:: cout<< "(1) Map is not a connected graph." << endl;
+    }
+    
+    
+
+    // (2) Continents are connected subgraphs
+
+    // same idea as for (1)
+    bool continents_are_connected_graphs = true;
+
+    for(pair<int, Continent*> pair : this->continents){
+
+        stack<Territory*> next_continent_territories;
+        set<Territory*> seen_continent_territories;
+
+        Continent* current_continent = pair.second;
+
+        Territory* current_continent_territory = current_continent->territories.begin()->second; // take first territory in continent
+
+        next_continent_territories.push(current_continent_territory);
+        seen_continent_territories.insert(current_continent_territory);
+
+        while(!next_continent_territories.empty()){ // loop while there are next nodes
+            Territory* continent_territory = next_continent_territories.top();
+            next_continent_territories.pop();
+            for(Territory* neighbour: continent_territory->neighbours){ // see each neighbour
+
+                const bool continent_territory_is_visited = seen_continent_territories.find(neighbour) != seen_continent_territories.end();
+                
+                const bool neighbour_belongs_to_continent = neighbour->continent_name == current_continent->name;
+                
+                if(!continent_territory_is_visited && neighbour_belongs_to_continent){
+                    next_continent_territories.push(neighbour);
+                    seen_continent_territories.insert(neighbour);
+                }
+            }
+        }
+
+        // If the number of seen Territories (that are in the same continent) from the initial territory in any of the continents does not corresponds 
+        // to the number of territories in the that given continent set, the continents are not connected graphs
+        if(!(seen_continent_territories.size() == current_continent->territories.size())){
+            continents_are_connected_graphs = false;
+            break;
+        }
+    }
+
+    if(continents_are_connected_graphs){
+        std:: cout<< "(2) Continents are connected graphs." << endl;
+    }
+    else{
+        std:: cout<< "(2) Continents aren not connected graphs." << endl;
+    }
+
+
+
+    // (3) Each Territory belongs to one and only one continent 
+
+    // loop through the territories in each continent and if any of them are present in other continents
+    // signal false and break out of the loops
+
+    set<Territory*> countrys_territories;
+    bool territory_belong_to_one_continent = true;
+
+    for(pair <int, Continent*> c_pair : this->continents){
+        Continent* current_continent = c_pair.second;
+         if(!territory_belong_to_one_continent){
+                break;
+            }
+
+        for(pair <int, Territory*> t_pair: current_continent->territories){
+
+            Territory* current_territory = t_pair.second;
+            
+            territory_belong_to_one_continent = countrys_territories.find(current_territory)==countrys_territories.end();
+
+            if(!territory_belong_to_one_continent){
+                break;
+            }
+            countrys_territories.insert(current_territory);
+        }
+    }
+
+    if(territory_belong_to_one_continent){
+        std:: cout<< "(3) Each territory belongs to one and only one continent." << endl;
+    }
+    else{
+        std:: cout<< "(3) Not each of the territory belongs to one and only one continent." << endl;
+    }
+
 }
 
 // loadMap implementation

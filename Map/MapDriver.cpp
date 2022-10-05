@@ -9,6 +9,10 @@ int main()
 
 	// map objects
 	vector <Map*> maps = testLoadMaps(filePaths);
+
+	for(Map *map : maps){
+		map->validate();
+	}
 }
 
 // Test and Load Maps free function
@@ -19,5 +23,8 @@ vector <Map*> testLoadMaps(vector <string> map_files){
 	for(string map_file: map_files){
 		maps.push_back(MapLoader::loadMap(map_file));
 	}
+
+	// TODO: reject invalid map files
+
 	return maps;
 }

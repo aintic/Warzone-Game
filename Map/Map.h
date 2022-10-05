@@ -65,6 +65,10 @@ class Map
 	bool valid;
 	
 	// member functions
+	
+	// validate method
+	void validate();
+
     // constructors
 	Map();
 	Map(const Map& m);
