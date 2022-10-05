@@ -1,14 +1,12 @@
 
 #include "Player.h"
+#include "Orders.h"
 
 
 
 using namespace std;
 
-    //order constructor just for testing
-    Order:: Order(string name) {
-        this->name = name;
-    }
+
 
 
 
@@ -19,7 +17,7 @@ Player::Player() {
     vector<Territory*> territories;
     vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
     Hand* hand;
-    vector<Order*> order_list;
+    vector<OrdersList*> order_list;
 }
 
 
@@ -29,14 +27,14 @@ Player::Player(int playerID, string name) {
     vector<Territory*> territories;
     vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
     Hand* hand;
-    vector<Order*> order_list;
+    vector<OrdersList*> order_list;
 }
 
 
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 
-Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<Order*> orders) {
+Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<OrdersList*> orders) {
     this->playerID = playerID;
     this->name = name;
     this->territories = territories;
@@ -93,10 +91,29 @@ vector<Territory*> Player:: toAttack(){
 
 }
 
-void Player:: issueOrder(string order){
-    Order *o= new Order(order); //create an order object
+void Player:: issueOrder(Player* p){
+    cout << p->name <<  " Adds order" << endl; //Indicate which player is issuing orders
+    Order* testDeploy = new Deploy;
+    Order* testAdvance = new Advance;
+    Order* testBomb = new Bomb;
+    Order* testBlockade = new Blockade;
+    Order* testAirlift = new Airlift;
+    Order* testNegotiate = new Negotiate;
 
-    order_list.push_back(o); //add it to the list of orders
+    OrdersList* ol = new OrdersList;
+
+
+    cout << "\nAdd orders.\n" << endl;
+    ol->add(testDeploy);
+    ol->add(testAdvance);
+    ol->add(testBomb);
+    ol->add(testBlockade);
+    ol->add(testAirlift);
+    ol->add(testNegotiate);
+    cout << "ExecuteList" << endl;
+    ol->executeList();
+
+
 
 }
 
@@ -129,7 +146,7 @@ string Player:: getName(){
 Hand* Player::getHand(){
     return hand;
 }
-vector<Order*> Player :: getPlayerOrderList(){
+vector<OrdersList*> Player :: getPlayerOrderList(){
     return order_list;
 }
 

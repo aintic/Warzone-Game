@@ -6,37 +6,32 @@
 
 #include <iostream>
 #include <vector>
+#include "../Orders/Orders.h"
 #include "../Map/Map.h"
 
 using namespace std;
 
 class Hand;
-//class Territory;
 //Order class just for testing
-class Order{
-    public:
-        Order(string name);
 
-    string name;
-};
 
 class Player{
 
     public:
         Player();
         Player(int playerID, string name);
-        Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<Order*> orders);
+        Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<OrdersList*> orders);
         Player(const Player& p); //copy constructor
         ~Player(); //desturctor
         Player& operator=(const Player& p); //assignment operator
         int getPlayerID();
-        vector<Order*> getPlayerOrderList();
+        vector<OrdersList*> getPlayerOrderList();
         Hand* getHand();
         string getName();
         vector<Territory*> getTerritories();
         vector<Territory*> toDefend();
         vector<Territory*> toAttack();
-        void issueOrder(string order);
+        void issueOrder(Player *p);
         void addTerritory(Territory* territory);
 
 
@@ -45,7 +40,7 @@ private:
         Hand* hand;
         vector<Territory*> territories; // List of owned territories
         vector<Territory*> territoriesOwnedByPlayer;
-        vector<Order*> order_list;
+        vector<OrdersList*> order_list;
         int reinforcement; // Number of armies in the reinforcement pool
         //PlayerStrategy* ps; // Pointer to a player strategy
         int playerID;
