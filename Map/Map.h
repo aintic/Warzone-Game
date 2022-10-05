@@ -12,12 +12,14 @@ class Territory
 	// data members:
     public:
     int id;
+	int army_units;
+
 	string name;
 	int x;
 	int y;
     int continent_id;
 	string continent_name;
-	vector <string> neighbours_strings;
+	vector <string> neighbours_strings; // placeholder before adding the pointers to the neighbours
     vector <Territory*> neighbours;
 
 	// member functions
@@ -27,6 +29,8 @@ class Territory
 
     // destructor
 	~Territory();
+
+	friend ostream& operator <<(ostream& stream, const Territory& t);
 
 	void add_neighbours(vector <Territory*> neighbours);
 };
@@ -42,6 +46,9 @@ class Continent
 	string name;
     int score;
 
+	// hashmap of territory ids to territories where each territory points to its neighbours
+	map<int, Territory*> territories; 
+
 	// member functions
 	// constructor
 	Continent(int id, string name, int score);
@@ -55,16 +62,23 @@ class Map
 {
 	// data members
     public:
-	vector<Continent*> continents; // list of continents
 
-	map<int, Territory*> territories; // list of territories
+	// hashmap of continent ids to continent where each territory holds a map of its territories
+	map<int, Continent*> continents; 
+
+	// hashmap of territory ids to territories where each territory points to its neighbours
+	map<int, Territory*> territories; 
 	bool valid;
 	
 	// member functions
+	
+	// validate method
+	void validate();
+
     // constructors
 	Map();
 	Map(const Map& m);
-	Map(vector<Continent*> continents, map<int, Territory*> territories);
+	Map(map<int, Continent*> continents, map<int, Territory*> territories);
 
 	// destructor
 	~Map();
@@ -81,4 +95,5 @@ class MapLoader
     public:
 	static Map* loadMap(string filePath);
 };
+
 
