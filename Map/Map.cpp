@@ -50,7 +50,6 @@ void Map::validate(){
     // the map and visit each of it's territories in a DFS-like manner. we keep a count of 
     // visited territories and if the count of all visited territories corresponds to the 
     // number of territories in the map, the graph is indeed connected.
-
     Territory* current_territory = this->territories.begin()->second; // take first territory in map
     stack<Territory*> next_territories;
     set<Territory*> seen_territories;

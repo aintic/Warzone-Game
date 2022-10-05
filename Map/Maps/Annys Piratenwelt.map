@@ -16,8 +16,8 @@ Asien=8
 Chinaland=4
 Australien=2
 Schatzinsel=1
-Sönke=2
-Südamerika=2
+Sï¿½nke=2
+Sï¿½damerika=2
 Pirat Isle=2
 Annys World=5
 Nordamerika=4
@@ -47,10 +47,10 @@ Territory20,333,468,Pirat Isle,Territory16,Territory21,Territory22,Territory19
 Territory21,327,453,Pirat Isle,Territory20,Territory22
 Territory22,367,459,Pirat Isle,Territory20,Territory21,Territory23
 Territory23,407,456,Pirat Isle,Territory22,Territory68,Territory83
-Territory24,253,338,Südamerika,Territory26,Territory27,Territory25
-Territory25,255,304,Südamerika,Territory26,Territory24,Territory11
-Territory26,299,336,Südamerika,Territory32,Territory24,Territory25,Territory27
-Territory27,266,395,Südamerika,Territory26,Territory24
+Territory24,253,338,Sï¿½damerika,Territory26,Territory27,Territory25
+Territory25,255,304,Sï¿½damerika,Territory26,Territory24,Territory11
+Territory26,299,336,Sï¿½damerika,Territory32,Territory24,Territory25,Territory27
+Territory27,266,395,Sï¿½damerika,Territory26,Territory24
 Territory30,317,193,Bermuda Isle,Territory31
 Territory31,337,194,Bermuda Isle,Territory31!,Territory30
 Territory31!,367,207,Bermuda Isle,Territory32,Territory31
@@ -106,4 +106,4 @@ Territory80,768,321,Australien,Territory79,Territory81,Territory82
 Territory81,730,370,Australien,Territory79,Territory82,Territory80
 Territory82,773,373,Australien,Territory81,Territory80
 Territory83,644,451,Schatzinsel,Territory23,Territory78,Territory68
-Territory83!,259,247,Sönke,Territory09
+Territory83!,259,247,Sï¿½nke,Territory09
