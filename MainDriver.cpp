@@ -5,16 +5,18 @@ using namespace std;
 
 int main()
 {
-    // Map test function
+    // Map 
 	testLoadMaps();
 
+    // Player
+    //testPlayers();
 
+    //Orders list
+    //testOrdersLists();
 
+    //Cards
+    // testCards();
 
-
-
-
-
-
-
+    //GameEngine
+    //testGameStates();
 }
