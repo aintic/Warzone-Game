@@ -1,8 +1,15 @@
+
 #include "Player.h"
 
 
 
 using namespace std;
+
+    //order constructor just for testing
+    Order:: Order(string name) {
+        this->name = name;
+    }
+
 
 
 //defualt constructor
@@ -12,11 +19,21 @@ Player::Player() {
     vector<Territory*> territories;
     vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
     Hand* hand;
-    vector<Order*> orders;
+    vector<Order*> order_list;
 }
 
-//Constructor with player id, territories, hand and orders
 
+Player::Player(int playerID, string name) {
+    this->playerID = playerID;
+    this->name = name;
+    vector<Territory*> territories;
+    vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
+    Hand* hand;
+    vector<Order*> order_list;
+}
+
+
+//Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 
 Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<Order*> orders) {
@@ -29,6 +46,38 @@ Player::Player(int playerID, string name, vector<Territory*> territories, Hand* 
 }
 
 
+//copy constructor
+Player::Player(const Player& p){
+        playerID = p.playerID;
+        name = p.name;
+        territories = p.territories;
+        hand = p.hand;
+        order_list = p.order_list;
+        territoriesOwnedByPlayer = p.territoriesOwnedByPlayer;
+    }
+
+
+// Destructor
+Player::~Player()
+{
+    delete hand;
+    order_list.clear();
+    territoriesOwnedByPlayer.clear();
+    name.clear();
+
+}
+
+
+
+//Assignment operator
+Player& Player::operator=(const Player& p){
+    playerID = p.playerID;
+    name = p.name;
+    territories = p.territories;
+    hand = p.hand;
+    order_list = p.order_list;
+    territoriesOwnedByPlayer = p.territoriesOwnedByPlayer;
+    }
 
 
 
@@ -36,28 +85,24 @@ Player::Player(int playerID, string name, vector<Territory*> territories, Hand* 
 
 // toDefend() - returns a list of territories that are to be defended
 vector<Territory*> Player:: toDefend(){
-    return this->territoriesOwnedByPlayer;
+    return this->territoriesOwnedByPlayer; //for A1, return the territories that player owns
 }
 // toAttack() - returns a list of territories that are to be attacked
 vector<Territory*> Player:: toAttack(){
+    return this->territoriesOwnedByPlayer; //for A1, return the territories that player owns
 
 }
 
 void Player:: issueOrder(string order){
+    Order *o= new Order(order); //create an order object
 
-    //Order *o= new Order(order); //create an order object
-
-
-    //order_list.push_back(o); //add it to the list of orders
+    order_list.push_back(o); //add it to the list of orders
 
 }
 
 void Player::addTerritory(Territory* t){
     territoriesOwnedByPlayer.push_back(t); // can be used like p1->addTerritory(t1*)
 }
-
-
-
 
 
 

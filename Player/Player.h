@@ -11,14 +11,24 @@
 using namespace std;
 
 class Hand;
-class Territory;
-class Order;
+//class Territory;
+//Order class just for testing
+class Order{
+    public:
+        Order(string name);
+
+    string name;
+};
 
 class Player{
 
     public:
         Player();
+        Player(int playerID, string name);
         Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<Order*> orders);
+        Player(const Player& p); //copy constructor
+        ~Player(); //desturctor
+        Player& operator=(const Player& p); //assignment operator
         int getPlayerID();
         vector<Order*> getPlayerOrderList();
         Hand* getHand();
