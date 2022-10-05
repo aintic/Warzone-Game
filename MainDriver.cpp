@@ -1,16 +1,22 @@
-// include your headers
-#include "iostream"
-#include "Map.h"
+#include"Map/Map.h"
+#include "Map/MapDriver.h"
+
+using namespace std;
 
 int main()
 {
-	// map files
-	vector<string> filePaths {"Annys Piratenwelt.map"};
+    // Map 
+	testLoadMaps();
 
-	// map objects
-	vector <Map*> maps = testLoadMaps(filePaths);
+    // Player
+    //testPlayers();
 
-	for(Map *map : maps){
-		map->validate();
-	}
+    //Orders list
+    //testOrdersLists();
+
+    //Cards
+    // testCards();
+
+    //GameEngine
+    //testGameStates();
 }

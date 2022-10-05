@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -93,6 +95,4 @@ class MapLoader
 	static Map* loadMap(string filePath);
 };
 
-// free function to test and load maps
-vector <Map*> testLoadMaps(vector <string> map_files);
 
