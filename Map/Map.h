@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -9,12 +10,13 @@ class Territory
 	// data members:
     public:
     int id;
+
 	string name;
 	int x;
 	int y;
     int continent_id;
 	string continent_name;
-	vector <string> neighbours_strings;
+	vector <string> neighbours_strings; // placeholder before adding the pointers to the neighbours
     vector <Territory*> neighbours;
 
 	// member functions
@@ -38,6 +40,9 @@ class Continent
 	string name;
     int score;
 
+	// hashmap of territory ids to territories where each territory points to its neighbours
+	map<int, Territory*> territories; 
+
 	// member functions
 	// constructor
 	Continent(int id, string name, int score);
@@ -51,15 +56,23 @@ class Map
 {
 	// data members
     public:
-	vector<Continent*> continents; // list of continents
-	vector<Territory*> territories; // list of countries
+
+	// hashmap of continent ids to continent where each territory holds a map of its territories
+	map<int, Continent*> continents; 
+
+	// hashmap of territory ids to territories where each territory points to its neighbours
+	map<int, Territory*> territories; 
 	bool valid;
 	
 	// member functions
+	
+	// validate method
+	void validate();
+
     // constructors
 	Map();
 	Map(const Map& m);
-	Map(vector<Continent*> continents, vector<Territory*> territories);
+	Map(map<int, Continent*> continents, map<int, Territory*> territories);
 
 	// destructor
 	~Map();
@@ -76,4 +89,7 @@ class MapLoader
     public:
 	static Map* loadMap(string filePath);
 };
+
+// free function to test and load maps
+vector <Map*> testLoadMaps(vector <string> map_files);
 
