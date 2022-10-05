@@ -4,7 +4,7 @@
 #include "Orders.h"
 
 void testOrdersList() {
-    // create new orders' list and one order of each kind
+    // create new orders' list and one order of each kind.
     OrdersList* ol = new OrdersList;
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
