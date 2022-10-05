@@ -56,8 +56,8 @@ void testPlayers() {
 
 }
 
-int main(){
-    testPlayers();
-};
+//int main(){
+//    testPlayers();
+//};
 
 
