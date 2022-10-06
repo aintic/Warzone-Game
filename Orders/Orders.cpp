@@ -12,6 +12,7 @@
 
 using namespace std;
 
+// set constant members
 const string Deploy::_orderType = "Deploy";
 const string Advance::_orderType = "Advance";
 const string Bomb::_orderType = "Bomb";
@@ -27,13 +28,16 @@ Order::Order() = default;
 /**
  * Default destructor for Order
  */
- Order::~Order() = default;
+Order::~Order() = default;
 
 /**
  * Stream insertion operator for Order
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
  */
 ostream& operator << (ostream& out,  const Order& o) {
-    out << o.orderEffect();
+    out << o.getOrderType();
     return out;
 }
 
@@ -49,20 +53,20 @@ Deploy::~Deploy() = default;
 
 /**
  * Validate method - prints a string then returns true for a1
- * @return
+ * @return boolean
  */
 bool Deploy::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Deploy::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -82,8 +86,12 @@ Order* Deploy::clone() const {
     return new Deploy(*this);
 }
 
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Deploy::orderEffect() const {
-    return "Deploy order";
+    return "Put a certain number of army units on a target territory.";
 }
 
 /**
@@ -98,20 +106,20 @@ Advance::~Advance() = default;
 
 /**
  * Validate method - prints a string for a1
- * @return
+ * @return boolean
  */
 bool Advance::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Advance::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -123,12 +131,20 @@ string Advance::getOrderType() const {
     return _orderType;
 }
 
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Advance - cloned object
+ */
 Order* Advance::clone() const {
     return new Advance(*this);
 }
 
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Advance::orderEffect() const {
-    return "Advance order";
+    return "Move a certain number of army units from one territory (source) to another (target).";
 }
 
 /**
@@ -143,20 +159,20 @@ Bomb::~Bomb() = default;
 
 /**
  * Validate method - prints a string for a1
- * @return
+ * @return boolean
  */
 bool Bomb::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Bomb::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -168,12 +184,19 @@ string Bomb::getOrderType() const {
     return _orderType;
 }
 
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Bomb - cloned object
+ */
 Order* Bomb::clone() const {
     return new Bomb(*this);
 }
-
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Bomb::orderEffect() const {
-    return "Bomb order";
+    return "Destroy half of the army units located on a target territory. (Requires card)";
 }
 
 /**
@@ -188,20 +211,20 @@ Blockade::~Blockade() = default;
 
 /**
  * Validate method - prints a string for a1
- * @return
+ * @return boolean
  */
 bool Blockade::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Blockade::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -213,12 +236,20 @@ string Blockade::getOrderType() const {
     return _orderType;
 }
 
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Blockade - cloned object
+ */
 Order* Blockade::clone() const {
     return new Blockade(*this);
 }
 
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Blockade::orderEffect() const {
-    return "Blockade order";
+    return "Triple the number of army units on a target territory and make it neutral. (Requires card)";
 }
 
 /**
@@ -233,20 +264,20 @@ Airlift::~Airlift() = default;
 
 /**
  * Validate method - prints a string for a1
- * @return
+ * @return boolean
  */
 bool Airlift::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Airlift::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -258,12 +289,20 @@ string Airlift::getOrderType() const {
     return _orderType;
 }
 
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Airlift - cloned object
+ */
 Order* Airlift::clone() const {
     return new Airlift(*this);
 }
 
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Airlift::orderEffect() const {
-    return "Airlift order";
+    return "Advance a certain number of army units from one from one territory (source) to another (target). (Requires card)";
 }
 
 /**
@@ -278,20 +317,20 @@ Negotiate::~Negotiate() = default;
 
 /**
  * Validate method - prints a string for a1
- * @return
+ * @return boolean
  */
 bool Negotiate::validate() const {
-    cout << "Validating order \n";
+    cout << "Validating order. \n";
     return true;
 }
 
 /**
  * Execute method - prints order effect if validate returns true
- * @return
  */
 void Negotiate::execute() const {
     if (validate()) {
-        cout << "Executing " << orderEffect() << "\n";
+        cout << "Executing " << *this << " order. \n";
+        cout << orderEffect() << "\n\n";
     }
 }
 
@@ -303,16 +342,30 @@ string Negotiate::getOrderType() const {
     return _orderType;
 }
 
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Negotiate - cloned object
+ */
 Order* Negotiate::clone() const {
     return new Negotiate(*this);
 }
 
+/**
+ * Method returning order's effect
+ * @return string
+ */
 string Negotiate::orderEffect() const {
-    return "Negotiate order";
+    return "Prevent attacks between the current player and another target player until the end of the turn. (Requires card)";
 }
 
+/**
+ * Default constructor for OrdersList
+ */
 OrdersList::OrdersList() = default;
 
+/**
+ * Destructor for OrdersList
+ */
 OrdersList::~OrdersList(){
     int size = _ordersList.size();
 
@@ -321,8 +374,13 @@ OrdersList::~OrdersList(){
     }
 };
 
+/**
+ * Copy constructor for OrdersList - makes deep copy
+ * @param ol - OrdersList object
+ */
 OrdersList::OrdersList(const OrdersList& ol) {
     int size = ol._ordersList.size();
+
     _ordersList = vector<Order*>(size);
 
     for (int i = 0; i < size; i++) {
@@ -330,11 +388,39 @@ OrdersList::OrdersList(const OrdersList& ol) {
     }
 }
 
-void OrdersList::add(Order* o) {
-        _ordersList.push_back(o);
-        cout << "Order added. Current list: \n" << *this << endl;
+/**
+ * Stream insertion operator for OrdersList
+ * @param ol - OrdersList object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out, const OrdersList& ol) {
+    int size = ol._ordersList.size();
+    for (int i = 0; i < size; i++) {
+        out << "[ " << *ol._ordersList[i] << " ] \n";
+    }
+    return out;
 }
 
+
+//OrdersList& OrdersList::operator=(const OrdersList& ol) {
+//}
+
+/**
+ * Method to add an order to the player's orders' list
+ * @param o - order object
+ */
+void OrdersList::add(Order* o) {
+    // add new order to vector
+    _ordersList.push_back(o);
+    // print new order list
+    cout << "Order added. Current list: \n" << *this << endl;
+}
+
+/**
+ * Method to remove an order from the player's orders' list
+ * @param pos - an int for the position of the order to be removed
+ */
 void OrdersList::remove(int pos) {
     int size = _ordersList.size();
 
@@ -343,12 +429,20 @@ void OrdersList::remove(int pos) {
     else if (pos < 1 || pos > size)
         cout << "Invalid order position." << endl;
     else {
+        // delete pointer
         delete _ordersList[pos-1];
+        // resize vector
         _ordersList.erase(_ordersList.begin()+pos-1);
+        // print new order list
         cout << "Order deleted. Current list: \n" << *this <<endl;
     }
 }
 
+/**
+ * Method to move an order from one position to another in the player's orders' list
+ * @param currentPos - an int for current position of the order
+ * @param newPos - an int for the new position of the order
+ */
 void OrdersList::move(int currentPos, int newPos) {
     int size = _ordersList.size();
 
@@ -359,41 +453,34 @@ void OrdersList::move(int currentPos, int newPos) {
     else if (currentPos < 1 || newPos < 1 || currentPos > size || newPos > size)
         cout << "Invalid order position." << endl;
     else {
-        Order* temp = _ordersList[currentPos-1]->clone();
-        _ordersList[currentPos-1] = _ordersList[newPos-1]->clone();
+        // temp object storing order at current position
+        Order* temp = _ordersList[currentPos-1];
+        // move the order at target position to current position
+        _ordersList[currentPos-1] = _ordersList[newPos-1];
+        // move the order at current position to target position
         _ordersList[newPos-1] = temp;
+        // print new order list
         cout << "Orders swapped. Current list: \n" << *this <<endl;
     }
 }
 
+/**
+ * Method to execute then remove orders sequentially from player's orders' list
+ */
 void OrdersList::executeList() {
     int size = _ordersList.size();
 
     if (size == 0)
         cout << "No order to execute." << endl;
     else {
+        // execute each order in vector then delete pointer
         for (int i = 0; i < size; i++) {
             _ordersList[i]->execute();
             delete _ordersList[i];
         }
-
+        // remove all elements from vector (now size 0)
         _ordersList.clear();
+        // print new order list
         cout << "\nExecuted all orders. List is now empty." << endl;
     }
 }
-
-ostream& operator << (ostream& out, const OrdersList& ol) {
-    int size = ol._ordersList.size();
-
-    for (int i = 0; i < size; i++) {
-
-        out << "[ " << ol._ordersList[i]->getOrderType() << " ] \n";
-    }
-
-    return out;
-}
-
-
-//OrdersList& OrdersList::operator=(const OrdersList& ol) {
-
-//}
