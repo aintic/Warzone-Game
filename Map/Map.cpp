@@ -1,5 +1,5 @@
-#pragma once
 #include "Map.h"
+#include "../Player/Player.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -13,7 +13,8 @@ using namespace std;
 // Territory
 
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
-	this->id = id;
+	Player* owner;
+    this->id = id;
 	this->name = name;
 	this->x = x;
 	this->y = y;
@@ -26,7 +27,13 @@ void Territory::add_neighbours(vector <Territory*> neighbours){
 }
 
 ostream& operator <<(ostream& stream, const Territory& t){
-    return stream << " ..."<< t.name << endl;
+    string neighbours = "";
+    for(string neighbour: t.neighbours_strings){
+        neighbours.append(neighbour + " ");
+    }
+    stream << "Territory: "<< t.name << ", ID:"<< t.id <<", Continent: " 
+    << t.continent_name << ", Neighbours: " << neighbours<< endl;
+    return stream;
 }
 
 // Continent
@@ -45,7 +52,7 @@ Map::Map(map<int, Continent*> continents, map<int, Territory*> territories) {
 // validate method
 void Map::validate(){
 
-    std::cout<< "Starting validation:"<< endl;
+    std::cout<< "Starting validate()..."<< endl <<endl;
     // (1) Map is connected subgraph
     
     // To confirm that the map is a connected graph we start with the first territory in 
@@ -169,11 +176,14 @@ void Map::validate(){
         std:: cout<< "(3) Not each of the territory belongs to one and only one continent." << endl;
     }
 
+    std::cout << endl << "Finished validate()!"<< endl <<endl;
+
 }
 
 // loadMap implementation
 Map* MapLoader::loadMap(string filePath) {
 
+    std::cout << endl <<"Strating loadMap()..."<< endl;
     // file variables
 	ifstream file(filePath);
 	string line;
@@ -202,12 +212,12 @@ Map* MapLoader::loadMap(string filePath) {
 
     // file does not exist
     if(!file){
-        std::cout << filePath << " does not exist."<< endl;
+        std::cout << endl << filePath << " does not exist."<< endl;
     }
 
     // file exists
     else{
-        std::cout << filePath <<  " exist."<< endl;
+        std::cout << endl << filePath <<  " exist."<< endl;
         
         // read each line while it exists
         //
@@ -222,23 +232,21 @@ Map* MapLoader::loadMap(string filePath) {
             // flag parsing continent
             if(line.find("[Continents]") != std::string::npos) {
                 parsing_continents = true;
-                std:: cout << endl << "**************************************" << endl; 
-                std:: cout << endl << "Parsing Continents..." << endl; 
+                std:: cout << "Parsing Continents..." << endl; 
             }
 
             // flag parsing territories
             if(line.find("[Territories]") != std::string::npos) {
                 parsing_continents = false;
                 parsing_territories = true;
-                std:: cout << endl << "**************************************" << endl; 
-                std:: cout << endl  << "Parsing Territories..." << endl; 
+                std:: cout << "Parsing Territories..." << endl; 
             }
 
             // Parse continents
             if (parsing_continents && !(line.find("[Continents]") != std::string::npos)) {                
 
                 if (!(line.find(continent_delimiter) != std::string::npos)) { // skip line if does not have the continent delimiter
-                    std::cout << endl  << "Continent section finished ..." << endl;
+                    std::cout << "Continent section finished!" << endl;
                     continue;
                 }
                 
@@ -257,7 +265,6 @@ Map* MapLoader::loadMap(string filePath) {
                     // Add the continents name and continent pointer to the hashmap needed to locate the
                     // continent object based on the continent name once the territories are parsed
                     continent_names_to_continents.insert(pair<string, Continent*>(continent_name, c));
-                    std::cout << "Adding " << continent_name << endl;
                     continent_id++;
                 }
             }
@@ -266,7 +273,6 @@ Map* MapLoader::loadMap(string filePath) {
             else if (parsing_territories && !(line.find("[Territories]") != std::string::npos)) {                
                 
                 if (!(line.find(territory_delimiter) != std::string::npos)) { // skip line if does not have the territory delimiter
-                    std::cout << endl  << "Territiries section finished ..." << endl;
                     continue;
                 }
 
@@ -292,10 +298,6 @@ Map* MapLoader::loadMap(string filePath) {
                     string line_neighbours = line.substr(index_after_last_delimiter); 
                     vector<string> neighbours_strings;
                   
-                    std:: cout << endl; 
-                    std::cout << "Adding " << territory_name << endl;
-                    std::cout << "x: " << x <<", y: " << y <<", continent name: " << continent_name << endl<< "neighbours: ";
-
                     string neighbour;
                     // while there is a delimeter in the string of neighbours add the territory 
                     while((line_neighbours.find(territory_delimiter) != std::string::npos)){
@@ -303,7 +305,6 @@ Map* MapLoader::loadMap(string filePath) {
                         neighbour = line_neighbours.substr(0, delimiter_index);
                         line_neighbours = line_neighbours.substr(delimiter_index + territory_delimiter.length());
                         neighbours_strings.push_back(neighbour);
-                        std::cout << neighbour << " ";
                     }
 
                     // remove last empty character
@@ -311,7 +312,6 @@ Map* MapLoader::loadMap(string filePath) {
                     
                     // Add last neighbour
                     neighbours_strings.push_back(line_neighbours);
-                    std::cout << line_neighbours << endl;
 
                     // construct territory and add it to list
                     Territory* territory = new Territory(territory_id, territory_name, continent_name, stoi(x), stoi(y), neighbours_strings);
@@ -330,6 +330,7 @@ Map* MapLoader::loadMap(string filePath) {
                 }
             }
         }
+            std::cout << "Territiries section finished!" << endl;
 
         // On this second iteration, each territory is linked as to  hold
         // a list of pointers to its neighbour objects.
@@ -353,29 +354,7 @@ Map* MapLoader::loadMap(string filePath) {
             
             // add list of its neighbouras to each territory object
             id_and_territory.second->neighbours = neighbours;
-
-            std:: cout << endl << "**************************************" << endl; 
-            std::cout<< "Linking neighbours of " << id_and_territory.second->name <<  " (";
-
-            for(Territory *neighbour_in_terr_object : id_and_territory.second->neighbours){
-                std::cout << neighbour_in_terr_object->name << " ";
-            }
-            std:: cout << ")" << endl; 
         }
-
-        // Iterrate throught the list of territories to add neighbours
-        for(pair <int, Continent*> id_and_continent : continents){
-
-            // Continent:
-            std::cout<< id_and_continent.second->name<<endl;
-
-
-            for(pair <int, Territory*> t : id_and_continent.second->territories){
-                // Territories in that continent:
-                std::cout << t.second->name << ",";
-            }
-            std::cout<< endl;
-        }    
     }
 
     // close file
@@ -383,5 +362,6 @@ Map* MapLoader::loadMap(string filePath) {
 
     // If file does not exists, return an empty map, otherwise return map with parsed information
     Map* map_result = new Map(continents, territories);
+    std::cout << endl << "Finished loadMap()!" << endl << endl;
     return map_result;
 }
