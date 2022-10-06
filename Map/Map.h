@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -10,6 +12,7 @@ class Territory
 	// data members:
     public:
     int id;
+	int army_units;
 
 	string name;
 	int x;
@@ -20,11 +23,14 @@ class Territory
     vector <Territory*> neighbours;
 
 	// member functions
-	// constructor
+    Territory(string name);
+    // constructor
 	Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
 
     // destructor
 	~Territory();
+
+	friend ostream& operator <<(ostream& stream, const Territory& t);
 
 	void add_neighbours(vector <Territory*> neighbours);
 };
@@ -90,6 +96,4 @@ class MapLoader
 	static Map* loadMap(string filePath);
 };
 
-// free function to test and load maps
-vector <Map*> testLoadMaps(vector <string> map_files);
 

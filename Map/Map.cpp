@@ -1,3 +1,4 @@
+#pragma once
 #include "Map.h"
 #include <fstream>
 #include <iostream>
@@ -10,6 +11,7 @@
 using namespace std;
 
 // Territory
+
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
 	this->id = id;
 	this->name = name;
@@ -21,6 +23,10 @@ Territory::Territory(int id, string name, string continent_name, int x, int y, v
 
 void Territory::add_neighbours(vector <Territory*> neighbours){
     this->neighbours = neighbours;
+}
+
+ostream& operator <<(ostream& stream, const Territory& t){
+    return stream << " ..."<< t.name << endl;
 }
 
 // Continent
@@ -46,7 +52,6 @@ void Map::validate(){
     // the map and visit each of it's territories in a DFS-like manner. we keep a count of 
     // visited territories and if the count of all visited territories corresponds to the 
     // number of territories in the map, the graph is indeed connected.
-
     Territory* current_territory = this->territories.begin()->second; // take first territory in map
     stack<Territory*> next_territories;
     set<Territory*> seen_territories;
