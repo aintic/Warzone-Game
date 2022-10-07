@@ -557,7 +557,12 @@ void Map::validate(){
 
 }
 
-// loadMap implementation
+/**
+ * @brief Load Map implementation
+ * 
+ * @param filePath 
+ * @return Map* 
+ */
 Map* MapLoader::loadMap(string filePath) {
 
     std::cout << endl <<"Strating loadMap()..."<< endl;

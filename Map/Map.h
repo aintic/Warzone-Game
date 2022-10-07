@@ -280,10 +280,14 @@ class Map
  */
 class MapLoader
 {
-	// data members
 	
-	// member functions
     public:
+	/**
+	 * @brief Load map
+	 * 
+	 * @param filePath 
+	 * @return Map* 
+	 */
 	static Map* loadMap(string filePath);
 };
 
