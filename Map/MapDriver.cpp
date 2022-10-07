@@ -16,9 +16,9 @@ void testLoadMaps(){
 	}
 
 	for(Map* map: maps){
-		for(pair<int, Territory*> pair : map->territories){
-			Territory* t = pair.second;
-			std::cout<< *t << endl;
+		for(pair<int, Continent*> pair : map->continents){
+			Continent* c = pair.second;
+			std::cout<< *c << endl;
 		}
 	}
 

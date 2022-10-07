@@ -52,11 +52,6 @@ Territory::Territory(const Territory &t){
     continent_id = t.continent_id;
 	continent_name = t.continent_id;
 	neighbours_strings = t.neighbours_strings;
-    
-    // Add null pointers as neighbours
-    for(Territory* t: t.neighbours){
-            neighbours.push_back(nullptr);
-    }
 }
 
 /**
@@ -92,6 +87,8 @@ Territory& Territory::operator=(const Territory& t){
 	continent_name = t.continent_id;
 	neighbours_strings = t.neighbours_strings;
     neighbours = t.neighbours;
+
+    return *this;
 }
 
 /**
@@ -165,7 +162,7 @@ string Territory::get_continent_name()
 {
     return this->continent_name;
 }
-void Territory::set_continent_name(string get_continent_name)
+void Territory::set_continent_name(string continent_name)
 {
     this->continent_name = continent_name;
 }
@@ -204,6 +201,120 @@ Continent::Continent(int id, string name, int score) {
 	this->name = name;
     this->score = score;
 }
+
+/**
+ * @brief Copy constructor: Construct a new Continent:: Continent object
+ * 
+ * @param c 
+ */
+Continent::Continent(const Continent &c){
+    id = c.id;
+	name = c.name;
+	score = c.score;
+}
+
+/**
+ * @brief Destructor: Destroy the Continent:: Continent object
+ * 
+ */
+Continent::~Continent() {
+	name.clear();
+    // intentionally do not delete the territory pointers
+    territories.clear();
+}
+
+/**
+ * @brief Assignment operator
+ * 
+ * @param c 
+ * @return Continent& 
+ */
+Continent& Continent::operator=(const Continent& c){
+    id = c.id;
+	name = c.name;
+	score = c.score;
+	territories = c.territories;
+
+    return *this;
+}
+
+/**
+ * @brief Stream insertion operator
+ * 
+ * @param stream 
+ * @param c 
+ * @return ostream& 
+ */
+ostream& operator <<(ostream& stream, const Continent& c){
+
+    stream << "Continent: "<< c.name << ", ID:"<< c.id <<", Score: " 
+    << c.score << ", Territories:" << endl;
+
+    for(pair<int, Territory*> pair: c.territories){
+        stream << "\t" << *pair.second;
+    }
+
+    return stream;
+}
+
+// Getters and setters
+
+int Continent::get_id()
+{
+    return this->id;
+}
+void Continent::set_id(int id)
+{
+    this->id = id;
+}
+
+string Continent::get_name()
+{
+    return this->name;
+}
+void Continent::set_name(string name)
+{
+    this->name = name;
+}
+
+int Continent::get_score()
+{
+    return this->score;
+}
+void Continent::set_score(int score)
+{
+    this->score = score;
+}
+
+map <int, Territory*> Continent::get_territories()
+{
+    return this->territories;
+}
+void Continent::set_territories(map <int, Territory*> territories)
+{
+    this->territories = territories;
+}
+
+/**
+ * @brief Get the continent size object
+ * 
+ * @return int 
+ */
+int Continent::get_continent_size()
+{
+    return this->territories.size();
+}
+
+void Continent::add_territory(pair< int, Territory*> pair)
+{
+    this->territories.insert(pair);
+}
+
+
+
+
+//*****************************************************************
+// Map
 
 // Map
 Map::Map(map<int, Continent*> continents, map<int, Territory*> territories) {
@@ -257,7 +368,7 @@ void Map::validate(){
     // (2) Continents are connected subgraphs
 
     // same idea as for (1)
-    bool continents_are_connected_graphs = true;
+    bool continents_are_connected_graphs = false;
 
     for(pair<int, Continent*> pair : this->continents){
 
@@ -266,7 +377,7 @@ void Map::validate(){
 
         Continent* current_continent = pair.second;
 
-        Territory* current_continent_territory = current_continent->territories.begin()->second; // take first territory in continent
+        Territory* current_continent_territory = current_continent->get_territories().begin()->second; // take first territory in continent
 
         next_continent_territories.push(current_continent_territory);
         seen_continent_territories.insert(current_continent_territory);
@@ -278,7 +389,7 @@ void Map::validate(){
 
                 const bool continent_territory_is_visited = seen_continent_territories.find(neighbour) != seen_continent_territories.end();
                 
-                const bool neighbour_belongs_to_continent = neighbour->get_continent_name() == current_continent->name;
+                const bool neighbour_belongs_to_continent = neighbour->get_continent_name() == current_continent->get_name();
                 
                 if(!continent_territory_is_visited && neighbour_belongs_to_continent){
                     next_continent_territories.push(neighbour);
@@ -289,17 +400,19 @@ void Map::validate(){
 
         // If the number of seen Territories (that are in the same continent) from the initial territory in any of the continents does not corresponds 
         // to the number of territories in the that given continent set, the continents are not connected graphs
-        if(!(seen_continent_territories.size() == current_continent->territories.size())){
-            continents_are_connected_graphs = false;
+
+        continents_are_connected_graphs = seen_continent_territories.size() == current_continent->get_continent_size();
+
+        if(!continents_are_connected_graphs){
             break;
         }
     }
 
     if(continents_are_connected_graphs){
-        std:: cout<< "(2) Continents are connected graphs." << endl;
+        std:: cout<< "(2) Continents are connected subgraphs." << endl;
     }
     else{
-        std:: cout<< "(2) Continents aren not connected graphs." << endl;
+        std:: cout<< "(2) Continents aren not connected subgraphs." << endl;
     }
 
 
@@ -310,15 +423,12 @@ void Map::validate(){
     // signal false and break out of the loops
 
     set<Territory*> countrys_territories;
-    bool territory_belong_to_one_continent = true;
+    bool territory_belong_to_one_continent = false;
 
     for(pair <int, Continent*> c_pair : this->continents){
         Continent* current_continent = c_pair.second;
-         if(!territory_belong_to_one_continent){
-                break;
-            }
 
-        for(pair <int, Territory*> t_pair: current_continent->territories){
+        for(pair <int, Territory*> t_pair: current_continent->get_territories()){
 
             Territory* current_territory = t_pair.second;
             
@@ -486,7 +596,7 @@ Map* MapLoader::loadMap(string filePath) {
                     territories.insert(pair<int, Territory*>(territory_id, territory));
 
                     // Add territory to hashmap of territories in the continent that matches the name of the territory continent
-                    continent_names_to_continents[continent_name]->territories.insert(pair<int, Territory*>(territory_id, territory));
+                    continent_names_to_continents[continent_name]->add_territory(pair<int, Territory*>(territory_id, territory));
 
                     territory_id++;
                 }
