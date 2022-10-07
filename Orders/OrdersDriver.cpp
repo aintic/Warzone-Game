@@ -3,8 +3,11 @@
 //
 #include "Orders.h"
 
+/**
+ * Free function to test Order and OrdersList
+ */
 void testOrdersList() {
-    // create new orders' list and one order of each kind.
+    // create new orders' list and one order of each kind
     OrdersList* ol = new OrdersList;
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
@@ -14,7 +17,7 @@ void testOrdersList() {
     Order* testNegotiate = new Negotiate;
 
     // add orders
-    cout << "\nAdd orders.\n" << endl;
+    cout << "\n============= Add orders =============\n" << endl;
     ol->add(testDeploy);
     ol->add(testAdvance);
     ol->add(testBomb);
@@ -23,18 +26,18 @@ void testOrdersList() {
     ol->add(testNegotiate);
 
     // move orders
-    cout << "\nMove orders 1 and 3.\n" << endl;
+    cout << "\n============= Move orders 1 and 3 =============\n" << endl;
     ol->move(1, 3);
-    cout << "\nMove orders 4 and 5.\n" << endl;
+    cout << "\n============= Move orders 4 and 5 =============\n" << endl;
     ol->move(4, 5);
 
     // delete orders
-    cout << "\nDelete order 3.\n" << endl;
+    cout << "\n============= Delete order 3 =============\n" << endl;
     ol->remove(3);
-    cout << "\nDelete order 2.\n" << endl;
-    ol->remove(3);
+    cout << "\n============= Delete order 2 =============\n" << endl;
+    ol->remove(2);
 
-    // execute list - invoke validate() and execute() method on each order in list
-    cout << "\nExecute list:\n" << endl;
+    // execute list - invokes validate() and execute() method on each order in list
+    cout << "\n============= Execute list =============\n" << endl;
     ol->executeList();
 }

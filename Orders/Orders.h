@@ -21,7 +21,7 @@ public:
     virtual ~Order() = 0;
     // assignment operator
     Order& operator = (const Order& o);
-    // string operator
+    // string insertion operator
     friend ostream& operator << (ostream& out,  const Order& o);
 
     // verifies if order is valid
@@ -34,6 +34,8 @@ public:
     virtual Order* clone() const = 0;
     // return order effect string
     virtual string orderEffect() const = 0;
+
+    friend class OrdersList;
 };
 
 class Deploy : public Order {
@@ -73,7 +75,7 @@ public:
     // clone order
     Order* clone() const override;
     // return order effect string
-    string orderEffect() const;
+    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -95,7 +97,7 @@ public:
     // clone order
     Order* clone() const override;
     // return order effect string
-    string orderEffect() const;
+    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -117,7 +119,7 @@ public:
     // clone order
     Order* clone() const override;
     // return order effect string
-    string orderEffect() const;
+    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -139,7 +141,7 @@ public:
     // clone order
     Order* clone() const override;
     // return order effect string
-    string orderEffect() const;
+    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -161,7 +163,7 @@ public:
     // clone order
     Order* clone() const override;
     // return order effect string
-    string orderEffect() const;
+    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -178,7 +180,7 @@ public:
     ~OrdersList();
     // assignment operator
     OrdersList& operator = (const OrdersList& ol);
-    // string operator
+    // string insertion operator
     friend ostream& operator << (ostream& out, const OrdersList& ol);
 
     // add order to list
