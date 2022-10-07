@@ -1,3 +1,9 @@
+/**
+ * @file Map.cpp
+ * @author Michael Djabauri
+ * @date 2022-10-07
+ */
+
 #include "Map.h"
 #include "../Player/Player.h"
 #include <fstream>
@@ -7,11 +13,21 @@
 #include <map>
 #include <stack>
 #include <set>
-
 using namespace std;
 
+//*****************************************************************
 // Territory
 
+/**
+ * @brief Constructor: Construct a new Territory:: Territory object
+ * 
+ * @param id 
+ * @param name 
+ * @param continent_name 
+ * @param x 
+ * @param y 
+ * @param neighbours_strings 
+ */
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
 	Player* owner;
     this->id = id;
@@ -22,10 +38,34 @@ Territory::Territory(int id, string name, string continent_name, int x, int y, v
     this->neighbours_strings = neighbours_strings;
 }
 
-void Territory::add_neighbours(vector <Territory*> neighbours){
-    this->neighbours = neighbours;
+/**
+ * @brief Copy constructor: Construct a new Territory:: Territory object
+ * 
+ * @param t 
+ */
+Territory::Territory(const Territory &t){
+    id = t.id;
+	army_units = t.army_units;
+	name = t.name;
+	x = t.x;
+	y = t.y;
+    continent_id = t.continent_id;
+	continent_name = t.continent_id;
+	neighbours_strings = t.neighbours_strings;
+    
+    // Add null pointers as neighbours
+    for(Territory* t: t.neighbours){
+            neighbours.push_back(nullptr);
+    }
 }
 
+/**
+ * @brief Stream insertion operator
+ * 
+ * @param stream 
+ * @param t 
+ * @return ostream& 
+ */
 ostream& operator <<(ostream& stream, const Territory& t){
     string neighbours = "";
     for(string neighbour: t.neighbours_strings){
@@ -36,7 +76,129 @@ ostream& operator <<(ostream& stream, const Territory& t){
     return stream;
 }
 
+/**
+ * @brief Assignment operator
+ * 
+ * @param t 
+ * @return Territory& 
+ */
+Territory& Territory::operator=(const Territory& t){
+    id = t.id;
+	army_units = t.army_units;
+	name = t.name;
+	x = t.x;
+	y = t.y;
+    continent_id = t.continent_id;
+	continent_name = t.continent_id;
+	neighbours_strings = t.neighbours_strings;
+    neighbours = t.neighbours;
+}
+
+/**
+ * @brief Destructor: Destroy the Territory:: Territory object
+ * 
+ */
+Territory::~Territory() {
+	name.clear();
+	continent_name.clear();
+	neighbours_strings.clear();
+    neighbours.clear();
+}
+
+// Getters and Setters
+
+int Territory::get_id()
+{
+    return this->id;
+}
+void Territory::set_id(int id)
+{
+    this->id = id;
+}
+
+int Territory::get_army_units()
+{
+    return this->army_units;
+}
+void Territory::set_army_units(int army_units)
+{
+    this->army_units = army_units;
+}
+
+string Territory::get_name()
+{
+    return this->name;
+}
+void Territory::set_name(string name)
+{
+    this->name = name;
+}
+
+int Territory::get_x()
+{
+    return this->x;
+}
+void Territory::set_x(int x)
+{
+    this->x = x;
+}
+
+int Territory::get_y()
+{
+    return this->y;
+}
+void Territory::set_y(int y)
+{
+    this->y = y;
+}
+
+int Territory::get_continent_id()
+{
+    return this->continent_id;
+}
+void Territory::set_continent_id(int continent_id)
+{
+    this->continent_id = continent_id;
+}
+
+string Territory::get_continent_name()
+{
+    return this->continent_name;
+}
+void Territory::set_continent_name(string get_continent_name)
+{
+    this->continent_name = continent_name;
+}
+
+vector<string> Territory::get_neighbours_strings()
+{
+    return this->neighbours_strings;
+}
+void Territory::set_neighbours_strings(vector<string> neighbours_strings)
+{
+    this->neighbours_strings = neighbours_strings;
+}
+
+vector<Territory*> Territory::get_neighbours(){
+    return this->neighbours;
+}
+void Territory::set_neighbours(vector<Territory*> neighbours){
+    this->neighbours = neighbours;
+}
+
+
+
+
+//*****************************************************************
 // Continent
+
+/**
+ * @brief Constructor: Construct a new Continent:: Continent object
+ * 
+ * @param id 
+ * @param name 
+ * @param score 
+ */
 Continent::Continent(int id, string name, int score) {
 	this->id = id;
 	this->name = name;
@@ -69,7 +231,7 @@ void Map::validate(){
     while(!next_territories.empty()){ // loop while there are next nodes
         Territory* territory = next_territories.top();
         next_territories.pop();
-        for(Territory* neighbour: territory->neighbours){ // see each neighbour
+        for(Territory* neighbour: territory->get_neighbours()){ // see each neighbour
 
             const bool territory_is_visited = seen_territories.find(neighbour) != seen_territories.end();
             if(!territory_is_visited){
@@ -112,11 +274,11 @@ void Map::validate(){
         while(!next_continent_territories.empty()){ // loop while there are next nodes
             Territory* continent_territory = next_continent_territories.top();
             next_continent_territories.pop();
-            for(Territory* neighbour: continent_territory->neighbours){ // see each neighbour
+            for(Territory* neighbour: continent_territory->get_neighbours()){ // see each neighbour
 
                 const bool continent_territory_is_visited = seen_continent_territories.find(neighbour) != seen_continent_territories.end();
                 
-                const bool neighbour_belongs_to_continent = neighbour->continent_name == current_continent->name;
+                const bool neighbour_belongs_to_continent = neighbour->get_continent_name() == current_continent->name;
                 
                 if(!continent_territory_is_visited && neighbour_belongs_to_continent){
                     next_continent_territories.push(neighbour);
@@ -345,7 +507,7 @@ Map* MapLoader::loadMap(string filePath) {
 
             // for each of the territories, iterate through its list of territory names 
             // added in the first teration to find the territory object
-            for(string neighbour_name_string : id_and_territory.second->neighbours_strings){
+            for(string neighbour_name_string : id_and_territory.second->get_neighbours_strings()){
 
                 // get neighbour territory and add it to list     
                 neighbouring_territory =  territory_names_to_territories[neighbour_name_string];
@@ -353,7 +515,7 @@ Map* MapLoader::loadMap(string filePath) {
             }
             
             // add list of its neighbouras to each territory object
-            id_and_territory.second->neighbours = neighbours;
+            id_and_territory.second->set_neighbours(neighbours);
         }
     }
 

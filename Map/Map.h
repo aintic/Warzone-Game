@@ -1,19 +1,103 @@
-#pragma once
+/**
+ * @file Map.h
+ * @author Michael Djabauri
+ * @date 2022-10-06
+ */
 
+#pragma once
 #include <iostream>
 #include <vector>
 #include <map>
 
 using namespace std;
 
-// Territory 
+/**
+ * @brief Territory class
+ * 
+ */
 class Territory 
 {
-	// data members:
     public:
-    int id;
-	int army_units;
+    /**
+     * @brief Constructor: Construct a new Territory object
+     * 
+     * @param id 
+     * @param name 
+     * @param continent_name 
+     * @param x 
+     * @param y 
+     * @param neighbours_strings 
+     */
+	Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
 
+	/**
+	 * @brief Copy constructor: Construct a new Territory object
+	 * 
+	 * @param t 
+	 */
+	Territory(const Territory &t);
+
+    /**
+     * @brief Destructor: Destroy the Territory object
+     * 
+     */
+	~Territory();
+
+	/**
+	 * @brief 
+	 * 
+	 * @param stream 
+	 * @param t 
+	 * @return ostream& 
+	 */
+	friend ostream& operator <<(ostream& stream, const Territory& t);
+
+	/**
+	 * @brief 
+	 * 
+	 * @param neighbours 
+	 */
+	void add_neighbours(vector <Territory*> neighbours);
+
+	/**
+	 * @brief Assignment operator
+	 * 
+	 * @param p 
+	 * @return Territory& 
+	 */
+    Territory& operator=(const Territory& t); 
+
+	// Getters and setters
+	int get_id();
+	void set_id(int id);
+
+	int get_army_units();
+	void set_army_units(int army_units);
+	
+	string get_name();
+	void set_name(string name);
+
+	int get_x();
+	void set_x(int x);
+
+	int get_y();
+	void set_y(int y);
+	
+	int get_continent_id();
+	void set_continent_id(int continent_id);
+
+	string get_continent_name();
+	void set_continent_name(string continent_name);
+
+	vector<string> get_neighbours_strings();
+	void set_neighbours_strings(vector<string> neighbours_strings);
+
+	vector<Territory*> get_neighbours();
+	void set_neighbours(vector<Territory*> neighbours);
+
+	private:
+	int id;
+	int army_units;
 	string name;
 	int x;
 	int y;
@@ -21,22 +105,13 @@ class Territory
 	string continent_name;
 	vector <string> neighbours_strings; // placeholder before adding the pointers to the neighbours
     vector <Territory*> neighbours;
-
-	// member functions
-    Territory(string name);
-    // constructor
-	Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
-
-    // destructor
-	~Territory();
-
-	friend ostream& operator <<(ostream& stream, const Territory& t);
-
-	void add_neighbours(vector <Territory*> neighbours);
 };
 
 
-// Continent
+
+
+///	CONTINENT CLASS
+///
 class Continent
 {
 	// data members
@@ -57,7 +132,13 @@ class Continent
 	~Continent();
 };
 
-// Map
+
+
+
+/**
+ * @brief 
+ * 
+ */
 class Map
 {
 	// data members
