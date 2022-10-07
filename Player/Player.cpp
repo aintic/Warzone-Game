@@ -17,7 +17,7 @@ Player::Player() {
     vector<Territory*> territories;
     vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
     Hand* hand;
-    vector<OrdersList*> order_list;
+    OrdersList* order_list;
 }
 
 
@@ -27,14 +27,14 @@ Player::Player(int playerID, string name) {
     vector<Territory*> territories;
     vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
     Hand* hand;
-    vector<OrdersList*> order_list;
+    OrdersList* order_list;
 }
 
 
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 
-Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<OrdersList*> orders) {
+Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders) {
     this->playerID = playerID;
     this->name = name;
     this->territories = territories;
@@ -59,7 +59,7 @@ Player::Player(const Player& p){
 Player::~Player()
 {
     delete hand;
-    order_list.clear();
+    delete order_list;
     territoriesOwnedByPlayer.clear();
     name.clear();
 
@@ -111,10 +111,11 @@ void Player:: issueOrder(Player* p){
     ol->add(testAirlift);
     ol->add(testNegotiate);
     cout << "ExecuteList" << endl;
-    ol->executeList();
+    //ol->executeList();
 
+    setPlayerOrderList(ol);
 
-
+    p->order_list->executeList(); //it executes each player's orderlist
 }
 
 void Player::addTerritory(Territory* t){
@@ -146,10 +147,16 @@ string Player:: getName(){
 Hand* Player::getHand(){
     return hand;
 }
-vector<OrdersList*> Player :: getPlayerOrderList(){
+OrdersList* Player :: getPlayerOrderList(){
     return order_list;
 }
 
 vector<Territory*> Player::getTerritories(){
     return territories;
+}
+
+//setters
+
+OrdersList* Player :: setPlayerOrderList(OrdersList* orders){
+    this->order_list = orders;
 }

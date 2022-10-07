@@ -10,7 +10,7 @@ void testPlayers() {
     cout << "Executing testPlayers method" << endl;
 
     string name = "Hongsuk";
-    vector<OrdersList*> orders;
+    OrdersList* orders;
 
     vector<Territory*> territories;
     Hand* hand;
@@ -42,12 +42,18 @@ void testPlayers() {
     }
 
     //Testing issueOrder function
-
     p1->issueOrder(p1);
 
 
+    //delete pointers
+    delete p1;
+    delete p2;
 
 
+    //pointed dangling ptr to NULL
+
+    p1 = NULL;
+    p2 = NULL;
 
 
 }
