@@ -1,17 +1,15 @@
 #include"Map/Map.h"
 #include "Map/MapDriver.h"
-#include "Player/PlayerDriver.h"
-
 
 using namespace std;
 
 int main()
 {
     // Map 
-	//testLoadMaps();
+	testLoadMaps();
 
     // Player
-    testPlayers();
+    //testPlayers();
 
     //Orders list
     //testOrdersLists();
