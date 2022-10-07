@@ -67,7 +67,7 @@ ostream& operator <<(ostream& stream, const Territory& t){
         neighbours.append(neighbour + " ");
     }
     stream << "Territory: "<< t.name << ", ID:"<< t.id <<", Continent: " 
-    << t.continent_name << ", Neighbours: " << neighbours<< endl;
+    << t.continent_name << ", \n\t\t\tNeighbours: " << neighbours<< endl;
     return stream;
 }
 
@@ -251,7 +251,7 @@ ostream& operator <<(ostream& stream, const Continent& c){
     << c.score << ", Territories:" << endl;
 
     for(pair<int, Territory*> pair: c.territories){
-        stream << "\t" << *pair.second;
+        stream << "\t\t" << *pair.second;
     }
 
     return stream;
@@ -316,13 +316,118 @@ void Continent::add_territory(pair< int, Territory*> pair)
 //*****************************************************************
 // Map
 
-// Map
-Map::Map(map<int, Continent*> continents, map<int, Territory*> territories) {
+/**
+ * @brief Constructor: Construct a new Map:: Map object
+ * 
+ * @param continents 
+ * @param territories 
+ */
+Map::Map(string name, map<int, Continent*> continents, map<int, Territory*> territories) {
+    this->name = name;
 	this->continents = continents;
 	this->territories = territories;
 }
 
-// validate method
+/**
+ * @brief Copy constructor: Construct a new Map:: Map object
+ * 
+ * @param m 
+ */
+Map::Map(const Map &m){
+    name = m.name;
+    continents = m.continents;
+    territories = m.territories;
+}
+
+/**
+ * @brief Destructor: Destroy the Continent:: Continent object
+ * 
+ */
+Map::~Map() {
+	name.clear();
+    
+    for(pair<int, Continent*> pair : continents){
+        Continent * continent = pair.second;
+        delete continent; // free memory
+        continent = NULL;
+    }
+    continents.clear();
+
+    for(pair<int, Territory*> pair : territories){
+        Territory * territory = pair.second;
+        delete territory; // free memory
+        territory = NULL;
+    }
+    territories.clear();
+}
+
+/**
+ * @brief Assignment operator
+ * 
+ * @param m 
+ * @return Map& 
+ */
+Map& Map::operator=(const Map& m){
+	name = m.name;
+    continents = m.continents;
+	territories = m.territories;
+
+    return *this;
+}
+
+/**
+ * @brief Assignments insertion operator
+ * 
+ * @param stream 
+ * @param m 
+ * @return ostream& 
+ */
+ostream& operator <<(ostream& stream, const Map& m){
+
+    stream << "Map path: "<< m.name << endl << "Continents:" << endl;
+
+    for(pair<int, Continent*> pair: m.continents){
+        stream << "\t" << *pair.second;
+    }
+
+    return stream;
+}
+
+// Getters and setters:
+
+string Map::get_name()
+{
+    return this->name;
+}
+void Map::set_name(string name)
+{
+    this->name = name;
+}
+
+map<int, Territory*> Map::get_territories()
+{
+    return this->territories;
+}
+void Map::set_territories(map<int, Territory*> territories)
+{
+    this->territories = territories;
+}
+
+map<int, Continent*> Map::get_continents()
+{
+    return this->continents;
+}
+void Map::set_continents(map<int, Continent*> continents)
+{
+    this->continents = continents;
+}
+
+/**
+ * @brief Validate that the map is a connected graph, 
+ * the continents are connected subgrahs, and each territitory 
+ * belongs to one and only one continent 
+ * 
+ */
 void Map::validate(){
 
     std::cout<< "Starting validate()..."<< endl <<endl;
@@ -633,7 +738,7 @@ Map* MapLoader::loadMap(string filePath) {
     file.close();
 
     // If file does not exists, return an empty map, otherwise return map with parsed information
-    Map* map_result = new Map(continents, territories);
+    Map* map_result = new Map(filePath, continents, territories);
     std::cout << endl << "Finished loadMap()!" << endl << endl;
     return map_result;
 }

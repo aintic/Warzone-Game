@@ -16,10 +16,7 @@ void testLoadMaps(){
 	}
 
 	for(Map* map: maps){
-		for(pair<int, Continent*> pair : map->continents){
-			Continent* c = pair.second;
-			std::cout<< *c << endl;
-		}
+		std::cout<< *map << endl;
 	}
 
 	for(Map* map: maps){
@@ -27,6 +24,11 @@ void testLoadMaps(){
 	}
 
 	//TODO: reject invalid map files
-	// TODO: delete maps
+
+	// free up memory by deleting the map
+	for(Map* map: maps){
+		delete map;
+		map = NULL;
+	}
 
 }

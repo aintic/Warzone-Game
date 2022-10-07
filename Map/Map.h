@@ -201,30 +201,71 @@ class Continent
  */
 class Map
 {
-	// data members
     public:
+    /**
+     * @brief Constructor: Construct a new Map object
+     * 
+     */
+	Map(string name, map<int, Continent*> continents, map<int, Territory*> territories);
 
+	/**
+	 * @brief Copy constructor: Construct a new Map object
+	 * 
+	 * @param m 
+	 */
+	Map(const Map& m);
+
+	/**
+	 * @brief Destructor: Destroy the Map object
+	 * 
+	 */
+	~Map();
+
+	/**
+	 * @brief Assignment operator
+	 * 
+	 * @param m 
+	 * @return Map& 
+	 */
+	Map& operator=(const Map& m);
+
+	/**
+	 * @brief Validate that the map is a connected graph, 
+	 * the continents are connected subgrahs, and each territitory 
+	 * belongs to one and only one continent 
+	 * 
+	 */
+	void validate();
+
+	/**
+	 * @brief Assignment insertion operator
+	 * 
+	 * @param stream 
+	 * @param m 
+	 * @return ostream& 
+	 */
+	friend ostream& operator <<(ostream& stream, const Map& m);
+
+	// Getters and setters
+
+	string get_name();
+	void set_name(string name);
+
+	map<int, Territory*> get_territories();
+	void set_territories(map<int, Territory*> territories);
+
+	map<int, Continent*> get_continents();
+	void set_continents(map<int, Continent*> continents);
+
+	private:
+	string name;
 	// hashmap of continent ids to continent where each territory holds a map of its territories
 	map<int, Continent*> continents; 
 
 	// hashmap of territory ids to territories where each territory points to its neighbours
 	map<int, Territory*> territories; 
+
 	bool valid;
-	
-	// member functions
-	
-	// validate method
-	void validate();
-
-    // constructors
-	Map();
-	Map(const Map& m);
-	Map(map<int, Continent*> continents, map<int, Territory*> territories);
-
-	// destructor
-	~Map();
-
-
 };
 
 
