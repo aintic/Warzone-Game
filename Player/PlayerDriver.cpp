@@ -51,7 +51,6 @@ void testPlayers() {
 
 
     //pointed dangling ptr to NULL
-
     p1 = NULL;
     p2 = NULL;
 
