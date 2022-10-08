@@ -41,6 +41,11 @@ ostream& operator << (ostream& out,  const Order& o) {
     return out;
 }
 
+Order& Order::operator=(const Order& o) {
+
+}
+
+
 /**
  * Default constructor for Deploy
  */
@@ -413,8 +418,6 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
 void OrdersList::add(Order* o) {
     // add new order to vector
     _ordersList.push_back(o);
-    // print new order list
-    cout << "Order added. Current list: \n" << *this << endl;
 }
 
 /**
@@ -433,8 +436,6 @@ void OrdersList::remove(int pos) {
         delete _ordersList[pos-1];
         // resize vector
         _ordersList.erase(_ordersList.begin()+pos-1);
-        // print new order list
-        cout << "Order deleted. Current list: \n" << *this <<endl;
     }
 }
 
@@ -459,8 +460,6 @@ void OrdersList::move(int currentPos, int newPos) {
         _ordersList[currentPos-1] = _ordersList[newPos-1];
         // move the order at current position to target position
         _ordersList[newPos-1] = temp;
-        // print new order list
-        cout << "Orders swapped. Current list: \n" << *this <<endl;
     }
 }
 
