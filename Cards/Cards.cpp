@@ -2,7 +2,16 @@
 #include <string>
 #include <iostream>
 #include <random>
+#include "../Orders/Orders.h"
+#include "../Player/Player.h"
 using namespace std;
+
+const string BombCard::cardType = "Bomb";
+const string ReinforcementCard::cardType = "Reinforcement";
+const string BlockadeCard::cardType = "Blockade";
+const string AirliftCard::cardType = "Airlift";
+const string DiplomacyCard::cardType = "Negotiate";
+
 
 // Card Class
 int Card::numCreatedCards = 0;
@@ -17,21 +26,17 @@ Card::Card(const Card& c){
 
 Card::~Card() = default;
 
-bool Card::transfer(Hand &aHand, Deck &aDeck, int index){
-    if(index >= 0 && index < aHand.getCards().size()){
-        aDeck.getCards().push_back(aHand.getCards().at(index));
-        aHand.getCards().erase(aHand.getCards().begin() + index);
-        return true;
-    }
-    return false;
-}
+//bool Card::transfer(Hand &aHand, Deck &aDeck, int index){
+//    if(index >= 0 && index < aHand.getCards().size()){
+//        aDeck.getCards().push_back(aHand.getCards().at(index));
+//        aHand.getCards().erase(aHand.getCards().begin() + index);
+//        return true;
+//    }
+//    return false;
+//}
 
 int Card::getId() const{
     return id;
-}
-
-string Card::getName() const{
-    return name;
 }
 
 Card& Card::operator=(const Card& c){
@@ -42,94 +47,105 @@ Card& Card::operator=(const Card& c){
 }
 
 ostream& operator<<(ostream& os, Card& c){
-    os << "card " << c.getId() << ": " << c.getName();
+    os << "card " << c.getId() << ": " << c.getCardType();
     return os;
 }
 
 
 
-// Bomb Class
-Bomb::Bomb() : Card(){
-    this->name = "Bomb";
+// BombCardOrder Class
+BombCard::BombCard() : Card(){}
+
+BombCard::BombCard(const BombCard& b) : Card(b){}
+
+Card* BombCard::clone() {
+    return new BombCard(*this);
 }
 
-Bomb::Bomb(const Bomb& b) : Card(b){
-    this->name = b.name;
+Order* BombCard::play(){
+    return new BombCardOrder;
 }
 
-Card* Bomb::clone() {
-    return new Bomb(*this);
+string BombCard::getCardType() {
+    return cardType;
 }
 
-void Bomb::play(){}
 
 
+// ReinforcementCard Class
+ReinforcementCard::ReinforcementCard() : Card(){}
 
-// Reinforcement Class
-Reinforcement::Reinforcement() : Card(){
-    this->name = "Reinforcement";
+ReinforcementCard::ReinforcementCard(const ReinforcementCard& r) : Card(r){}
+
+Card* ReinforcementCard::clone() {
+    return new ReinforcementCard(*this);
 }
 
-Reinforcement::Reinforcement(const Reinforcement& r) : Card(r){
-    this->name = r.name;
+Order* ReinforcementCard::play(){
+    return nullptr;
 }
 
-Card* Reinforcement::clone() {
-    return new Reinforcement(*this);
+string ReinforcementCard::getCardType() {
+    return cardType;
 }
 
-void Reinforcement::play(){}
 
 
+// BlockadeCardOrder Class
+BlockadeCard::BlockadeCard() : Card(){}
 
-// Blockade Class
-Blockade::Blockade() : Card(){
-    this->name = "Blockade";
+BlockadeCard::BlockadeCard(const BlockadeCard& b) : Card(b){}
+
+Card* BlockadeCard::clone() {
+    return new BlockadeCard(*this);
 }
 
-Blockade::Blockade(const Blockade& b) : Card(b){
-    this->name = b.name;
+Order* BlockadeCard::play() {
+    return new BlockadeCardOrder;
 }
 
-Card* Blockade::clone() {
-    return new Blockade(*this);
+string BlockadeCard::getCardType() {
+    return cardType;
 }
 
-void Blockade::play() {}
 
 
+// AirliftCardOrder Class
+AirliftCard::AirliftCard() : Card(){}
 
-// Airlift Class
-Airlift::Airlift() : Card(){
-    this->name = "Airlift";
+AirliftCard::AirliftCard(const AirliftCard& a) : Card(a){}
+
+Card* AirliftCard::clone() {
+    return new AirliftCard(*this);
 }
 
-Airlift::Airlift(const Airlift& a) : Card(a){
-    this->name = a.name;
+Order* AirliftCard::play() {
+    return new AirliftCardOrder;
 }
 
-Card* Airlift::clone() {
-    return new Airlift(*this);
+string AirliftCard::getCardType() {
+    return cardType;
 }
 
-void Airlift::play() {}
 
 
+// DiplomacyCard Class
+DiplomacyCard::DiplomacyCard() : Card(){}
 
-// Diplomacy Class
-Diplomacy::Diplomacy() :Card(){
-    this->name = "Diplomacy";
+DiplomacyCard::DiplomacyCard(const DiplomacyCard& d) : Card(d){}
+
+Card* DiplomacyCard::clone(){
+    return new DiplomacyCard(*this);
 }
 
-Diplomacy::Diplomacy(const Diplomacy& d) : Card(d){
-    this->name = name;
+Order* DiplomacyCard::play() {
+    return new Negotiate;
 }
 
-Card* Diplomacy::clone(){
-    return new Diplomacy(*this);
+string DiplomacyCard::getCardType() {
+    return cardType;
 }
 
-void Diplomacy::play() {}
 
 
 
@@ -154,6 +170,19 @@ Hand::~Hand() {
 void Hand::addCard(Card *c){
     this->cards.push_back(c);
 }
+
+Order* Hand::play(Deck& d, int index){
+    Order* o = nullptr;
+        if(index >= 0 && index < this->cards.size()){
+            o = this->cards.at(index)->play();
+            d.getCards().push_back(this->cards.at(index));
+            this->cards.erase(this->cards.begin() + index);
+        }
+        else{
+            cout << "Play failed - Invalid Index: " << index;
+        }
+        return o;
+    }
 
 vector<Card *> &Hand::getCards(){
     return this->cards;
@@ -190,19 +219,19 @@ ostream& operator<<(ostream& os, Hand& h){
 //Deck Class
 Deck::Deck(){
     for (int i = 0; i < 3; i++){
-        this->cards.push_back(new Bomb());
+        this->cards.push_back(new BombCard());
     }
     for (int i = 0; i < 3; i++){
-        this->cards.push_back(new Reinforcement());
+        this->cards.push_back(new ReinforcementCard());
     }
     for (int i = 0; i < 3; i++){
-        this->cards.push_back(new Blockade());
+        this->cards.push_back(new BlockadeCard());
     }
     for (int i = 0; i < 3; i++){
-        this->cards.push_back(new Airlift());
+        this->cards.push_back(new AirliftCard());
     }
     for (int i = 0; i < 3; i++){
-        this->cards.push_back(new Diplomacy());
+        this->cards.push_back(new DiplomacyCard());
     }
 }
 
@@ -222,14 +251,17 @@ Deck::~Deck() {
     }
 }
 
-Card* Deck::draw(Hand &aHand){
+Card* Deck::draw(Player& p){
     if (!cards.empty()){
         random_device rd;
         uniform_int_distribution<int> dist(0, cards.size() - 1);
         int randomIndex = dist(rd);
-        aHand.getCards().push_back(this->getCards().at(randomIndex));
+        p.getHand()->getCards().push_back(this->getCards().at(randomIndex));
         this->cards.erase(this->cards.begin() + randomIndex);
-        return aHand.getCards().back();
+        return p.getHand()->getCards().back();
+    }
+    else{
+        cout << "Draw Failed: Deck is Empty";
     }
     return nullptr;
 }

@@ -15,9 +15,9 @@ using namespace std;
 // set constant members
 const string Deploy::_orderType = "Deploy";
 const string Advance::_orderType = "Advance";
-const string Bomb::_orderType = "Bomb";
-const string Blockade::_orderType = "Blockade";
-const string Airlift::_orderType = "Airlift";
+const string BombCardOrder::_orderType = "Bomb";
+const string BlockadeCardOrder::_orderType = "Blockade";
+const string AirliftCardOrder::_orderType = "Airlift";
 const string Negotiate::_orderType = "Negotiate";
 
 /**
@@ -148,20 +148,20 @@ string Advance::orderEffect() const {
 }
 
 /**
- * Default constructor for Bomb
+ * Default constructor for BombCardOrder
  */
-Bomb::Bomb() = default;
+BombCardOrder::BombCardOrder() = default;
 
 /**
- * Default destructor for Bomb
+ * Default destructor for BombCardOrder
  */
-Bomb::~Bomb() = default;
+BombCardOrder::~BombCardOrder() = default;
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Bomb::validate() const {
+bool BombCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -169,7 +169,7 @@ bool Bomb::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Bomb::execute() const {
+void BombCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -180,40 +180,40 @@ void Bomb::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Bomb::getOrderType() const {
+string BombCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Bomb - cloned object
+ * @return BombCardOrder - cloned object
  */
-Order* Bomb::clone() const {
-    return new Bomb(*this);
+Order* BombCardOrder::clone() const {
+    return new BombCardOrder(*this);
 }
 /**
  * Method returning order's effect
  * @return string
  */
-string Bomb::orderEffect() const {
+string BombCardOrder::orderEffect() const {
     return "Destroy half of the army units located on a target territory. (Requires card)";
 }
 
 /**
- * Default constructor for Blockade
+ * Default constructor for BlockadeCardOrder
  */
-Blockade::Blockade() = default;
+BlockadeCardOrder::BlockadeCardOrder() = default;
 
 /**
- * Default destructor for Blockade
+ * Default destructor for BlockadeCardOrder
  */
-Blockade::~Blockade() = default;
+BlockadeCardOrder::~BlockadeCardOrder() = default;
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Blockade::validate() const {
+bool BlockadeCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -221,7 +221,7 @@ bool Blockade::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Blockade::execute() const {
+void BlockadeCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -232,41 +232,41 @@ void Blockade::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Blockade::getOrderType() const {
+string BlockadeCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Blockade - cloned object
+ * @return BlockadeCardOrder - cloned object
  */
-Order* Blockade::clone() const {
-    return new Blockade(*this);
+Order* BlockadeCardOrder::clone() const {
+    return new BlockadeCardOrder(*this);
 }
 
 /**
  * Method returning order's effect
  * @return string
  */
-string Blockade::orderEffect() const {
+string BlockadeCardOrder::orderEffect() const {
     return "Triple the number of army units on a target territory and make it neutral. (Requires card)";
 }
 
 /**
- * Default constructor for Airlift
+ * Default constructor for AirliftCardOrder
  */
-Airlift::Airlift() = default;
+AirliftCardOrder::AirliftCardOrder() = default;
 
 /**
- * Default destructor for Airlift
+ * Default destructor for AirliftCardOrder
  */
-Airlift::~Airlift() = default;
+AirliftCardOrder::~AirliftCardOrder() = default;
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Airlift::validate() const {
+bool AirliftCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -274,7 +274,7 @@ bool Airlift::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Airlift::execute() const {
+void AirliftCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -285,23 +285,23 @@ void Airlift::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Airlift::getOrderType() const {
+string AirliftCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Airlift - cloned object
+ * @return AirliftCardOrder - cloned object
  */
-Order* Airlift::clone() const {
-    return new Airlift(*this);
+Order* AirliftCardOrder::clone() const {
+    return new AirliftCardOrder(*this);
 }
 
 /**
  * Method returning order's effect
  * @return string
  */
-string Airlift::orderEffect() const {
+string AirliftCardOrder::orderEffect() const {
     return "Advance a certain number of army units from one from one territory (source) to another (target). (Requires card)";
 }
 
@@ -413,8 +413,6 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
 void OrdersList::add(Order* o) {
     // add new order to vector
     _ordersList.push_back(o);
-    // print new order list
-    cout << "Order added. Current list: \n" << *this << endl;
 }
 
 /**

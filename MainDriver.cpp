@@ -1,6 +1,7 @@
-#include"Map/Map.h"
+#include "Map/Map.h"
 #include "Map/MapDriver.h"
-#include "Player/PlayerDriver.h"
+#include "Cards/CardsDriver.h"
+//#include "Player/PlayerDriver.h"
 
 
 using namespace std;
@@ -11,13 +12,13 @@ int main()
 	//testLoadMaps();
 
     // Player
-    testPlayers();
+    //testPlayers();
 
     //Orders list
     //testOrdersLists();
 
     //Cards
-    // testCards();
+     testCards();
 
     //GameEngine
     //testGameStates();

@@ -1,23 +1,12 @@
-
 #include "Player.h"
-#include "Orders.h"
-
-
-
+#include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
 using namespace std;
-
-
-
-
 
 //defualt constructor
 Player::Player() {
-    int playerID = 0;
-    string name = "p1";
-    vector<Territory*> territories;
-    vector<Territory*> territoriesOwnedByPlayer; //territoriesOwned byPlayer
-    Hand* hand;
-    vector<OrdersList*> order_list;
+    this->hand = new Hand;
+    this->order_list = new OrdersList;
 }
 
 
@@ -34,7 +23,7 @@ Player::Player(int playerID, string name) {
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 
-Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, vector<OrdersList*> orders) {
+Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders) {
     this->playerID = playerID;
     this->name = name;
     this->territories = territories;
@@ -59,7 +48,7 @@ Player::Player(const Player& p){
 Player::~Player()
 {
     delete hand;
-    order_list.clear();
+    delete order_list;
     territoriesOwnedByPlayer.clear();
     name.clear();
 
@@ -91,13 +80,19 @@ vector<Territory*> Player:: toAttack(){
 
 }
 
+void Player::issueOrder(Order* o) {
+    if(o) {
+        this->order_list->add(o);
+    }
+}
+
 void Player:: issueOrder(Player* p){
     cout << p->name <<  " Adds order" << endl; //Indicate which player is issuing orders
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
-    Order* testBomb = new Bomb;
-    Order* testBlockade = new Blockade;
-    Order* testAirlift = new Airlift;
+    Order* testBomb = new BombCardOrder;
+    Order* testBlockade = new BlockadeCardOrder;
+    Order* testAirlift = new AirliftCardOrder;
     Order* testNegotiate = new Negotiate;
 
     OrdersList* ol = new OrdersList;
@@ -146,7 +141,7 @@ string Player:: getName(){
 Hand* Player::getHand(){
     return hand;
 }
-vector<OrdersList*> Player :: getPlayerOrderList(){
+OrdersList* Player :: getPlayerOrderList(){
     return order_list;
 }
 

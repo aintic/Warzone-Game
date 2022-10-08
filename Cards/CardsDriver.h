@@ -1,4 +1,3 @@
-#ifndef COMP_345_CARDSDRIVER_H
-#define COMP_345_CARDSDRIVER_H
+#pragma once
 void testCards();
-#endif //COMP_345_CARDSDRIVER_H
+

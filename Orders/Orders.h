@@ -2,11 +2,6 @@
 // Created by Alice on 2022-09-26.
 //
 
-#ifndef COMP_345_ORDERS_H
-#define COMP_345_ORDERS_H
-
-#endif //COMP_345_ORDERS_H
-
 #pragma once
 #include <iostream>
 #include <vector>
@@ -82,12 +77,12 @@ private:
     const static string _orderType;
 };
 
-class Bomb : public Order {
+class BombCardOrder : public Order {
 public:
     //constructor
-    Bomb();
+    BombCardOrder();
     // destructor
-    ~Bomb();
+    ~BombCardOrder();
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -104,12 +99,12 @@ private:
     const static string _orderType;
 };
 
-class Blockade : public Order {
+class BlockadeCardOrder : public Order {
 public:
     // constructor
-    Blockade();
+    BlockadeCardOrder();
     // destructor
-    ~Blockade();
+    ~BlockadeCardOrder();
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -126,12 +121,12 @@ private:
     const static string _orderType;
 };
 
-class Airlift : public Order {
+class AirliftCardOrder : public Order {
 public:
     // constructor
-    Airlift();
+    AirliftCardOrder();
     // destructor
-    ~Airlift();
+    ~AirliftCardOrder();
     // verifies if order is valid
     bool validate() const override;
     // execute order

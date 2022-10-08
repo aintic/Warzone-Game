@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "Map.h"
+#include "../Map/Map.h"
 #include "../Orders/Orders.h"
 
 
@@ -10,7 +10,7 @@ void testPlayers() {
     cout << "Executing testPlayers method" << endl;
 
     string name = "Hongsuk";
-    vector<OrdersList*> orders;
+    OrdersList* orders;
 
     vector<Territory*> territories;
     Hand* hand;
