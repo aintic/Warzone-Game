@@ -2,12 +2,6 @@
 // Created by Alice on 2022-09-26.
 //
 
-/**
- * To do:
- * assignment operators for Orders and OrdersList
- * comments
- */
-
 #include "Orders.h"
 
 using namespace std;
@@ -41,10 +35,19 @@ ostream& operator << (ostream& out,  const Order& o) {
     return out;
 }
 
+/**
+ * Assignment operator for Order
+ * @param o - Orders object
+ * @return Order object
+ */
 Order& Order::operator=(const Order& o) {
-
+    if (o.getOrderType() != getOrderType()) {
+        cout << "Assignment only valid for Orders of the same type." << endl;
+    }
+    else {
+        return *this;
+    }
 }
-
 
 /**
  * Default constructor for Deploy
@@ -407,9 +410,27 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
     return out;
 }
 
+/**
+ * Assignment operator for OrdersList
+ * @param ol - OrdersList object
+ * @return OrdersList object
+ */
+OrdersList& OrdersList::operator=(const OrdersList& ol) {
+    // free memory of original orders list
+    for (int i = 0; i < _ordersList.size(); i++) {
+        delete _ordersList[i];
+    }
 
-//OrdersList& OrdersList::operator=(const OrdersList& ol) {
-//}
+    // set list size equal to target orders list
+    _ordersList = vector<Order*>(ol._ordersList);
+
+    // clone deep copy of target orders list to original orders list
+    for (int i = 0; i < ol._ordersList.size(); i++) {
+        _ordersList[i] = ol._ordersList[i]->clone();
+    }
+
+    return *this;
+}
 
 /**
  * Method to add an order to the player's orders' list
