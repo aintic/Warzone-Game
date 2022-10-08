@@ -31,14 +31,14 @@ void testPlayers() {
     //Testing toDefend function
     cout << "print countires to be defended" << endl;
     for(Territory* t : p1->toDefend()){
-        cout << t->name << endl;
+        cout << t->get_name() << endl;
     }
 
 
     //Testing toAttack function
     cout << "print countires to be attacked" << endl;
     for(Territory* t : p1->toAttack()){
-        cout << t->name << endl;
+        cout << t->get_name() << endl;
     }
 
     //Testing issueOrder function
