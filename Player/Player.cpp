@@ -188,6 +188,9 @@ OrdersList* Player :: getPlayerOrderList(){
 vector<Territory*> Player::getTerritories(){
     return territories;
 }
+vector<Territory*> Player::getTerritoriesownbyplayer(){
+    return territoriesOwnedByPlayer;
+}
 
 //setters
 OrdersList* Player :: setPlayerOrderList(OrdersList* orders){

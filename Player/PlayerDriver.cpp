@@ -17,19 +17,24 @@ void testPlayers() {
     Hand* hand;
     Player* p1 = new Player(1, name, territories, hand, orders);
     Player* p2 = new Player();
+    Player* p3 = new Player(1, name, territories, hand, orders);
+
     vector<string> test;
 
 
     Territory *t1 = new Territory(1, "t1", "test", 1,2,test);
     Territory *t2 = new Territory(2, "t2", "test", 1,2,test);
     Territory *t3 = new Territory(3, "t3", "test", 1,2,test);
+    Territory *t4 = new Territory(4, "t4", "test", 1,2,test);
+    Territory *t5 = new Territory(5, "t5", "test", 1,2,test);
 
 
     p1->addTerritory(t1);
     p1->addTerritory(t2);
     p1->addTerritory(t3);
 
-
+    p3->addTerritory(t4);
+    p3->addTerritory(t5);
 
     //Testing toDefend function
     cout << "print countires to be defended" << endl;
@@ -44,8 +49,16 @@ void testPlayers() {
         cout << t->get_name() << endl;
     }
 
+    cout << "Printing countries that the player owns" << endl;
+    for(Territory* t : p3->getTerritoriesownbyplayer()){
+        cout << t->get_name() << endl;
+    }
+
     //Testing issueOrder function
+    cout << "Printing orders that the player issued" << endl;
     p1->issueOrder();
+    cout << *(p1->getPlayerOrderList()) << endl;
+
 
     cout << "Printing a hand of cards that the player owns" << endl;
 

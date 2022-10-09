@@ -82,6 +82,12 @@ public:
      * @return
      */
     OrdersList* setPlayerOrderList(OrdersList* orders);
+    /**
+     * getTerritoriesownbyplayer
+     * @return territories that ownsbyplayer
+     */
+    vector<Territory*> getTerritoriesownbyplayer();
+
 
 private:
     string name;
