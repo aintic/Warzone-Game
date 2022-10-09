@@ -711,7 +711,6 @@ Map* MapLoader::loadMap(string filePath) {
 
                     // Add territory to hashmap of territories in the continent that matches the name of the territory continent
                     continent_names_to_continents[continent_name]->add_territory(pair<int, Territory*>(territory_id, territory));
-                    std::cout << "4" << endl;
                     territory_id++;
                 }
             }
