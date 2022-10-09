@@ -11,9 +11,9 @@ void testOrdersList() {
     OrdersList* ol = new OrdersList;
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
-    Order* testBomb = new Bomb;
-    Order* testBlockade = new Blockade;
-    Order* testAirlift = new Airlift;
+    Order* testBomb = new BombCardOrder;
+    Order* testBlockade = new BlockadeCardOrder;
+    Order* testAirlift = new AirliftCardOrder;
     Order* testNegotiate = new Negotiate;
 
     // add orders

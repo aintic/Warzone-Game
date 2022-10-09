@@ -1,13 +1,7 @@
-
 #include "Player.h"
-#include "Orders.h"
-
-
-
+#include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
 using namespace std;
-
-
-
 
 
 /**
@@ -18,8 +12,8 @@ Player::Player() {
     this->name = "p1";
     this->territories = territories;
     this->territoriesOwnedByPlayer = territoriesOwnedByPlayer;
-    this->hand = hand;
-    this->order_list = order_list;
+    this->hand = new Hand;
+    this->order_list = new OrdersList;
 }
 /**
  * Constructor: Construct a new Player object
@@ -46,6 +40,10 @@ Player::Player(int playerID, string name) {
  * @param hand
  * @param orders
  */
+
+//Constructor with player id, territories, hand and orders
+//So, the player owns territories, owns hand cards and list of orders
+
 
 Player::Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders) {
     this->playerID = playerID;
@@ -116,17 +114,25 @@ vector<Territory*> Player:: toAttack(){
     return this->territoriesOwnedByPlayer;
 
 }
+
+void Player::issueOrder(Order* o) {
+    if(o) {
+        this->order_list->add(o);
+    }
+}
+
 /**
  * issueOrder: creates an order object and adds it to the list of orders
  * when an issue is created then Player object sets player's orderlist and it executes it
  * @param p
  */
 void Player:: issueOrder(){
+
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
-    Order* testBomb = new Bomb;
-    Order* testBlockade = new Blockade;
-    Order* testAirlift = new Airlift;
+    Order* testBomb = new BombCardOrder;
+    Order* testBlockade = new BlockadeCardOrder;
+    Order* testAirlift = new AirliftCardOrder;
     Order* testNegotiate = new Negotiate;
 
     OrdersList* ol = new OrdersList;

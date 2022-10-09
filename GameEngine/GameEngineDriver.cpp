@@ -24,7 +24,7 @@ void testGameStates(){
 
 
 
-int main()
-{
-    testGameStates();
-}
+//int main()
+//{
+//    testGameStates();
+//}

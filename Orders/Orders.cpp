@@ -6,12 +6,12 @@
 
 using namespace std;
 
-// set constant members
+// set constant members for subclasses
 const string Deploy::_orderType = "Deploy";
 const string Advance::_orderType = "Advance";
-const string Bomb::_orderType = "Bomb";
-const string Blockade::_orderType = "Blockade";
-const string Airlift::_orderType = "Airlift";
+const string BombCardOrder::_orderType = "Bomb";
+const string BlockadeCardOrder::_orderType = "Blockade";
+const string AirliftCardOrder::_orderType = "Airlift";
 const string Negotiate::_orderType = "Negotiate";
 
 /**
@@ -41,12 +41,8 @@ ostream& operator << (ostream& out,  const Order& o) {
  * @return Order object
  */
 Order& Order::operator=(const Order& o) {
-    if (o.getOrderType() != getOrderType()) {
-        cout << "Assignment only valid for Orders of the same type." << endl;
-    }
-    else {
-        return *this;
-    }
+    // no object data members, no cleanup or assignment necessary
+    return *this;
 }
 
 /**
@@ -58,6 +54,17 @@ Deploy::Deploy() = default;
  * Default destructor for Deploy
  */
 Deploy::~Deploy() = default;
+
+/**
+ * Stream insertion operator for Deploy
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Deploy& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string then returns true for a1
@@ -113,6 +120,17 @@ Advance::Advance() = default;
 Advance::~Advance() = default;
 
 /**
+ * Stream insertion operator for Advance
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Advance& o) {
+    out << o.getOrderType();
+    return out;
+}
+
+/**
  * Validate method - prints a string for a1
  * @return boolean
  */
@@ -156,20 +174,31 @@ string Advance::orderEffect() const {
 }
 
 /**
- * Default constructor for Bomb
+ * Default constructor for BombCardOrder
  */
-Bomb::Bomb() = default;
+BombCardOrder::BombCardOrder() = default;
 
 /**
- * Default destructor for Bomb
+ * Default destructor for BombCardOrder
  */
-Bomb::~Bomb() = default;
+BombCardOrder::~BombCardOrder() = default;
+
+/**
+ * Stream insertion operator for Bomb
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const BombCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Bomb::validate() const {
+bool BombCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -177,7 +206,7 @@ bool Bomb::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Bomb::execute() const {
+void BombCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -188,40 +217,51 @@ void Bomb::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Bomb::getOrderType() const {
+string BombCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Bomb - cloned object
+ * @return BombCardOrder - cloned object
  */
-Order* Bomb::clone() const {
-    return new Bomb(*this);
+Order* BombCardOrder::clone() const {
+    return new BombCardOrder(*this);
 }
 /**
  * Method returning order's effect
  * @return string
  */
-string Bomb::orderEffect() const {
+string BombCardOrder::orderEffect() const {
     return "Destroy half of the army units located on a target territory. (Requires card)";
 }
 
 /**
- * Default constructor for Blockade
+ * Default constructor for BlockadeCardOrder
  */
-Blockade::Blockade() = default;
+BlockadeCardOrder::BlockadeCardOrder() = default;
 
 /**
- * Default destructor for Blockade
+ * Default destructor for BlockadeCardOrder
  */
-Blockade::~Blockade() = default;
+BlockadeCardOrder::~BlockadeCardOrder() = default;
+
+/**
+ * Stream insertion operator for Blockade
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const BlockadeCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Blockade::validate() const {
+bool BlockadeCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -229,7 +269,7 @@ bool Blockade::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Blockade::execute() const {
+void BlockadeCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -240,41 +280,52 @@ void Blockade::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Blockade::getOrderType() const {
+string BlockadeCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Blockade - cloned object
+ * @return BlockadeCardOrder - cloned object
  */
-Order* Blockade::clone() const {
-    return new Blockade(*this);
+Order* BlockadeCardOrder::clone() const {
+    return new BlockadeCardOrder(*this);
 }
 
 /**
  * Method returning order's effect
  * @return string
  */
-string Blockade::orderEffect() const {
+string BlockadeCardOrder::orderEffect() const {
     return "Triple the number of army units on a target territory and make it neutral. (Requires card)";
 }
 
 /**
- * Default constructor for Airlift
+ * Default constructor for AirliftCardOrder
  */
-Airlift::Airlift() = default;
+AirliftCardOrder::AirliftCardOrder() = default;
 
 /**
- * Default destructor for Airlift
+ * Default destructor for AirliftCardOrder
  */
-Airlift::~Airlift() = default;
+AirliftCardOrder::~AirliftCardOrder() = default;
+
+/**
+ * Stream insertion operator for Airlift
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const AirliftCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
  * @return boolean
  */
-bool Airlift::validate() const {
+bool AirliftCardOrder::validate() const {
     cout << "Validating order. \n";
     return true;
 }
@@ -282,7 +333,7 @@ bool Airlift::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Airlift::execute() const {
+void AirliftCardOrder::execute() const {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -293,23 +344,23 @@ void Airlift::execute() const {
  * Getter for order type
  * @return constant string for type of order
  */
-string Airlift::getOrderType() const {
+string AirliftCardOrder::getOrderType() const {
     return _orderType;
 }
 
 /**
  * Clone method - invokes default copy constructor since there is no object data member
- * @return Airlift - cloned object
+ * @return AirliftCardOrder - cloned object
  */
-Order* Airlift::clone() const {
-    return new Airlift(*this);
+Order* AirliftCardOrder::clone() const {
+    return new AirliftCardOrder(*this);
 }
 
 /**
  * Method returning order's effect
  * @return string
  */
-string Airlift::orderEffect() const {
+string AirliftCardOrder::orderEffect() const {
     return "Advance a certain number of army units from one from one territory (source) to another (target). (Requires card)";
 }
 
@@ -322,6 +373,17 @@ Negotiate::Negotiate() = default;
  * Default destructor for Negotiate
  */
 Negotiate::~Negotiate() = default;
+
+/**
+ * Stream insertion operator for Negotiate
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Negotiate& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
@@ -390,7 +452,6 @@ OrdersList::OrdersList(const OrdersList& ol) {
     int size = ol._ordersList.size();
 
     _ordersList = vector<Order*>(size);
-
     for (int i = 0; i < size; i++) {
         _ordersList[i] = ol._ordersList[i]->clone();
     }
@@ -416,16 +477,20 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
  * @return OrdersList object
  */
 OrdersList& OrdersList::operator=(const OrdersList& ol) {
+    // check self-assignment
+    if (this == &ol)
+        return *this;
+
     // free memory of original orders list
     for (int i = 0; i < _ordersList.size(); i++) {
         delete _ordersList[i];
     }
 
+    int size = ol._ordersList.size();
     // set list size equal to target orders list
-    _ordersList = vector<Order*>(ol._ordersList);
-
+    _ordersList = vector<Order*>(size);
     // clone deep copy of target orders list to original orders list
-    for (int i = 0; i < ol._ordersList.size(); i++) {
+    for (int i = 0; i < size; i++) {
         _ordersList[i] = ol._ordersList[i]->clone();
     }
 
@@ -500,7 +565,7 @@ void OrdersList::executeList() {
         }
         // remove all elements from vector (now size 0)
         _ordersList.clear();
-        // print new order list
+        // print end of execution
         cout << "\nExecuted all orders. List is now empty." << endl;
     }
 }

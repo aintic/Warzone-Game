@@ -2,11 +2,6 @@
 // Created by Alice on 2022-09-26.
 //
 
-#ifndef COMP_345_ORDERS_H
-#define COMP_345_ORDERS_H
-
-#endif //COMP_345_ORDERS_H
-
 #pragma once
 #include <iostream>
 #include <vector>
@@ -44,6 +39,8 @@ public:
     Deploy();
     // destructor
     ~Deploy();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Deploy& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -66,6 +63,8 @@ public:
     Advance();
     // destructor
     ~Advance();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Advance& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -82,12 +81,15 @@ private:
     const static string _orderType;
 };
 
-class Bomb : public Order {
+class BombCardOrder : public Order {
 public:
     //constructor
-    Bomb();
+    BombCardOrder();
     // destructor
-    ~Bomb();
+    ~BombCardOrder();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const BombCardOrder& o);
+
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -104,12 +106,14 @@ private:
     const static string _orderType;
 };
 
-class Blockade : public Order {
+class BlockadeCardOrder : public Order {
 public:
     // constructor
-    Blockade();
+    BlockadeCardOrder();
     // destructor
-    ~Blockade();
+    ~BlockadeCardOrder();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const BlockadeCardOrder& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -126,12 +130,14 @@ private:
     const static string _orderType;
 };
 
-class Airlift : public Order {
+class AirliftCardOrder : public Order {
 public:
     // constructor
-    Airlift();
+    AirliftCardOrder();
     // destructor
-    ~Airlift();
+    ~AirliftCardOrder();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const AirliftCardOrder& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -154,6 +160,8 @@ public:
     Negotiate();
     // destructor
     ~Negotiate();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Negotiate& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -189,7 +197,7 @@ public:
     void move(int, int);
     // remove an order at specified position
     void remove(int);
-    // execute orders in list then delete order from list sequentially
+    // execute then delete orders from list sequentially
     void executeList();
 
 private:
