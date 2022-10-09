@@ -44,6 +44,8 @@ public:
     Deploy();
     // destructor
     ~Deploy();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Deploy& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -66,6 +68,8 @@ public:
     Advance();
     // destructor
     ~Advance();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Advance& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -88,6 +92,8 @@ public:
     Bomb();
     // destructor
     ~Bomb();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Bomb& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -110,6 +116,8 @@ public:
     Blockade();
     // destructor
     ~Blockade();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Blockade& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -132,6 +140,8 @@ public:
     Airlift();
     // destructor
     ~Airlift();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Airlift& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -154,6 +164,8 @@ public:
     Negotiate();
     // destructor
     ~Negotiate();
+    // stream insertion operator
+    friend ostream& operator << (ostream& out,  const Negotiate& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -189,7 +201,7 @@ public:
     void move(int, int);
     // remove an order at specified position
     void remove(int);
-    // execute orders in list then delete order from list sequentially
+    // execute then delete orders from list sequentially
     void executeList();
 
 private:
