@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// set constant members
+// set constant members for subclasses
 const string Deploy::_orderType = "Deploy";
 const string Advance::_orderType = "Advance";
 const string BombCardOrder::_orderType = "Bomb";
@@ -41,12 +41,8 @@ ostream& operator << (ostream& out,  const Order& o) {
  * @return Order object
  */
 Order& Order::operator=(const Order& o) {
-    if (o.getOrderType() != getOrderType()) {
-        cout << "Assignment only valid for Orders of the same type." << endl;
-    }
-    else {
-        return *this;
-    }
+    // no object data members, no cleanup or assignment necessary
+    return *this;
 }
 
 /**
@@ -58,6 +54,17 @@ Deploy::Deploy() = default;
  * Default destructor for Deploy
  */
 Deploy::~Deploy() = default;
+
+/**
+ * Stream insertion operator for Deploy
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Deploy& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string then returns true for a1
@@ -113,6 +120,17 @@ Advance::Advance() = default;
 Advance::~Advance() = default;
 
 /**
+ * Stream insertion operator for Advance
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Advance& o) {
+    out << o.getOrderType();
+    return out;
+}
+
+/**
  * Validate method - prints a string for a1
  * @return boolean
  */
@@ -166,6 +184,17 @@ BombCardOrder::BombCardOrder() = default;
 BombCardOrder::~BombCardOrder() = default;
 
 /**
+ * Stream insertion operator for Bomb
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const BombCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
+
+/**
  * Validate method - prints a string for a1
  * @return boolean
  */
@@ -216,6 +245,17 @@ BlockadeCardOrder::BlockadeCardOrder() = default;
  * Default destructor for BlockadeCardOrder
  */
 BlockadeCardOrder::~BlockadeCardOrder() = default;
+
+/**
+ * Stream insertion operator for Blockade
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const BlockadeCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
@@ -271,6 +311,17 @@ AirliftCardOrder::AirliftCardOrder() = default;
 AirliftCardOrder::~AirliftCardOrder() = default;
 
 /**
+ * Stream insertion operator for Airlift
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const AirliftCardOrder& o) {
+    out << o.getOrderType();
+    return out;
+}
+
+/**
  * Validate method - prints a string for a1
  * @return boolean
  */
@@ -322,6 +373,17 @@ Negotiate::Negotiate() = default;
  * Default destructor for Negotiate
  */
 Negotiate::~Negotiate() = default;
+
+/**
+ * Stream insertion operator for Negotiate
+ * @param o - Orders object
+ * @param out - ostream object
+ * @return ostream object
+ */
+ostream& operator << (ostream& out,  const Negotiate& o) {
+    out << o.getOrderType();
+    return out;
+}
 
 /**
  * Validate method - prints a string for a1
@@ -390,7 +452,6 @@ OrdersList::OrdersList(const OrdersList& ol) {
     int size = ol._ordersList.size();
 
     _ordersList = vector<Order*>(size);
-
     for (int i = 0; i < size; i++) {
         _ordersList[i] = ol._ordersList[i]->clone();
     }
@@ -416,16 +477,20 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
  * @return OrdersList object
  */
 OrdersList& OrdersList::operator=(const OrdersList& ol) {
+    // check self-assignment
+    if (this == &ol)
+        return *this;
+
     // free memory of original orders list
     for (int i = 0; i < _ordersList.size(); i++) {
         delete _ordersList[i];
     }
 
+    int size = ol._ordersList.size();
     // set list size equal to target orders list
-    _ordersList = vector<Order*>(ol._ordersList);
-
+    _ordersList = vector<Order*>(size);
     // clone deep copy of target orders list to original orders list
-    for (int i = 0; i < ol._ordersList.size(); i++) {
+    for (int i = 0; i < size; i++) {
         _ordersList[i] = ol._ordersList[i]->clone();
     }
 
@@ -500,7 +565,7 @@ void OrdersList::executeList() {
         }
         // remove all elements from vector (now size 0)
         _ordersList.clear();
-        // print new order list
+        // print end of execution
         cout << "\nExecuted all orders. List is now empty." << endl;
     }
 }

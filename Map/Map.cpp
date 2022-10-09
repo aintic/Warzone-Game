@@ -565,7 +565,7 @@ void Map::validate(){
  */
 Map* MapLoader::loadMap(string filePath) {
 
-    std::cout << endl <<"Strating loadMap()..."<< endl;
+    std::cout << endl <<"Strating loadMap() for "<< filePath << endl;
     // file variables
 	ifstream file(filePath);
 	string line;
@@ -594,13 +594,12 @@ Map* MapLoader::loadMap(string filePath) {
 
     // file does not exist
     if(!file){
-        std::cout << endl << filePath << " does not exist."<< endl;
+        std::cout << endl << filePath << " REJECTED (file does not exist)"<< endl;
+        return nullptr;
     }
 
     // file exists
-    else{
-        std::cout << endl << filePath <<  " exist."<< endl;
-        
+    else{        
         // read each line while it exists
         //
         // This is going to be the first iteration. In this iteration, a list of territories 
@@ -657,7 +656,7 @@ Map* MapLoader::loadMap(string filePath) {
                 if (!(line.find(territory_delimiter) != std::string::npos)) { // skip line if does not have the territory delimiter
                     continue;
                 }
-
+                
                 else {
                     // get territory name and calculate delimiter index
                     int index_after_last_delimiter = 0;
@@ -668,6 +667,7 @@ Map* MapLoader::loadMap(string filePath) {
                     string x = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
                     index_after_last_delimiter += x.length() + territory_delimiter.length();
 
+
                     // get territory y coordinate and calculate delimiter index
                     string y = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter); 
                     index_after_last_delimiter += y.length() + territory_delimiter.length();
@@ -675,7 +675,7 @@ Map* MapLoader::loadMap(string filePath) {
                     // get territory continent name and calculate delimiter index
                     string continent_name = line.substr(index_after_last_delimiter, line.find(territory_delimiter, index_after_last_delimiter) - index_after_last_delimiter);
                     index_after_last_delimiter += continent_name.length() + territory_delimiter.length();
-
+                    
                     // get territory neighbours as a string
                     string line_neighbours = line.substr(index_after_last_delimiter); 
                     vector<string> neighbours_strings;
@@ -697,7 +697,6 @@ Map* MapLoader::loadMap(string filePath) {
 
                     // construct territory and add it to list
                     Territory* territory = new Territory(territory_id, territory_name, continent_name, stoi(x), stoi(y), neighbours_strings);
-
                     // add territory name and territory pointer to hashmap
                     // this will help with the linking of neighbours
                     territory_names_to_territories.insert(pair<string, Territory*>(territory_name, territory));
@@ -705,9 +704,13 @@ Map* MapLoader::loadMap(string filePath) {
                     // Add territories to the hashmap that will be added to the map object
                     territories.insert(pair<int, Territory*>(territory_id, territory));
 
+                    if(continent_names_to_continents.size() == 0){
+                        std::cout << endl << filePath << " REJECTED (file does not have continents)"<< endl;
+                        return nullptr;
+                    }
+
                     // Add territory to hashmap of territories in the continent that matches the name of the territory continent
                     continent_names_to_continents[continent_name]->add_territory(pair<int, Territory*>(territory_id, territory));
-
                     territory_id++;
                 }
             }
@@ -744,6 +747,6 @@ Map* MapLoader::loadMap(string filePath) {
 
     // If file does not exists, return an empty map, otherwise return map with parsed information
     Map* map_result = new Map(filePath, continents, territories);
-    std::cout << endl << "Finished loadMap()!" << endl << endl;
+    std::cout << endl << "Successfully created a map object for "<< filePath << endl << endl;
     return map_result;
 }

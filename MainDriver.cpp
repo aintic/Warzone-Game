@@ -7,7 +7,6 @@
 
 
 
-
 using namespace std;
 
 int main()
@@ -19,10 +18,10 @@ int main()
     //testPlayers();
 
     //Orders list
-    //testOrdersLists();
+    testOrdersList();
 
     //Cards
-    testCards();
+    //testCards();
 
     //GameEngine
     //testGameStates();
