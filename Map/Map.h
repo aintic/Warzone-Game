@@ -280,7 +280,6 @@ class Map
  */
 class MapLoader
 {
-	
     public:
 	/**
 	 * @brief Load map
