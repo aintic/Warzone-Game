@@ -689,8 +689,11 @@ Map* MapLoader::loadMap(string filePath) {
                         neighbours_strings.push_back(neighbour);
                     }
 
-                    // remove last empty character
-                    line_neighbours = line_neighbours.substr(0, line_neighbours.length()-1);
+                    // remove last empty character if it is the carriage return, represented by 13 in ascii
+                    if ((int)line_neighbours[line_neighbours.length() - 1] == 13){
+                        line_neighbours = line_neighbours.substr(0, line_neighbours.length()-1);
+                    }
+            
                     
                     // Add last neighbour
                     neighbours_strings.push_back(line_neighbours);
