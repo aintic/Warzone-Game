@@ -8,37 +8,88 @@
 using namespace std;
 
 class Hand;
-//Order class just for testing
 
 
 class Player{
 
-    public:
-        Player();
-        Player(int playerID, string name);
-        Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders);
-        Player(const Player& p); //copy constructor
-        ~Player(); //desturctor
-        Player& operator=(const Player& p); //assignment operator
-        int getPlayerID();
-        OrdersList* getPlayerOrderList();
-        Hand* getHand();
-        string getName();
-        vector<Territory*> getTerritories();
-        vector<Territory*> toDefend();
-        vector<Territory*> toAttack();
-        void issueOrder(Player *p);
-        void issueOrder(Order* o);
-        void addTerritory(Territory* territory);
+public:
+    /**
+     * default constructor
+     */
+    Player();
+    /**
+     * Player constructor: creates a Player object
+     * @param playerID
+     * @param name
+     */
+    Player(int playerID, string name);
 
+    /**
+     * Player constructor: creates a Player object
+     * @param playerID
+     * @param name
+     * @param territories
+     * @param hand
+     * @param orders
+     */
+    Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders);
+    /**
+     * copy constructor
+     * @param p
+     */
+    Player(const Player& p);
+    /**
+     * destructor
+     */
+    ~Player(); //desturctor
+    /**
+     * assignment operator
+     * @param p
+     * @return &Player
+     */
+    Player& operator=(const Player& p);
+    /**
+     * getters
+     * @return
+     */
+    int getPlayerID();
+    OrdersList* getPlayerOrderList();
+    Hand* getHand();
+    string getName();
+    vector<Territory*> getTerritories();
+    /**
+     * toDefend: return a list of territories to be defended
+     * @return vector<Territory*>
+     */
+    vector<Territory*> toDefend();
+    /**
+     * toAttack: return a list of territories to be attacked
+     * @return vector<Territory*>
+     */
+    vector<Territory*> toAttack();
+    /**
+     * issueOrder : crates an order object and Player object sets its orderlist
+     * @param p
+     */
+    void issueOrder();
+    void issueOrder(Order* o);
+    /**
+     * addTerritory: adds player's territories
+     * @param territory
+     */
+    void addTerritory(Territory* territory);
+    /**
+     * setters
+     * @param orders
+     * @return
+     */
+    OrdersList* setPlayerOrderList(OrdersList* orders);
 
 private:
-        string name;
-        Hand* hand;
-        vector<Territory*> territories; // List of owned territories
-        vector<Territory*> territoriesOwnedByPlayer;
-        OrdersList* order_list;
-        int reinforcement; // Number of armies in the reinforcement pool
-        //PlayerStrategy* ps; // Pointer to a player strategy
-        int playerID;
+    string name;
+    Hand* hand;
+    vector<Territory*> territories; // List of owned territories
+    vector<Territory*> territoriesOwnedByPlayer;
+    OrdersList* order_list;
+    int playerID;
 };

@@ -16,7 +16,7 @@ public:
     virtual ~Order() = 0;
     // assignment operator
     Order& operator = (const Order& o);
-    // string insertion operator
+    // stream insertion operator
     friend ostream& operator << (ostream& out,  const Order& o);
 
     // verifies if order is valid
@@ -175,7 +175,7 @@ public:
     ~OrdersList();
     // assignment operator
     OrdersList& operator = (const OrdersList& ol);
-    // string insertion operator
+    // stream insertion operator
     friend ostream& operator << (ostream& out, const OrdersList& ol);
 
     // add order to list

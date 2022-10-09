@@ -6,17 +6,24 @@ using std::cout;
 using std::endl;
 
 void testCards(){
+/**
+* Initialize Deck with 3 cards of each type
+*/
     cout << "Initialize deck with 3 cards of each type:"  << endl;
 
     Deck d;
-    cout << d << endl;
-
+    cout << d << endl; // print deck
+/**
+* Create 3 players
+*/
     cout << "Create 3 players and randomly draw 5 cards each:" << endl;
 
     Player p1;
     Player p2;
     Player p3;
-
+/**
+* Each player draws 3 cards from the deck
+*/
     while(!d.isEmpty()){
         if(!d.isEmpty()){
             cout << "Player 1 draws: " << *d.draw(p1) << endl;
@@ -29,6 +36,9 @@ void testCards(){
         }
     }
 
+/**
+* Display cards in each player's hand
+*/
     cout << "\nPlayer 1 Hand: " << endl;
     cout << *p1.getHand() << "\n" << endl;
 
@@ -38,8 +48,14 @@ void testCards(){
     cout << "Player 3 Hand: " << endl;
     cout << *p3.getHand() << "\n" << endl;
 
+/**
+* Display contents of now empty deck
+*/
     cout << d << endl;
 
+/**
+* Play all 5 cards in each player's hand
+*/
     cout << "Play all 5 cards in each player's hand:" << endl;
 
     for (Card* c : p1.getHand()->getCards()){
@@ -53,7 +69,9 @@ void testCards(){
     }
 
 
-
+/**
+* Display contents of each player's now empty hand
+*/
     cout << "Player 1 Hand: " << endl;
     cout << *p1.getHand() << endl;
 
@@ -63,6 +81,9 @@ void testCards(){
     cout << "Player 3 Hand: " << endl;
     cout << *p3.getHand() << endl;
 
+/**
+* Display each player's orders list
+*/
     cout << "\nPlayer 1 Orders List:" << endl;
     cout << *p1.getPlayerOrderList();
     cout << "\nPlayer 2 Orders List:" << endl;
@@ -70,11 +91,9 @@ void testCards(){
     cout << "\nPlayer 3 Orders List:" << endl;
     cout << *p3.getPlayerOrderList();
 
+/**
+* Display now full deck
+*/
     cout << "\n"<< d;
 }
 
-//int main()
-//{
-//    testCards();
-//    return 0;
-//}

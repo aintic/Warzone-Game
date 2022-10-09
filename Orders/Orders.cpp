@@ -2,12 +2,6 @@
 // Created by Alice on 2022-09-26.
 //
 
-/**
- * To do:
- * assignment operators for Orders and OrdersList
- * comments
- */
-
 #include "Orders.h"
 
 using namespace std;
@@ -39,6 +33,20 @@ Order::~Order() = default;
 ostream& operator << (ostream& out,  const Order& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Assignment operator for Order
+ * @param o - Orders object
+ * @return Order object
+ */
+Order& Order::operator=(const Order& o) {
+    if (o.getOrderType() != getOrderType()) {
+        cout << "Assignment only valid for Orders of the same type." << endl;
+    }
+    else {
+        return *this;
+    }
 }
 
 /**
@@ -402,9 +410,27 @@ ostream& operator << (ostream& out, const OrdersList& ol) {
     return out;
 }
 
+/**
+ * Assignment operator for OrdersList
+ * @param ol - OrdersList object
+ * @return OrdersList object
+ */
+OrdersList& OrdersList::operator=(const OrdersList& ol) {
+    // free memory of original orders list
+    for (int i = 0; i < _ordersList.size(); i++) {
+        delete _ordersList[i];
+    }
 
-//OrdersList& OrdersList::operator=(const OrdersList& ol) {
-//}
+    // set list size equal to target orders list
+    _ordersList = vector<Order*>(ol._ordersList);
+
+    // clone deep copy of target orders list to original orders list
+    for (int i = 0; i < ol._ordersList.size(); i++) {
+        _ordersList[i] = ol._ordersList[i]->clone();
+    }
+
+    return *this;
+}
 
 /**
  * Method to add an order to the player's orders' list
@@ -431,8 +457,6 @@ void OrdersList::remove(int pos) {
         delete _ordersList[pos-1];
         // resize vector
         _ordersList.erase(_ordersList.begin()+pos-1);
-        // print new order list
-        cout << "Order deleted. Current list: \n" << *this <<endl;
     }
 }
 
@@ -457,8 +481,6 @@ void OrdersList::move(int currentPos, int newPos) {
         _ordersList[currentPos-1] = _ordersList[newPos-1];
         // move the order at current position to target position
         _ordersList[newPos-1] = temp;
-        // print new order list
-        cout << "Orders swapped. Current list: \n" << *this <<endl;
     }
 }
 

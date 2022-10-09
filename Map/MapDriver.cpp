@@ -16,10 +16,19 @@ void testLoadMaps(){
 	}
 
 	for(Map* map: maps){
+		std::cout<< *map << endl;
+	}
+
+	for(Map* map: maps){
 		map->validate();
 	}
 
 	//TODO: reject invalid map files
-	// TODO: delete maps
+
+	// free up memory by deleting the map
+	for(Map* map: maps){
+		delete map;
+		map = NULL;
+	}
 
 }
