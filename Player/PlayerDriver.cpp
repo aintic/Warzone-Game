@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
 
 
 using namespace std;
@@ -28,6 +29,8 @@ void testPlayers() {
     p1->addTerritory(t2);
     p1->addTerritory(t3);
 
+
+
     //Testing toDefend function
     cout << "print countires to be defended" << endl;
     for(Territory* t : p1->toDefend()){
@@ -43,6 +46,27 @@ void testPlayers() {
 
     //Testing issueOrder function
     p1->issueOrder();
+
+    cout << "Printing a hand of cards that the player owns" << endl;
+
+    BlockadeCard* block = new BlockadeCard();
+    ReinforcementCard* reinforce = new ReinforcementCard();
+    BombCard* b = new BombCard();
+    AirliftCard* a = new AirliftCard();
+    DiplomacyCard* d = new DiplomacyCard();
+
+
+    Hand* h1 = p2->getHand();
+
+    h1->addCard(block);
+    h1->addCard(reinforce);
+    h1->addCard(b);
+    h1->addCard(a);
+    h1->addCard(d);
+
+    for(Card* c : h1->getCards()){
+        cout << c->getCardType() << endl;
+    }
 
 
     //delete pointers
