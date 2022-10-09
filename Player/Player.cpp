@@ -92,10 +92,9 @@ Player& Player::operator=(const Player& p){
     playerID = p.playerID;
     name = p.name;
     territories = p.territories;
-    hand = p.hand;
-    order_list = p.order_list;
+    //hand to be deep copied after merging card class
+    order_list = new OrdersList(*(p.order_list));
     territoriesOwnedByPlayer = p.territoriesOwnedByPlayer;
-
     return *this;
     }
 
@@ -122,8 +121,7 @@ vector<Territory*> Player:: toAttack(){
  * when an issue is created then Player object sets player's orderlist and it executes it
  * @param p
  */
-void Player:: issueOrder(Player* p){
-    cout << p->name <<  " Adds order" << endl; //Indicate which player is issuing orders
+void Player:: issueOrder(){
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
     Order* testBomb = new Bomb;
@@ -141,12 +139,11 @@ void Player:: issueOrder(Player* p){
     ol->add(testBlockade);
     ol->add(testAirlift);
     ol->add(testNegotiate);
-    cout << "ExecuteList" << endl;
+
     //ol->executeList();
 
-    setPlayerOrderList(ol);
+    setPlayerOrderList(ol); //set orderlist
 
-    p->order_list->executeList(); //it executes each player's orderlist
 }
 /**
  * addTerritory: it adds territories to each object

@@ -74,7 +74,7 @@ class Player{
          * issueOrder : crates an order object and Player object sets its orderlist
          * @param p
          */
-        void issueOrder(Player *p);
+        void issueOrder();
         /**
          * addTerritory: adds player's territories
          * @param territory

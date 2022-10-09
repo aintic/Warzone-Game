@@ -42,7 +42,7 @@ void testPlayers() {
     }
 
     //Testing issueOrder function
-    p1->issueOrder(p1);
+    p1->issueOrder();
 
 
     //delete pointers
