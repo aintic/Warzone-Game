@@ -80,6 +80,12 @@ BombCard::BombCard() : Card(){}
 BombCard::BombCard(const BombCard& b) : Card(b){}
 
 /**
+ * Default destructor for BombCard
+ * No dynamically allocated memory
+ */
+BombCard::~BombCard() = default;
+
+/**
  * BombCard Class clone method
  * Calls copy constructor to dynamically return copy
  */
@@ -116,6 +122,11 @@ ReinforcementCard::ReinforcementCard() : Card(){}
 ReinforcementCard::ReinforcementCard(const ReinforcementCard& r) : Card(r){}
 
 /**
+ * Default destructor for ReinforcementCard
+ * No dynamically allocated memory
+ */
+ReinforcementCard::~ReinforcementCard() = default;
+/**
  * ReinforcementCard Class clone method
  * Calls copy constructor to dynamically return copy
  */
@@ -151,6 +162,12 @@ BlockadeCard::BlockadeCard() : Card(){}
  * Calls Card copy constructor to initialize id member
  */
 BlockadeCard::BlockadeCard(const BlockadeCard& b) : Card(b){}
+
+/**
+ * Default destructor for BlockadeCard
+ * No dynamically allocated memory
+ */
+BlockadeCard::~BlockadeCard() = default;
 
 /**
  * BlockadeCard Class clone method
@@ -191,6 +208,12 @@ AirliftCard::AirliftCard() : Card(){}
 AirliftCard::AirliftCard(const AirliftCard& a) : Card(a){}
 
 /**
+ * Default destructor for AirliftCard
+ * No dynamically allocated memory
+ */
+AirliftCard::~AirliftCard() = default;
+
+/**
  * AirliftCard Class clone method
  * Calls copy constructor to dynamically return copy
  */
@@ -227,6 +250,12 @@ DiplomacyCard::DiplomacyCard() : Card(){}
  * Calls Card copy constructor to initialize id member
  */
 DiplomacyCard::DiplomacyCard(const DiplomacyCard& d) : Card(d){}
+
+/**
+ * Default destructor for DiplomacyCard
+ * No dynamically allocated memory
+ */
+DiplomacyCard::~DiplomacyCard() = default;
 
 /**
  * DiplomacyCard Class clone method

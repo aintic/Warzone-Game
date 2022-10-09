@@ -42,6 +42,8 @@ public:
     BombCard();
     // Copy Constructor
     BombCard(const BombCard& b);
+    // Destructor
+    ~BombCard();
     // Clone method for dynamic copies
     Card* clone();
     // Play method to return corresponding order
@@ -59,6 +61,8 @@ public:
     ReinforcementCard();
     // Copy Constructor
     ReinforcementCard(const ReinforcementCard& r);
+    // Destructor
+    ~ReinforcementCard();
     // Clone method for dynamic copies
     Card* clone();
     // Play method to return corresponding order
@@ -76,6 +80,8 @@ public:
     BlockadeCard();
     // Copy Constructor
     BlockadeCard(const BlockadeCard& b);
+    // Destructor
+    ~BlockadeCard();
     // Clone method for dynamic copies
     Card* clone();
     // Play method to return corresponding order
@@ -93,6 +99,8 @@ public:
     AirliftCard();
     // Copy Constructor
     AirliftCard(const AirliftCard& a);
+    // Destructor
+    ~AirliftCard();
     // Clone method for dynamic copies
     Card* clone();
     // Play method to return corresponding order
@@ -110,6 +118,8 @@ public:
     DiplomacyCard();
     // Copy Constructor
     DiplomacyCard(const DiplomacyCard& d);
+    // Destructor
+    ~DiplomacyCard();
     // Clone method for dynamic copies
     Card* clone();
     // Play method to return corresponding order
