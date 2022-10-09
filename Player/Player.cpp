@@ -3,16 +3,15 @@
 #include "../Cards/Cards.h"
 using namespace std;
 
-
 /**
  * Default constructor for Player
  **/
 Player::Player() {
-    this->playerID = 0;
-    this->name = "p1";
-    this->territories = territories;
-    this->territoriesOwnedByPlayer = territoriesOwnedByPlayer;
-    this->hand = new Hand;
+    int playerID;
+    string name;
+    vector<Territory*> territories;
+    vector<Territory*> territoriesOwnedByPlayer;
+    this->hand = new Hand();
     this->order_list = new OrdersList;
 }
 /**
@@ -25,10 +24,10 @@ Player::Player() {
 Player::Player(int playerID, string name) {
     this->playerID = playerID;
     this->name = name;
-    this->territories = territories;
-    this->territoriesOwnedByPlayer = territoriesOwnedByPlayer;
-    this->hand = hand;
-    this->order_list = order_list;
+    vector<Territory*> territories;
+    vector<Territory*> territoriesOwnedByPlayer;
+    this->hand = new Hand();
+    this->order_list = new OrdersList();
 }
 
 /**
@@ -63,8 +62,8 @@ Player::Player(const Player& p){
         playerID = p.playerID;
         name = p.name;
         territories = p.territories;
-        hand = p.hand;
-        order_list = p.order_list;
+        this->hand = new Hand(*(p.hand));
+        this->order_list = new OrdersList(*(p.order_list));
         territoriesOwnedByPlayer = p.territoriesOwnedByPlayer;
     }
 
@@ -90,8 +89,8 @@ Player& Player::operator=(const Player& p){
     playerID = p.playerID;
     name = p.name;
     territories = p.territories;
-    //hand to be deep copied after merging card class
-    order_list = new OrdersList(*(p.order_list));
+    this->hand = new Hand(*(p.hand));
+    this->order_list = new OrdersList(*(p.order_list));
     territoriesOwnedByPlayer = p.territoriesOwnedByPlayer;
     return *this;
     }

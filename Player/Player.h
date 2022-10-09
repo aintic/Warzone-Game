@@ -3,12 +3,10 @@
 #include <vector>
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
-//#include "../Cards/Cards.h"
 
 using namespace std;
 
 class Hand;
-
 
 class Player{
 
