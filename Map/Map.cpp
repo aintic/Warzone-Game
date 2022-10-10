@@ -560,8 +560,56 @@ void Map::validate(){
     }
 }
 
+//
+//MAP LOADER CLASS
+//
+
+
 /**
- * @brief Load Map implementation
+ * @brief Constructor: Construct a new Map Loader object
+ *
+ */
+MapLoader::MapLoader(){
+}
+
+/**
+ * @brief Copy constructor: Construct a new MapLoader object
+ * @param m
+ */
+MapLoader::MapLoader(const MapLoader &m){
+}
+
+/**
+ * @brief Destructor: Destroy the Map Loader object
+ *
+ */
+MapLoader::~MapLoader(){
+}
+
+/**
+ * @brief Stream insertion operator
+ *
+ * @param stream
+ * @param m
+ * @return ostream&
+ */
+ostream& operator <<(ostream& stream, const MapLoader& c){
+    stream << " MapLoader" << endl;
+    return stream;
+}
+
+/**
+ * @brief Assignment operator
+ *
+ * @param t
+ * @return MapLoader&
+ */
+MapLoader& MapLoader::operator=(const MapLoader& t){
+    return *this;
+}
+
+/**
+ * @brief Load Map implementation that reads a txt file
  * 
  * @param filePath 
  * @return Map* 
