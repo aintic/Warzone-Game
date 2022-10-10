@@ -535,13 +535,13 @@ Deck& Deck::operator=(const Deck &d){
 */
 ostream& operator <<(ostream& os, Deck& d){
     os << "Deck: " << endl;
-        if (d.getCards().empty()){
-            os << "deck is empty" << endl;
-        } else{
-
+    if (d.getCards().empty()){
+        os << "deck is empty" << endl;
+    }
+    else{
         for (Card* c : d.getCards()) {
             os << *c << endl;
         }
-        return os;
     }
+    return os;
 }

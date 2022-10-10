@@ -126,6 +126,7 @@ ostream& operator<<(ostream& stream, const startupState& s){
     else if(s.step == 4){
         return stream << "\nYou have entered an invalid command for the '" << s.getStateName() << "' state..." << endl;
     }
+    return  stream;
 }
 
 ostream &operator<<(ostream &stream, const reinforcementState &s) {
