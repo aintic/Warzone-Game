@@ -72,6 +72,8 @@ public:
 private:
     const static string cardType;
 };
+// Stream insertion operator
+ostream& operator<<(ostream& os, ReinforcementCard& c);
 
 // Card Type Subclass
 class BlockadeCard : public Card{
@@ -91,6 +93,8 @@ public:
 private:
     const static string cardType;
 };
+// Stream insertion operator
+ostream& operator<<(ostream& os, BlockadeCard& c);
 
 // Card Type Subclass
 class AirliftCard : public Card{
@@ -110,6 +114,8 @@ public:
 private:
     const static string cardType;
 };
+// Stream insertion operator
+ostream& operator<<(ostream& os, AirliftCard& c);
 
 // Card Type Subclass
 class DiplomacyCard : public Card{
@@ -129,6 +135,8 @@ public:
 private:
     const static string cardType;
 };
+// Stream insertion operator
+ostream& operator<<(ostream& os, DiplomacyCard& c);
 
 // Deck Class
 class Deck

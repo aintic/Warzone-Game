@@ -106,6 +106,14 @@ string BombCard::getCardType() {
     return cardType;
 }
 
+/**
+ * Card stream insertion operator
+ * Prints id and cardType members
+ */
+ostream& operator<<(ostream& os, BombCard& c){
+    os << "card " << c.getId() << ": " << c.getCardType();
+    return os;
+}
 
 
 // ReinforcementCard Class
@@ -146,6 +154,14 @@ Order* ReinforcementCard::play(){
  */
 string ReinforcementCard::getCardType() {
     return cardType;
+}
+/**
+ * Card stream insertion operator
+ * Prints id and cardType members
+ */
+ostream& operator<<(ostream& os, ReinforcementCard& c){
+    os << "card " << c.getId() << ": " << c.getCardType();
+    return os;
 }
 
 
@@ -191,7 +207,14 @@ Order* BlockadeCard::play() {
 string BlockadeCard::getCardType() {
     return cardType;
 }
-
+/**
+ * Card stream insertion operator
+ * Prints id and cardType members
+ */
+ostream& operator<<(ostream& os, BlockadeCard& c){
+    os << "card " << c.getId() << ": " << c.getCardType();
+    return os;
+}
 
 
 // AirliftCardOrder Class
@@ -234,6 +257,14 @@ Order* AirliftCard::play() {
  */
 string AirliftCard::getCardType() {
     return cardType;
+}
+/**
+ * Card stream insertion operator
+ * Prints id and cardType members
+ */
+ostream& operator<<(ostream& os, AirliftCard& c){
+    os << "card " << c.getId() << ": " << c.getCardType();
+    return os;
 }
 
 
@@ -279,7 +310,14 @@ Order* DiplomacyCard::play() {
 string DiplomacyCard::getCardType() {
     return cardType;
 }
-
+/**
+ * Card stream insertion operator
+ * Prints id and cardType members
+ */
+ostream& operator<<(ostream& os, DiplomacyCard& c){
+    os << "card " << c.getId() << ": " << c.getCardType();
+    return os;
+}
 
 
 
