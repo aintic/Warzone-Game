@@ -3,12 +3,10 @@
 #include <vector>
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
-//#include "../Cards/Cards.h"
 
 using namespace std;
 
 class Hand;
-
 
 class Player{
 
@@ -84,6 +82,12 @@ public:
      * @return
      */
     OrdersList* setPlayerOrderList(OrdersList* orders);
+    /**
+     * getTerritoriesownbyplayer
+     * @return territories that ownsbyplayer
+     */
+    vector<Territory*> getTerritoriesownbyplayer();
+
 
 private:
     string name;

@@ -1,0 +1,18 @@
+[Map]
+author=
+image=NotConnectedGraph.bmp
+wrap=yes
+scroll=none
+warn=yes
+
+[Continents]
+Continent One=4
+Continent Two=2
+
+[Territories]
+TerritoryA,698,308,Continent One,TerritoryD
+TerritoryB,768,321,Continent Two,TerritoryC
+TerritoryC,730,370,Continent Two,TerritoryB
+TerritoryD,773,373,Continent One,TerritoryA
+TerritoryE,644,451,Continent One,TerritoryF
+TerritoryF!,259,247,Continent One,TerritoryE

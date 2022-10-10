@@ -16,7 +16,7 @@
 using namespace std;
 
 //*****************************************************************
-// Territory
+// Territory: Represents the territory of a map (node of the graph)
 
 /**
  * @brief Constructor: Construct a new Territory:: Territory object
@@ -187,7 +187,7 @@ void Territory::set_neighbours(vector<Territory*> neighbours){
 
 
 //*****************************************************************
-// Continent
+// Continent: represents the continent of a map. Is a connected subgraph of a map.
 
 /**
  * @brief Constructor: Construct a new Continent:: Continent object
@@ -314,7 +314,7 @@ void Continent::add_territory(pair< int, Territory*> pair)
 
 
 //*****************************************************************
-// Map
+// Map: is a connected graph representing a collection of territor
 
 /**
  * @brief Constructor: Construct a new Map:: Map object
@@ -430,7 +430,7 @@ void Map::set_continents(map<int, Continent*> continents)
  */
 void Map::validate(){
 
-    std::cout<< "Starting validate()..."<< endl <<endl;
+    std::cout<< "Starting validate() for "<< this->get_name()<< endl <<endl;
     // (1) Map is connected subgraph
     
     // To confirm that the map is a connected graph we start with the first territory in 
@@ -553,8 +553,16 @@ void Map::validate(){
         std:: cout<< "(3) Not each of the territory belongs to one and only one continent." << endl;
     }
 
-    std::cout << endl << "Finished validate()!"<< endl <<endl;
+    bool valid = territory_belong_to_one_continent && map_is_connected_graph && continents_are_connected_graphs;
 
+    if (valid){
+        std::cout << endl << this->get_name() << " is VALID "<< endl <<endl;
+        this->valid = true;
+    }
+    else{
+        std::cout << endl << this->get_name() << " is INVALID "<< endl <<endl;
+        this->valid = false;
+    }
 }
 
 /**
@@ -565,7 +573,7 @@ void Map::validate(){
  */
 Map* MapLoader::loadMap(string filePath) {
 
-    std::cout << endl <<"Strating loadMap() for "<< filePath << endl;
+    std::cout << endl <<"Starting loadMap() for "<< filePath << endl;
     // file variables
 	ifstream file(filePath);
 	string line;
@@ -613,21 +621,18 @@ Map* MapLoader::loadMap(string filePath) {
             // flag parsing continent
             if(line.find("[Continents]") != std::string::npos) {
                 parsing_continents = true;
-                std:: cout << "Parsing Continents..." << endl; 
             }
 
             // flag parsing territories
             if(line.find("[Territories]") != std::string::npos) {
                 parsing_continents = false;
                 parsing_territories = true;
-                std:: cout << "Parsing Territories..." << endl; 
             }
 
             // Parse continents
             if (parsing_continents && !(line.find("[Continents]") != std::string::npos)) {                
 
                 if (!(line.find(continent_delimiter) != std::string::npos)) { // skip line if does not have the continent delimiter
-                    std::cout << "Continent section finished!" << endl;
                     continue;
                 }
                 
@@ -689,8 +694,11 @@ Map* MapLoader::loadMap(string filePath) {
                         neighbours_strings.push_back(neighbour);
                     }
 
-                    // remove last empty character
-                    line_neighbours = line_neighbours.substr(0, line_neighbours.length()-1);
+                    // remove last empty character if it is the carriage return, represented by 13 in ascii
+                    if ((int)line_neighbours[line_neighbours.length() - 1] == 13){
+                        line_neighbours = line_neighbours.substr(0, line_neighbours.length()-1);
+                    }
+            
                     
                     // Add last neighbour
                     neighbours_strings.push_back(line_neighbours);
@@ -705,7 +713,7 @@ Map* MapLoader::loadMap(string filePath) {
                     territories.insert(pair<int, Territory*>(territory_id, territory));
 
                     if(continent_names_to_continents.size() == 0){
-                        std::cout << endl << filePath << " REJECTED (file does not have continents)"<< endl;
+                        std::cout << endl << filePath << " REJECTED (file does not have continents)"<< endl << endl;
                         return nullptr;
                     }
 
@@ -715,7 +723,6 @@ Map* MapLoader::loadMap(string filePath) {
                 }
             }
         }
-            std::cout << "Territiries section finished!" << endl;
 
         // On this second iteration, each territory is linked as to  hold
         // a list of pointers to its neighbour objects.

@@ -11,7 +11,7 @@
 
 using namespace std;
 //*****************************************************************
-// Territory
+// Territory: Represents the territory of a map (node of the graph)
 
 /**
  * @brief Territory class
@@ -106,7 +106,7 @@ class Territory
 
 
 //*****************************************************************
-// Continent
+// Continent: represents the continent of a map. Is a connected subgraph of a map.
 
 /**
  * @brief Contonent Class
@@ -193,7 +193,7 @@ class Continent
 
 
 //*****************************************************************
-// Map
+// Map: is a connected graph representing a collection of territor
 
 /**
  * @brief Map Class
