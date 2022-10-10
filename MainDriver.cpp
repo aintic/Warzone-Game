@@ -15,13 +15,13 @@ int main()
 	testLoadMaps();
 
     // Player
-    //testPlayers();
+    testPlayers();
 
     //Orders list
-    //testOrdersList();
+    testOrdersList();
 
     //Cards
-    //testCards();
+    testCards();
 
     //GameEngine
     //testGameStates();
