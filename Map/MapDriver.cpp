@@ -10,17 +10,26 @@ void testLoadMaps(){
 	// MAP FILES:
 	
 	// Valid Maps:
-	string valid_map = "Maps/AnnysPiratenwelt.map";
+	string valid_map1 = "Maps/AnnysPiratenwelt.map";
+	string valid_map2 = "Maps/Aden.map";
+	string valid_map3 = "Maps/DigDug.map";
 
-	// Invalid Maps:
+	// Rejected Map Files:
 	string file_does_not_exist = "Maps/FileDoesNotExist.map";
 	string continent_does_not_exist = "Maps/NoContinent.map";
 
+	// invalid Maps
+	string continents_not_connected_graph = "Maps/MongolEmpire1294.map";
+	string map_not_connected_graph = "Maps/Map_not_connected_graph.map";
 
 	vector<string> filePaths {
-		valid_map, 
+		valid_map1, 
+		valid_map2, 
+		valid_map3, 
 		file_does_not_exist,
-		continent_does_not_exist
+		continent_does_not_exist,
+		continents_not_connected_graph,
+		map_not_connected_graph
 	};
 
 	vector<Map*> maps;
@@ -30,10 +39,12 @@ void testLoadMaps(){
 	// (1) Read map_files 
 	// (2) Creates a map object if valid
 	// (3) Reject if invalid 
+	std::cout << "*********************************** LOADING MAPS ***********************************" << endl;
 	for(string map_file: filePaths){
 		maps.push_back(MapLoader::loadMap(map_file));
 	}
 
+	// DISPLAY MAPS:
 	if(show_maps){
 			
 		for(Map* map: maps){
@@ -43,14 +54,13 @@ void testLoadMaps(){
 		}
 	}
 
-
+	// VALIDATE MAPS
+	std::cout << "********************************** VALIDATING MAPS *********************************" << endl;
 	for(Map* map: maps){
 		if(map){
 			map->validate();
 		}
 	}
-
-	//TODO: reject invalid map files
 
 	// free up memory by deleting the map
 	for(Map* map: maps){
