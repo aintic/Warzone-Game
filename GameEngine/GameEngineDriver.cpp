@@ -5,26 +5,21 @@ using std::cout;
 using std::cin;
 using std::string;
 
+//testGameStates creates a console-driven interface that allows the user to navigate
+//to different states of the game based on user input. Invalid commands are taken into
+//account by the transition method, that only allows a state transition with valid commands.
 
 void testGameStates(){
-
     GameEngine* game;
     game = new GameEngine();
     string command;
-    cout << "\nGame begins in state: ";
-    cout << game->getCurrentState()->getStateName() << "\n";
+    cout << "\nTESTING GAME STATES\n\n";
+    cout << *game; //Displays current game state
 
+    //Game loop that exists when the user enters 'end' command
     do{
-        cout << "\nPlease enter command to move to the next state: \n";
+        cout << "\nPlease enter command to move to the next state:  ";
         cin >> command;
         game->getCurrentState()->transition(game, command);
     }while(true);
-
 }
-
-
-
-//int main()
-//{
-//    testGameStates();
-//}
