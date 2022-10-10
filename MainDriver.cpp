@@ -1,9 +1,8 @@
-#include "Map/Map.h"
 #include "Map/MapDriver.h"
 #include "Cards/CardsDriver.h"
 #include "Orders/OrdersDriver.h"
 #include "Player/PlayerDriver.h"
-#include"Player/Player.h"
+#include "GameEngine/GameEngineDriver.h"
 
 
 
@@ -24,5 +23,5 @@ int main()
     testCards();
 
     //GameEngine
-    //testGameStates();
+    testGameStates();
 }
