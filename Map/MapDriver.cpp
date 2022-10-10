@@ -10,11 +10,11 @@ void testLoadMaps(){
 	// MAP FILES:
 	
 	// Valid Maps:
-	string valid_map = "Map/Maps/Annys Piratenwelt.map";
+	string valid_map = "Maps/AnnysPiratenwelt.map";
 
 	// Invalid Maps:
-	string file_does_not_exist = "Map/Maps/FileDoesNotExist.map";
-	string continent_does_not_exist = "Map/Maps/NoContinent.map";
+	string file_does_not_exist = "Maps/FileDoesNotExist.map";
+	string continent_does_not_exist = "Maps/NoContinent.map";
 
 
 	vector<string> filePaths {

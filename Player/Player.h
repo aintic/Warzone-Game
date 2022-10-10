@@ -30,7 +30,7 @@ public:
      * @param hand
      * @param orders
      */
-    Player(int playerID, string name, vector<Territory*> territories, Hand* hand, OrdersList* orders);
+    Player(int playerID, string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders);
     /**
      * copy constructor
      * @param p
@@ -81,19 +81,23 @@ public:
      * @param orders
      * @return
      */
-    OrdersList* setPlayerOrderList(OrdersList* orders);
+    void setPlayerOrderList(OrdersList* orders);
     /**
      * getTerritoriesownbyplayer
      * @return territories that ownsbyplayer
      */
-    vector<Territory*> getTerritoriesownbyplayer();
 
+    void setTerritories(vector<Territory*> t);
 
 private:
     string name;
     Hand* hand;
     vector<Territory*> territories; // List of owned territories
-    vector<Territory*> territoriesOwnedByPlayer;
+    //vector<Territory*> territoriesOwnedByPlayer;
     OrdersList* order_list;
     int playerID;
 };
+/**
+ * Stream insertion operator
+ */
+ostream& operator << (ostream& os, Player& p);
