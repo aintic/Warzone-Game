@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
-#include <random>
 using namespace std;
 
 /**
@@ -125,11 +124,7 @@ void Player::issueOrder(Order* o) {
  * @param p
  */
 void Player::issueOrder(){
-    Order* o[] = {new Deploy, new Advance,new BombCardOrder, new BlockadeCardOrder, new AirliftCardOrder,new Negotiate};
-    random_device rd; //way to generate random number
-    uniform_int_distribution<int> dist(0, 5);
-    int randomIndex = dist(rd);
-    order_list->add(o[randomIndex]);
+    order_list->add(new Deploy);
 }
 
 /**

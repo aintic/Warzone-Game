@@ -24,8 +24,6 @@ void testPlayers() {
 
     cout << "Player's orders list:" << endl;
     p1.issueOrder();
-    p1.issueOrder();
-    p1.issueOrder();
     cout << *p1.getPlayerOrderList() << endl;
 
     cout << "Player's hand:" << endl;
