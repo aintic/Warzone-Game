@@ -44,7 +44,6 @@ Player::Player(int playerID, string name) {
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 
-
 Player::Player(int playerID, string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
     this->playerID = playerID;
     this->name = name;
@@ -127,13 +126,14 @@ void Player::issueOrder(Order* o) {
  */
 void Player::issueOrder(){
     Order* o[] = {new Deploy, new Advance,new BombCardOrder, new BlockadeCardOrder, new AirliftCardOrder,new Negotiate};
-    random_device rd;
+    random_device rd; //way to generate random number
     uniform_int_distribution<int> dist(0, 5);
     int randomIndex = dist(rd);
     order_list->add(o[randomIndex]);
-
 }
+
 /**
+ *
  * addTerritory: it adds territories to each object
  * @param t
  */

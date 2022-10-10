@@ -65,7 +65,7 @@ void GameEngine::setCurrentState(State* state){
     currentState = state;
 }
 
-//method
+//method to move to next state. Taking care of memory leak.
 void GameEngine::nextState(State* nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
