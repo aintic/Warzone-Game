@@ -542,7 +542,6 @@ ostream& operator <<(ostream& os, Deck& d){
         for (Card* c : d.getCards()) {
             os << *c << endl;
         }
-    return os;
     }
     return os;
 }
