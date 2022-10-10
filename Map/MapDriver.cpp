@@ -10,17 +10,17 @@ void testLoadMaps(){
 	// MAP FILES:
 	
 	// Valid Maps:
-	string valid_map1 = "Map/Maps/AnnysPiratenwelt.map";
-	string valid_map2 = "Map/Maps/Aden.map";
-	string valid_map3 = "Map/Maps/DigDug.map";
+	string valid_map1 = "Maps/AnnysPiratenwelt.map";
+	string valid_map2 = "Maps/Aden.map";
+	string valid_map3 = "Maps/DigDug.map";
 
 	// Rejected Map Files:
-	string file_does_not_exist = "Map/Maps/FileDoesNotExist.map";
-	string continent_does_not_exist = "Map/Maps/NoContinent.map";
+	string file_does_not_exist = "Maps/FileDoesNotExist.map";
+	string continent_does_not_exist = "Maps/NoContinent.map";
 
 	// invalid Maps
-	string continents_not_connected_graph = "Map/Maps/MongolEmpire1294.map";
-	string map_not_connected_graph = "Map/Maps/Map_not_connected_graph.map";
+	string continents_not_connected_graph = "Maps/MongolEmpire1294.map";
+	string map_not_connected_graph = "Maps/Map_not_connected_graph.map";
 
 	vector<string> filePaths {
 		valid_map1, 
