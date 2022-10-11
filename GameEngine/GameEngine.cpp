@@ -432,8 +432,9 @@ endState &endState::operator=(const endState &s) {
 void endState::transition(GameEngine *gameEngine, string command) {
     if(command == validCommand1){
         //<method to reset game and play again here>
-        gameEngine->nextState(new startupState());
+        gameEngine->getCurrentState()->setStateName("Start");
         cout << dynamic_cast<endState&>(*gameEngine->getCurrentState());
+        gameEngine->nextState(new startupState());
     }
     else if(command == validCommand2){
         //<method for end game statistics and exit here>
