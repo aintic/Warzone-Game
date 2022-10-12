@@ -29,7 +29,7 @@ using namespace std;
  * @param neighbours_strings 
  */
 Territory::Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings) {
-	Player* owner;
+	Player *owner;
     this->id = id;
 	this->name = name;
 	this->x = x;
@@ -44,6 +44,7 @@ Territory::Territory(int id, string name, string continent_name, int x, int y, v
  * @param t 
  */
 Territory::Territory(const Territory &t){
+    owner = t.owner;
     id = t.id;
 	army_units = t.army_units;
 	name = t.name;
@@ -78,6 +79,7 @@ ostream& operator <<(ostream& stream, const Territory& t){
  * @return Territory& 
  */
 Territory& Territory::operator=(const Territory& t){
+    owner = t.owner;
     id = t.id;
 	army_units = t.army_units;
 	name = t.name;
