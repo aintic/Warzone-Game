@@ -47,7 +47,12 @@ void testOrdersList() {
     ol->remove(2);
     cout << "Order deleted. Current list: \n" << *ol << endl;
 
-    // execute list - invokes validate() and execute() method on each order in list
+    // execute list - invokes validate() and execute() method on each order then delete order in list
     cout << "\n============= Execute list =============\n" << endl;
     ol->executeList();
+    cout << "\n=========================================\n" << endl;
+
+    // cleanup
+    delete ol;
+    ol = NULL;
 }

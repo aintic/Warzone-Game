@@ -11,28 +11,28 @@ void testCards(){
 */
     cout << "Initialize deck with 3 cards of each type:"  << endl;
 
-    Deck d;
-    cout << d << endl; // print deck
+    Deck* d = new Deck;
+    cout << *d << endl; // print deck
 /**
 * Create 3 players
 */
     cout << "Create 3 players and randomly draw 5 cards each:" << endl;
 
-    Player p1;
-    Player p2;
-    Player p3;
+    Player *p1 = new Player;
+    Player *p2 = new Player;
+    Player *p3 = new Player;
 /**
 * Each player draws 3 cards from the deck
 */
-    while(!d.isEmpty()){
-        if(!d.isEmpty()){
-            cout << "Player 1 draws: " << *d.draw(p1) << endl;
+    while(!d->isEmpty()){
+        if(!d->isEmpty()){
+            cout << "Player 1 draws: " << *d->draw(*p1) << endl;
         }
-        if(!d.isEmpty()){
-            cout << "Player 2 draws: " << *d.draw(p2) << endl;
+        if(!d->isEmpty()){
+            cout << "Player 2 draws: " << *d->draw(*p2) << endl;
         }
-        if(!d.isEmpty()){
-            cout << "Player 3 draws: " << *d.draw(p3) << endl;
+        if(!d->isEmpty()){
+            cout << "Player 3 draws: " << *d->draw(*p3) << endl;
         }
     }
 
@@ -40,32 +40,32 @@ void testCards(){
 * Display cards in each player's hand
 */
     cout << "\nPlayer 1 Hand: " << endl;
-    cout << *p1.getHand() << "\n" << endl;
+    cout << *p1->getHand() << "\n" << endl;
 
     cout << "Player 2 Hand: " << endl;
-    cout << *p2.getHand() << "\n" << endl;
+    cout << *p2->getHand() << "\n" << endl;
 
     cout << "Player 3 Hand: " << endl;
-    cout << *p3.getHand() << "\n" << endl;
+    cout << *p3->getHand() << "\n" << endl;
 
 /**
 * Display contents of now empty deck
 */
-    cout << d << endl;
+    cout << *d << endl;
 
 /**
 * Play all 5 cards in each player's hand
 */
     cout << "Play all 5 cards in each player's hand:" << endl;
 
-    for (Card* c : p1.getHand()->getCards()){
-        p1.issueOrder(p1.getHand()->play(d, 0));
+    for (Card* c : p1->getHand()->getCards()){
+        p1->issueOrder(p1->getHand()->play(*d, 0));
     }
-    for (Card* c : p2.getHand()->getCards()){
-        p2.issueOrder(p2.getHand()->play(d, 0));
+    for (Card* c : p2->getHand()->getCards()){
+        p2->issueOrder(p2->getHand()->play(*d, 0));
     }
-    for (Card* c : p3.getHand()->getCards()){
-        p3.issueOrder(p3.getHand()->play(d, 0));
+    for (Card* c : p3->getHand()->getCards()){
+        p3->issueOrder(p3->getHand()->play(*d, 0));
     }
 
 
@@ -73,27 +73,33 @@ void testCards(){
 * Display contents of each player's now empty hand
 */
     cout << "Player 1 Hand: " << endl;
-    cout << *p1.getHand() << endl;
+    cout << *p1->getHand() << endl;
 
     cout << "Player 2 Hand: " << endl;
-    cout << *p2.getHand()  << endl;
+    cout << *p2->getHand()  << endl;
 
     cout << "Player 3 Hand: " << endl;
-    cout << *p3.getHand() << endl;
+    cout << *p3->getHand() << endl;
 
 /**
 * Display each player's orders list
 */
     cout << "\nPlayer 1 Orders List:" << endl;
-    cout << *p1.getPlayerOrderList();
+    cout << *p1->getPlayerOrderList();
     cout << "\nPlayer 2 Orders List:" << endl;
-    cout << *p2.getPlayerOrderList();
+    cout << *p2->getPlayerOrderList();
     cout << "\nPlayer 3 Orders List:" << endl;
-    cout << *p3.getPlayerOrderList();
+    cout << *p3->getPlayerOrderList();
 
 /**
 * Display now full deck
 */
-    cout << "\n"<< d;
+    cout << "\n"<< *d;
+
+    // cleanup
+    delete d;
+    d = nullptr;
+    delete p1; delete p2; delete p3;
+    p1 = NULL; p2 = NULL; p3 = NULL;
 }
 

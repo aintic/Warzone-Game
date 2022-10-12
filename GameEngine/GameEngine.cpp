@@ -439,6 +439,7 @@ void endState::transition(GameEngine *gameEngine, string command) {
         //<method for end game statistics and exit here>
         gameEngine->getCurrentState()->setStateName("End");
         cout << *gameEngine->getCurrentState();
+        delete this;
         exit(0);
     }
     else cout << "\nYou have entered an invalid command for the 'Win' state...\n";
