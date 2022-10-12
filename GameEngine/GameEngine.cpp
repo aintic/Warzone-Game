@@ -5,7 +5,7 @@
 // Set constant members
 const string reinforcementState::validCommand = "issueorder";
 const string reinforcementState::stateName = "Assign reinforcement";
-const string issueOrdersState::validCommand1 = "issueOrder";
+const string issueOrdersState::validCommand1 = "issueorder";
 const string issueOrdersState::validCommand2 = "endissueorders";
 const string issueOrdersState::stateName = "Issue orders";
 const string executeOrdersState::validCommand1 = "execorder";
@@ -432,8 +432,9 @@ endState &endState::operator=(const endState &s) {
 void endState::transition(GameEngine *gameEngine, string command) {
     if(command == validCommand1){
         //<method to reset game and play again here>
-        gameEngine->nextState(new startupState());
+        gameEngine->getCurrentState()->setStateName("Start");
         cout << dynamic_cast<endState&>(*gameEngine->getCurrentState());
+        gameEngine->nextState(new startupState());
     }
     else if(command == validCommand2){
         //<method for end game statistics and exit here>
