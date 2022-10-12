@@ -41,7 +41,7 @@ ostream& operator << (ostream& out,  const Order& o) {
  * @return Order object
  */
 Order& Order::operator=(const Order& o) {
-    // no object data members, no cleanup or assignment necessary
+    Order::operator=(o);
     return *this;
 }
 
