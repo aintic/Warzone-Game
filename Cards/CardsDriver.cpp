@@ -98,7 +98,7 @@ void testCards(){
 
     // cleanup
     delete d;
-    d = nullptr;
+    d = NULL;
     delete p1; delete p2; delete p3;
     p1 = NULL; p2 = NULL; p3 = NULL;
 }
