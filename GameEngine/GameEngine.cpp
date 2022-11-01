@@ -18,7 +18,7 @@ const string endState::stateName = "Win";
 
 
 //
-//GAME ENGINE STATE CLASS
+//GAME ENGINE CLASS
 //
 
 //Initializing static turn variable to 1 for the first turn
@@ -71,6 +71,11 @@ void GameEngine::nextState(State* nextState) {
     this->setCurrentState(nextState);
 }
 
+void GameEngine::reinforcementPhase() {
+
+
+
+}
 
 //
 //ABSTRACT STATE CLASS

@@ -3,25 +3,22 @@
 #include "../Cards/Cards.h"
 using namespace std;
 
-/**
- * Default constructor for Player
- **/
+int Player::playerID = 0;
+
+//Default constructor
 Player::Player() {
-    this->playerID = 0;
+    playerID++;
+    this->playerID = playerID;
     this->name = "player";
     vector<Territory*> t;
     this->territories = t;
     this->hand = new Hand;
-    this->order_list = new OrdersList;
+    this->order_list = new OrdersList();
 }
-/**
- * Constructor: Construct a new Player object
- *
- * @param playerID
- * @param name
- */
 
-Player::Player(int playerID, string name) {
+//Constructor with name only
+Player::Player(string name) {
+    playerID++;
     this->playerID = playerID;
     this->name = name;
     vector<Territory*> t;
@@ -30,20 +27,11 @@ Player::Player(int playerID, string name) {
     this->order_list = new OrdersList();
 }
 
-/**
- * Constructor: Construct a new Player object
- *
- * @param playerID
- * @param name
- * @param territories
- * @param hand
- * @param orders
- */
 
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
-
-Player::Player(int playerID, string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
+Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
+    playerID++;
     this->playerID = playerID;
     this->name = name;
     this->territories = territories;
@@ -51,13 +39,9 @@ Player::Player(int playerID, string name, vector<Territory*>& territories, Hand*
     this->order_list = orders;
 }
 
-/**
- * Copy constructor : Construct a new Player object
- *
- * @param p
- */
+//copy constructor
 Player::Player(const Player& p){
-    playerID = p.playerID;
+    playerID = getPlayerID();
     name = p.name;
     for (Territory* t : p.territories){
         this->addTerritory(new Territory(*t));
@@ -66,9 +50,7 @@ Player::Player(const Player& p){
     this->order_list = new OrdersList(*(p.order_list));
 }
 
-/**
- * Destructor : Destruct Player
- */
+//destructor
 Player::~Player()
 {
     delete hand;
@@ -79,12 +61,7 @@ Player::~Player()
     territories.clear();
 }
 
-
-/**
- * Assignment operator
- * @param p
- * @return Player&
- */
+//assignment operator
 Player& Player::operator=(const Player& p){
     playerID = p.playerID;
     name = p.name;
@@ -96,44 +73,37 @@ Player& Player::operator=(const Player& p){
     return *this;
 }
 
-/**
- * toDefend : returns a list of territories to be defended
- * @return
- */
+//returns a list of territories to be defended
 vector<Territory*> Player:: toDefend(){
     return this->territories;
 }
-/**
- * toAttack : returns a list of territories to be attacked
- * @return
- */
+
+//returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
     return this->territories;
 
 }
 
+//method for testing purposes to issue existing order
 void Player::issueOrder(Order* o) {
     if(o) {
         this->order_list->add(o);
     }
 }
 
-/**
- * issueOrder: creates an order object and adds it to the list of orders
- * when an issue is created then Player object sets player's orderlist and it executes it
- * @param p
- */
+//creates an order object and adds it to the list of orders
 void Player::issueOrder(){
     order_list->add(new Deploy);
 }
 
-/**
- *
- * addTerritory: it adds territories to each object
- * @param t
- */
+//adds a territory to the list of owned territories
 void Player::addTerritory(Territory* t){
-    territories.push_back(t); // can be used like p1->addTerritory(t1*)
+        territories.push_back(t); // can be used like p1->addTerritory(t1*)
+        t->set_owner(this);
+}
+
+void Player::removeTerritory(Territory* t) {
+    territories.erase(remove(territories.begin(), territories.end(), t), territories.end());
 }
 
 //getters
@@ -156,6 +126,14 @@ vector<Territory*> Player::getTerritories(){
     return territories;
 }
 
+int Player::getNumTerritories() {
+    return this->getTerritories().size();
+}
+
+int Player::getReinforcementPool() {
+    return reinforcementPool;
+}
+
 //setters
 void Player::setPlayerOrderList(OrdersList* orders){
     this->order_list = orders;
@@ -165,7 +143,18 @@ void Player::setTerritories(vector<Territory*> t){
     this->territories = t;
 }
 
-ostream& operator << (ostream& os, Player& p){
+void Player::setReinforcementPool(int armies) {
+    this->reinforcementPool = armies;
+}
+
+
+
+
+
+ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
 }
+
+
+
 
