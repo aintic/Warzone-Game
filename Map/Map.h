@@ -92,6 +92,9 @@ public:
     vector<Territory*> get_neighbours();
     void set_neighbours(vector<Territory*> neighbours);
 
+    Player* get_owner();
+    void set_owner(Player* player);
+
 private:
     Player* owner;
     int id;

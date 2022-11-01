@@ -185,6 +185,13 @@ void Territory::set_neighbours(vector<Territory*> neighbours){
     this->neighbours = neighbours;
 }
 
+void Territory::set_owner(Player* player){
+    this->owner = player;
+}
+
+Player* Territory::get_owner() {
+    return this->owner;
+}
 
 //*****************************************************************
 // Continent: represents the continent of a map. Is a connected subgraph of a map.
