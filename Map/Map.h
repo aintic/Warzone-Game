@@ -10,9 +10,11 @@
 #include <map>
 
 using namespace std;
+
+class Player;
+
 //*****************************************************************
 // Territory: Represents the territory of a map (node of the graph)
-
 /**
  * @brief Territory class
  * 
@@ -91,12 +93,13 @@ public:
     void set_neighbours(vector<Territory*> neighbours);
 
 private:
+    Player* owner;
     int id;
-    int army_units;
+    int army_units{};
     string name;
     int x;
     int y;
-    int continent_id;
+    int continent_id{};
     string continent_name;
     vector <string> neighbours_strings; // placeholder before adding the pointers to the neighbours
     vector <Territory*> neighbours;
