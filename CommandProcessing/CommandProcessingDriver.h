@@ -1,0 +1,6 @@
+#ifndef COMP_345_COMMANDPROCESSINGDRIVER_H
+#define COMP_345_COMMANDPROCESSINGDRIVER_H
+
+#endif //COMP_345_COMMANDPROCESSINGDRIVER_H
+// Test command processing
+void testCommandProcessor();
