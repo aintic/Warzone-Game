@@ -102,9 +102,18 @@ void Player::addTerritory(Territory* t){
         t->set_owner(this);
 }
 
+//removes territory from players list of territories
 void Player::removeTerritory(Territory* t) {
     territories.erase(remove(territories.begin(), territories.end(), t), territories.end());
 }
+
+//makes the territory exchange between 2 players, when territory gets conquered
+void Player::conquerTerritory(Territory* t) {
+    Player* loser = t->get_owner();
+    loser->removeTerritory(t);
+    this->addTerritory(t);
+}
+
 
 //getters
 int Player::getPlayerID(){
@@ -147,13 +156,10 @@ void Player::setReinforcementPool(int armies) {
     this->reinforcementPool = armies;
 }
 
-
-
-
-
 ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
 }
+
 
 
 

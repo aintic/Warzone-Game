@@ -18,7 +18,6 @@ class Hand;
 class Player{
 
 public:
-
     Player(); //default constructor
     Player(string name); //player constructor
     Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders); //parametrized constructor
@@ -41,6 +40,7 @@ public:
     vector<Territory*> toAttack(); //player territories to attack
     void issueOrder(); //creates order object and adds to list of orders
     void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
+    void conquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
     void removeTerritory(Territory* territory);
     friend ostream& operator << (ostream& os, Player& p); //stream insertion operator
