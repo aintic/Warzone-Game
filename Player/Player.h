@@ -35,6 +35,8 @@ public:
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
     void setReinforcementPool(int armies);
+    bool getHasIssueNewOrder() const;
+    void setHasIssueNewOrder(bool b);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
@@ -52,4 +54,5 @@ private:
     OrdersList* order_list; //list of current orders
     static int playerID; //unique player ID
     int reinforcementPool;
+    bool hasIssueNewOrder;
 };

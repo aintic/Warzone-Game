@@ -172,6 +172,13 @@ void Player::setReinforcementPool(int armies) {
     this->reinforcementPool = armies;
 }
 
+bool Player::getHasIssueNewOrder() const{
+    return this->hasIssueNewOrder;
+}
+
+void Player::setHasIssueNewOrder(bool b) {
+    this->hasIssueNewOrder = b;
+}
 ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
 }
