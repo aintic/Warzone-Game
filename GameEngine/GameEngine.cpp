@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "../Player/Player.h"
 #include <iostream>
 
 
@@ -77,6 +78,11 @@ void GameEngine::reinforcementPhase() {
 
 }
 
+void GameEngine::issueOrderPhase() {
+for (Player *p : players){
+    p->issueOrder();
+}
+}
 //
 //ABSTRACT STATE CLASS
 //

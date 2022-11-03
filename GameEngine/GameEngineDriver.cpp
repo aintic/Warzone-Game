@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "GameEngine.h"
+#include "../Map/Map.h"
 using std::cout;
 using std::cin;
 using std::string;
@@ -23,3 +24,8 @@ void testGameStates(){
         game->getCurrentState()->transition(game, command);
     }while(true);
 }
+
+void testMainGameLoop(){
+
+}
+

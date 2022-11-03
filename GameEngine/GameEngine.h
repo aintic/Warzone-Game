@@ -9,7 +9,7 @@ using std::vector;
 using std::ostream;
 using std::endl;
 
-
+class Player;
 //
 //GAME ENGINE CLASS
 //
@@ -21,6 +21,8 @@ class GameEngine {
 
 private:
     class State* currentState;
+    vector<Player*> players;
+
 public:
     GameEngine(); //default constructor
     ~GameEngine(); //destructor
@@ -35,6 +37,7 @@ public:
 
 
     void reinforcementPhase();
+    void issueOrderPhase();
 };
 
 

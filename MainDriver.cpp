@@ -11,17 +11,18 @@ using namespace std;
 int main()
 {
     // Map 
-	testLoadMaps();
+	//testLoadMaps();
 
     // Player
-    testPlayers();
+    //testPlayers();
 
     //Orders list
-    testOrdersList();
+    //testOrdersList();
 
     //Cards
-    testCards();
+    //testCards();
 
     //GameEngine
-    testGameStates();
+   //testGameStates();
+   testMainGameLoop();
 }

@@ -1,7 +1,8 @@
 #include "Player.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
-using namespace std;
+#include "algorithm"
+using std::find_if;
 
 int Player::playerID = 0;
 
@@ -80,8 +81,21 @@ vector<Territory*> Player:: toDefend(){
 
 //returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
-    return this->territories;
-
+    vector<Territory*> toAttackTerritories;
+    for (Territory *ownedTerritory : territories){
+        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) {
+            if (neighborTerritory->get_owner() != this) {
+                auto it = find_if(toAttackTerritories.begin(), toAttackTerritories.end(),
+                                  [&neighborTerritory](Territory *t) {
+                                      return t->get_id() == neighborTerritory->get_id();
+                                  });
+                if (it == toAttackTerritories.end()) {
+                    toAttackTerritories.push_back(neighborTerritory);
+                }
+            }
+        }
+    }
+    return toAttackTerritories;
 }
 
 //method for testing purposes to issue existing order
@@ -93,13 +107,15 @@ void Player::issueOrder(Order* o) {
 
 //creates an order object and adds it to the list of orders
 void Player::issueOrder(){
-    order_list->add(new Deploy);
+    while(reinforcementPool != 0) {
+        order_list->add(new Deploy);
+    }
 }
 
 //adds a territory to the list of owned territories
 void Player::addTerritory(Territory* t){
-        territories.push_back(t); // can be used like p1->addTerritory(t1*)
-        t->set_owner(this);
+    territories.push_back(t); // can be used like p1->addTerritory(t1*)
+    t->set_owner(this);
 }
 
 //removes territory from players list of territories
