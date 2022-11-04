@@ -47,21 +47,10 @@ public:
      */
     ~Territory();
 
-    /**
-     * @brief Stream insertion operator
-     *
-     * @param stream
-     * @param t
-     * @return ostream&
-     */
+    //stream insertion operator
     friend ostream& operator <<(ostream& stream, const Territory& t);
 
-    /**
-     * @brief Assignment operator
-     *
-     * @param p
-     * @return Territory&
-     */
+    //assignment operator
     Territory& operator=(const Territory& t);
 
     // Getters and setters
@@ -109,13 +98,11 @@ private:
 };
 
 
-
-
 //*****************************************************************
 // Continent: represents the continent of a map. Is a connected subgraph of a map.
 
 /**
- * @brief Contonent Class
+ * @brief Continent Class
  * 
  */
 class Continent
@@ -262,6 +249,8 @@ public:
 
     map<int, Continent*> get_continents();
     void set_continents(map<int, Continent*> continents);
+
+    int allContinentsBonus(Player* player);
 
 private:
     string name;

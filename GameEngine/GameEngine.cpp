@@ -18,7 +18,7 @@ const string endState::stateName = "Win";
 
 
 //
-//GAME ENGINE STATE CLASS
+//GAME ENGINE CLASS
 //
 
 //Initializing static turn variable to 1 for the first turn
@@ -27,6 +27,7 @@ int GameEngine::turn = 1;
 //default constructor
 GameEngine::GameEngine() {
     currentState = new startupState();
+    map = nullptr;
 }
 
 //destructor
@@ -71,6 +72,20 @@ void GameEngine::nextState(State* nextState) {
     this->setCurrentState(nextState);
 }
 
+void GameEngine::reinforcementPhase() {
+    for(Player* p : players){
+        cout << "num territories: " << p->getNumTerritories() << endl;
+        int armyUnits = floor(p->getNumTerritories() / 3);
+        cout << "army units : " << armyUnits << endl;
+        int continentBonus = map->allContinentsBonus(p);
+        cout << "continent bonus : " << continentBonus << endl;
+        int reinforcementPool = max(armyUnits + map->allContinentsBonus(p), 3);
+        cout << "reinforcement : " << reinforcementPool << endl;
+        p->setReinforcementPool(max(armyUnits + map->allContinentsBonus(p), 3));
+        cout << "Player: " << p->getPlayerID() << " got " <<  p->getReinforcementPool() <<
+        " armies during the reinforcement phase!\n" << endl;
+    }
+}
 
 //
 //ABSTRACT STATE CLASS
