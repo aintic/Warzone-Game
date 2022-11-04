@@ -5,6 +5,8 @@
 #include <cmath>
 #include "../Player/Player.h"
 #include "../Map/Map.h"
+#include "../CommandProcessing/CommandProcessing.h"
+
 using std::cout;
 using std::cin;
 using std::string;
@@ -13,6 +15,7 @@ using std::ostream;
 using std::endl;
 
 class Player;
+class Command;
 
 //
 //GAME ENGINE CLASS
@@ -65,7 +68,9 @@ public:
     State& operator =(const State& s); //assignment operator
     void setStateName(const string& name);
     string getStateName() const;
-    virtual void transition(GameEngine* gameEngine, string command) = 0; //virtual method to implement
+    virtual void transition(GameEngine* gameEngine, Command* command) = 0; //virtual method to implement
+    virtual vector<string> getSpecificValidCommands() = 0; //virtual method to implement
+    virtual string getWrongCommandError() = 0; //method to get wrong command error message
     friend ostream& operator <<(ostream& stream, const State& s); //stream insertion operator
 };
 
@@ -88,8 +93,10 @@ public:
     State* clone() override; //clone method
     startupState& operator =(const startupState& otherState); //assignment operator
     static vector<string> getValidCommand(); //method to get valid
+    vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
+    string getWrongCommandError() override; //method to get wrong command error message
     int getStateStep() const; //method to get the
-    void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
+    void transition(GameEngine* gameEngine, Command* command) override; //method to transition to other state
     friend ostream& operator <<(ostream& stream, const startupState& s); //stream insertion operator
 private:
     int step;
@@ -109,7 +116,9 @@ public:
     reinforcementState(const reinforcementState& aState); //copy constructor
     State* clone() override; //clone method
     reinforcementState& operator =(const reinforcementState& otherState); //assignment operator
-    void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
+    void transition(GameEngine* gameEngine, Command* command) override; //method to transition to other state
+    vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
+    string getWrongCommandError() override; //method to get wrong command error message
     friend ostream& operator <<(ostream& stream, const reinforcementState& s); //stream insertion operator
 private:
     const static string validCommand;
@@ -130,7 +139,9 @@ public:
     issueOrdersState(const issueOrdersState& aState); //copy constructor
     State* clone() override; //clone method
     issueOrdersState& operator =(const issueOrdersState& otherState); //assignment operator
-    void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
+    void transition(GameEngine* gameEngine, Command* command) override; //method to transition to other state
+    vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
+    string getWrongCommandError() override; //method to get wrong command error message
     friend ostream& operator <<(ostream& stream, const issueOrdersState& s); //stream insertion operator
 private:
     const static string validCommand1;
@@ -151,7 +162,9 @@ public:
     executeOrdersState(const executeOrdersState& aState); //copy constructor
     State* clone() override; //clone method
     executeOrdersState& operator =(const executeOrdersState& otherState); //assignment operator
-    void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
+    void transition(GameEngine* gameEngine, Command* command) override; //method to transition to other state
+    vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
+    string getWrongCommandError() override; //method to get wrong command error message
     friend ostream& operator <<(ostream& stream, const executeOrdersState& s); //stream insertion operator
 private:
     const static string validCommand1;
@@ -174,7 +187,9 @@ public:
     endState(const endState& aState); //copy constructor
     State* clone() override; //clone method
     endState& operator =(const endState& otherState); //assignment operator
-    void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
+    void transition(GameEngine* gameEngine, Command* command) override; //method to transition to other state
+    vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
+    string getWrongCommandError() override; //method to get wrong command error message
     friend ostream& operator <<(ostream& stream, const endState& s); //stream insertion operator
 private:
     const static string validCommand1;

@@ -12,8 +12,8 @@ const string executeOrdersState::validCommand1 = "execorder";
 const string executeOrdersState::validCommand2 = "endexecorders";
 const string executeOrdersState::validCommand3 = "win";
 const string executeOrdersState::stateName = "Execute orders";
-const string endState::validCommand1 = "play";
-const string endState::validCommand2 = "end";
+const string endState::validCommand1 = "replay";
+const string endState::validCommand2 = "quit";
 const string endState::stateName = "Win";
 
 
@@ -218,16 +218,60 @@ vector<string> startupState::getValidCommand() {
     return vect;
 }
 
+string startupState::getWrongCommandError(){//method to get wrong command error message
+    string error_string = "Something went wrong...";
+    switch (step) {
+        case 0:
+            error_string = "Invalid command for the 'Start' state...";
+            break;
+        case 1:
+            error_string = "Invalid command for the 'Map Loaded' state...";
+            break;
+        case 2:
+            error_string = "Invalid command for the 'Map Validated' state...";
+            break;
+        case 3:
+            error_string = "Invalid command for the 'Players Added' state...";
+            break;
+    }
+    return error_string;
+}
+
+
+vector<string> startupState::getSpecificValidCommands() { //method to get valid command given the specific state
+
+    vector<string> valid_commands;
+
+    switch (step) {
+        case 0:
+            valid_commands.push_back(getValidCommand()[0]);
+            break;
+        case 1:
+            valid_commands.push_back(getValidCommand()[0]);
+            valid_commands.push_back(getValidCommand()[1]);
+            break;
+        case 2:
+            valid_commands.push_back(getValidCommand()[2]);
+            break;
+        case 3:
+            valid_commands.push_back(getValidCommand()[2]);
+            valid_commands.push_back(getValidCommand()[3]);
+            break;
+    }
+
+    return valid_commands;
+}
+
 //method to get current step of startup phase
 int startupState::getStateStep() const {
     return this->step;
 }
 
 //overridden transition method for state transition
-void startupState::transition(GameEngine* gameEngine, string command) {
+void startupState::transition(GameEngine* gameEngine, Command* command) {
     switch (step) {
         case 0:
-            if (command == getValidCommand()[0]) {
+            if (command->get_typed_command() == getValidCommand()[0]) {
                 gameEngine->getCurrentState()->setStateName("Map loaded");
                 cout << *gameEngine->getCurrentState(); //currently transitioning
                 //<method to load map here>
@@ -235,12 +279,12 @@ void startupState::transition(GameEngine* gameEngine, string command) {
                 break;
             }
         case 1:
-            if(command == getValidCommand()[0]){
+            if(command->get_typed_command() == getValidCommand()[0]){
                 //<method to load map once again here>
                 cout << dynamic_cast<startupState&>(*gameEngine->getCurrentState());
                 break;
             }
-            else if(command == getValidCommand()[1]){
+            else if(command->get_typed_command() == getValidCommand()[1]){
                 gameEngine->getCurrentState()->setStateName("Map validated");
                 cout << *gameEngine->getCurrentState();
                 //<method to validate map here>
@@ -248,7 +292,7 @@ void startupState::transition(GameEngine* gameEngine, string command) {
                 break;
             }
         case 2:
-            if(command == getValidCommand()[2]){
+            if(command->get_typed_command() == getValidCommand()[2]){
                 gameEngine->getCurrentState()->setStateName("Players added");
                 cout << *gameEngine->getCurrentState();
                 //<method to add player here>
@@ -256,12 +300,12 @@ void startupState::transition(GameEngine* gameEngine, string command) {
                 break;
             }
         case 3:
-            if(command == getValidCommand()[2]){
+            if(command->get_typed_command() == getValidCommand()[2]){
                 //<method to add player again here>
                 cout << dynamic_cast<startupState&>(*gameEngine->getCurrentState());
                 break;
             }
-            else if(command == getValidCommand()[3]){
+            else if(command->get_typed_command() == getValidCommand()[3]){
                 //<method to assign countries here>
                 gameEngine->nextState(new reinforcementState());
                 cout << *gameEngine->getCurrentState();
@@ -307,13 +351,26 @@ reinforcementState &reinforcementState::operator=(const reinforcementState &s) {
 }
 
 //overridden transition method for state transition
-void reinforcementState::transition(GameEngine *gameEngine, string command) {
-    if(command == validCommand){
+void reinforcementState::transition(GameEngine *gameEngine, Command* command) {
+    if(command->get_typed_command() == validCommand){
         //<method to assign reinforcement here>
         gameEngine->nextState(new issueOrdersState());
         cout << *gameEngine->getCurrentState();
     }
     else cout << dynamic_cast<reinforcementState&>(*gameEngine->getCurrentState());
+}
+
+string reinforcementState::getWrongCommandError(){//method to get wrong command error message
+    return "Invalid command for the 'Reinforcement' state...";
+}
+
+vector<string> reinforcementState::getSpecificValidCommands() { //method to get valid command given the specific state
+
+    vector<string> valid_commands;
+
+    valid_commands.push_back(validCommand);
+
+    return valid_commands;
 }
 
 
@@ -347,17 +404,31 @@ issueOrdersState &issueOrdersState::operator=(const issueOrdersState &s) {
 }
 
 //overridden transition method for state transition
-void issueOrdersState::transition(GameEngine *gameEngine, string command) {
-    if(command == validCommand1){
+void issueOrdersState::transition(GameEngine *gameEngine, Command* command) {
+    if(command->get_typed_command() == validCommand1){
         //<method to issue an order here>
         cout << dynamic_cast<issueOrdersState&>(*gameEngine->getCurrentState());
     }
-    else if(command == validCommand2){
+    else if(command->get_typed_command() == validCommand2){
         //<method to end issue orders? or just end issue ordering here>
         gameEngine->nextState(new executeOrdersState());
         cout << *gameEngine->getCurrentState();
     }
     else cout << "\nYou have entered an invalid command for the 'Issue orders' state...\n";
+}
+
+string issueOrdersState::getWrongCommandError(){//method to get wrong command error message
+    return "Invalid command for the 'Issue Order' state...";
+}
+
+vector<string> issueOrdersState::getSpecificValidCommands() { //method to get valid command given the specific state
+
+    vector<string> valid_commands;
+
+    valid_commands.push_back(validCommand1);
+    valid_commands.push_back(validCommand2);
+
+    return valid_commands;
 }
 
 
@@ -393,18 +464,18 @@ executeOrdersState &executeOrdersState::operator=(const executeOrdersState &s) {
 }
 
 //overridden transition method for state transition
-void executeOrdersState::transition(GameEngine *gameEngine, string command) {
-    if(command == validCommand1){
+void executeOrdersState::transition(GameEngine *gameEngine, Command* command) {
+    if(command->get_typed_command() == validCommand1){
         //<method to execute order here>
         cout << dynamic_cast<executeOrdersState&>(*gameEngine->getCurrentState());
     }
-    else if(command == validCommand2){
+    else if(command->get_typed_command() == validCommand2){
         //<method to end order execution>
         GameEngine::turn++;
         gameEngine->nextState(new reinforcementState());
         cout << *gameEngine->getCurrentState();
     }
-    else if(command == validCommand3){
+    else if(command->get_typed_command() == validCommand3){
         //<method of win state here if needed>
         gameEngine->nextState(new endState());
         cout << *gameEngine->getCurrentState();
@@ -412,6 +483,20 @@ void executeOrdersState::transition(GameEngine *gameEngine, string command) {
     else cout << "\nYou have entered an invalid command for that state...\n";
 }
 
+string executeOrdersState::getWrongCommandError(){//method to get wrong command error message
+    return "Invalid command for the 'Execute Order' state...";
+}
+
+vector<string> executeOrdersState::getSpecificValidCommands() { //method to get valid command given the specific state
+
+    vector<string> valid_commands;
+
+    valid_commands.push_back(validCommand1);
+    valid_commands.push_back(validCommand2);
+    valid_commands.push_back(validCommand3);
+
+    return valid_commands;
+}
 
 
 //
@@ -443,15 +528,29 @@ endState &endState::operator=(const endState &s) {
     return *this;
 }
 
+vector<string> endState::getSpecificValidCommands() { //method to get valid command given the specific state
+
+    vector<string> valid_commands;
+
+    valid_commands.push_back(validCommand1);
+    valid_commands.push_back(validCommand2);
+
+    return valid_commands;
+}
+
+string endState::getWrongCommandError(){//method to get wrong command error message
+    return "Invalid command for the 'Win' state...";
+}
+
 //overridden transition method for state transition
-void endState::transition(GameEngine *gameEngine, string command) {
-    if(command == validCommand1){
+void endState::transition(GameEngine *gameEngine, Command* command) {
+    if(command->get_typed_command() == validCommand1){
         //<method to reset game and play again here>
         gameEngine->getCurrentState()->setStateName("Start");
         cout << dynamic_cast<endState&>(*gameEngine->getCurrentState());
         gameEngine->nextState(new startupState());
     }
-    else if(command == validCommand2){
+    else if(command->get_typed_command() == validCommand2){
         //<method for end game statistics and exit here>
         gameEngine->getCurrentState()->setStateName("End");
         cout << *gameEngine->getCurrentState();

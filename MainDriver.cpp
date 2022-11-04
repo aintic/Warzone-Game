@@ -6,22 +6,22 @@
 
 
 
-using namespace std;
-
-int main()
-{
-    // Map 
-	testLoadMaps();
-
-    // Player
-    testPlayers();
-
-    //Orders list
-    testOrdersList();
-
-    //Cards
-    testCards();
-
-    //GameEngine
-    testGameStates();
-}
+//using namespace std;
+//
+//int main()
+//{
+//    // Map
+//	testLoadMaps();
+//
+//    // Player
+//    testPlayers();
+//
+//    //Orders list
+//    testOrdersList();
+//
+//    //Cards
+//    testCards();
+//
+//    //GameEngine
+//    testGameStates();
+//}
