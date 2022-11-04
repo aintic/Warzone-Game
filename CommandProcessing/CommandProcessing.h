@@ -1,7 +1,4 @@
-#ifndef COMP_345_COMMANDPROCESSING_H
-#define COMP_345_COMMANDPROCESSING_H
-#endif //COMP_345_COMMANDPROCESSING_H
-
+#pragma once
 #include "../GameEngine/GameEngine.h"
 #include <vector>
 #include <string>
@@ -12,7 +9,7 @@ class GameEngine;
 class State;
 
 //*****************************************************************
-// Command: Represents the commands given by the user to transition from state to state
+// Command: Represents the commands given by the client to transition from state to state
 /**
  * @brief Command class
  *
@@ -25,6 +22,13 @@ public:
      *
      */
     void saveEffect(string command_effect);
+
+    /**
+     * @brief Constructor: Construct a new Command object
+     *
+     * @param typed_command
+     */
+    Command();
 
     /**
      * @brief Constructor: Construct a new Command object
@@ -63,11 +67,11 @@ public:
     Command& operator=(const Command& c);
 
     // Getters and setters for the typed command
-    int get_typed_command();
+    string get_typed_command();
     void set_typed_command(string typed_command);
 
     // Getters and setters for the command effect
-    int get_command_effect();
+    string get_command_effect();
     void set_command_effect(string command_effect);
 
 private:
@@ -100,7 +104,7 @@ public:
      * @brief Copy constructor: Construct a new CommandProcessor object
      * @param c
      */
-    CommandProcessor(const Command &c);
+    CommandProcessor(const CommandProcessor &c);
 
     /**
      * @brief Destructor: Destroy the CommandProcessor object
@@ -129,11 +133,11 @@ public:
      * @brief Gets the command from the console input, saves it and validates it
      * @return
      */
-    Command* getCommand();
+    Command* getCommand(GameEngine* game);
 
     // Getters and setters for the command list
     vector<Command*> get_commands();
-    void set_commands(vector <Command> commands);
+    void set_commands(vector <Command*> commands);
 
 private:
     // Private methods and command list
@@ -155,6 +159,6 @@ private:
      * a corresponding error message is saved in the effect of the command.
      * @return
      */
-    bool validate(Command*, GameEngine*);
+    bool validate(Command* command, GameEngine* game);
 
 };

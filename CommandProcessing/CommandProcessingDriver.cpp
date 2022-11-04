@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "CommandProcessingDriver.h"
+#include "../GameEngine/GameEngine.h"
 using std::cout;
 using std::cin;
 using std::string;
@@ -8,7 +9,21 @@ using std::string;
 using namespace std;
 
 void testCommandProcessor(){
-    cout << "testing Command Processing\n\n";
+    cout << "\nTESTING COMMAND PROCESSING\n\n";
+
+    GameEngine* game;
+    game = new GameEngine();
+
+    CommandProcessor* processor;
+    processor = new CommandProcessor();
+
+
+    cout << *game; //Displays current game state
+
+    //Game loop that exists when the user enters 'end' command
+    do{
+        game->getCurrentState()->transition(game, processor->getCommand(game));
+    }while(true);
 
 
 
@@ -24,7 +39,7 @@ void testCommandProcessor(){
 
 
 
-
-int main(){
-    testCommandProcessor();
-}
+//
+//int main(){
+//    testCommandProcessor();
+//}
