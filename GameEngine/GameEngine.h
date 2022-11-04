@@ -28,6 +28,7 @@ class GameEngine {
 
 private:
     class State* currentState;
+    CommandProcessor* commandProcessor;
 //    vector<Player*> players;
 //    Map* map;
 public:
@@ -44,6 +45,7 @@ public:
 
     vector<Player*> players;
     Map* map;
+    void startupPhase();
     void reinforcementPhase();
 };
 

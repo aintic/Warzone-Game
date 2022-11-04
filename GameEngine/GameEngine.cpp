@@ -26,6 +26,7 @@ int GameEngine::turn = 1;
 
 //default constructor
 GameEngine::GameEngine() {
+    commandProcessor = new CommandProcessor();
     currentState = new startupState();
     map = nullptr;
 }
@@ -34,6 +35,8 @@ GameEngine::GameEngine() {
 GameEngine::~GameEngine() {
     delete currentState;
     currentState = nullptr;
+    delete commandProcessor;
+    commandProcessor = nullptr;
 }
 
 //parametrized constructor
@@ -70,6 +73,14 @@ void GameEngine::setCurrentState(State* state){
 void GameEngine::nextState(State* nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
+}
+
+void GameEngine::startupPhase() {
+    do{
+        Command* command = this->commandProcessor->getCommand(this);
+        this->getCurrentState()->transition(this, command->get_typed_command());
+        // TODO: save effect of command
+    }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 }
 
 void GameEngine::reinforcementPhase() {
