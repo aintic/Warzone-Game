@@ -22,8 +22,10 @@ void testCommandProcessor(){
 
     //Game loop that exists when the user enters 'end' command
     do{
-        game->getCurrentState()->transition(game, processor->getCommand(game));
+        Command* command = processor->getCommand(game);
+        game->getCurrentState()->transition(game, command->get_typed_command());
     }while(true);
+
 
 
 
@@ -39,7 +41,7 @@ void testCommandProcessor(){
 
 
 
-//
-//int main(){
-//    testCommandProcessor();
-//}
+
+int main(){
+    testCommandProcessor();
+}
