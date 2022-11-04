@@ -9,17 +9,17 @@ using std::string;
 //to different states of the game based on user input. Invalid commands are taken into
 //account by the transition method, that only allows a state transition with valid commands.
 
-void testGameStates(){
-    GameEngine* game;
-    game = new GameEngine();
-    string command;
-    cout << "\nTESTING GAME STATES\n\n";
-    cout << *game; //Displays current game state
-
-    //Game loop that exists when the user enters 'end' command
-    do{
-        cout << "\nPlease enter command to move to the next state:  ";
-        cin >> command;
-        game->getCurrentState()->transition(game, command);
-    }while(true);
-}
+//void testGameStates(){
+//    GameEngine* game;
+//    game = new GameEngine();
+//    string command;
+//    cout << "\nTESTING GAME STATES\n\n";
+//    cout << *game; //Displays current game state
+//
+//    //Game loop that exists when the user enters 'end' command
+//    do{
+//        cout << "\nPlease enter command to move to the next state:  ";
+//        cin >> command;
+//        game->getCurrentState()->transition(game, command);
+//    }while(true);
+//}
