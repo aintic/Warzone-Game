@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
+#include "../Player/Player.h"
+#include "../Map/Map.h"
 using std::cout;
 using std::cin;
 using std::string;
@@ -9,6 +12,7 @@ using std::vector;
 using std::ostream;
 using std::endl;
 
+class Player;
 
 //
 //GAME ENGINE CLASS
@@ -21,6 +25,8 @@ class GameEngine {
 
 private:
     class State* currentState;
+//    vector<Player*> players;
+//    Map* map;
 public:
     GameEngine(); //default constructor
     ~GameEngine(); //destructor
@@ -33,7 +39,8 @@ public:
     static int turn; //count iterations of main game phase
     friend ostream& operator <<(ostream& stream, const GameEngine& g); //stream insertion operator
 
-
+    vector<Player*> players;
+    Map* map;
     void reinforcementPhase();
 };
 

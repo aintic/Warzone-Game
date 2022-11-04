@@ -3,12 +3,11 @@
 #include "../Cards/Cards.h"
 using namespace std;
 
-int Player::playerID = 0;
+int Player::uniqueID = 0;
 
 //Default constructor
 Player::Player() {
-    playerID++;
-    this->playerID = playerID;
+    this->playerID = ++uniqueID;
     this->name = "player";
     vector<Territory*> t;
     this->territories = t;
@@ -18,8 +17,7 @@ Player::Player() {
 
 //Constructor with name only
 Player::Player(string name) {
-    playerID++;
-    this->playerID = playerID;
+    this->playerID = ++uniqueID;
     this->name = name;
     vector<Territory*> t;
     this->territories = t;
@@ -31,8 +29,7 @@ Player::Player(string name) {
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
-    playerID++;
-    this->playerID = playerID;
+    this->playerID = ++uniqueID;
     this->name = name;
     this->territories = territories;
     this->hand = hand;
@@ -81,7 +78,6 @@ vector<Territory*> Player:: toDefend(){
 //returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
     return this->territories;
-
 }
 
 //method for testing purposes to issue existing order
@@ -117,7 +113,7 @@ void Player::conquerTerritory(Territory* t) {
 
 //getters
 int Player::getPlayerID(){
-    return playerID;
+    return this->playerID;
 }
 
 string Player:: getName(){

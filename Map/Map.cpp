@@ -576,7 +576,6 @@ int Map::allContinentsBonus(Player* player) {
     for(auto & x : continents){
         int count = 0;
         int continentSize = x.second->get_continent_size();
-        cout << x.second->get_name() << endl;
         for(auto const& y : player->getTerritories()){
             if(y->get_continent_name() == x.second->get_name()){
                 count++;
