@@ -569,6 +569,25 @@ void Map::validate(){
     }
 }
 
+//returns sum of bonuses to player if they own all territories
+//in one continent
+int Map::allContinentsBonus(Player* player) {
+    int bonus = 0;
+    for(auto & x : continents){
+        int count = 0;
+        int continentSize = x.second->get_continent_size();
+        for(auto const& y : player->getTerritories()){
+            if(y->get_continent_name() == x.second->get_name()){
+                count++;
+            }
+        }
+        if(continentSize == count){
+            bonus += x.second->get_score();
+        }
+    }
+    return bonus;
+}
+
 //
 //MAP LOADER CLASS
 //

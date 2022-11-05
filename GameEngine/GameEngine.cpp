@@ -18,7 +18,7 @@ const string endState::stateName = "Win";
 
 
 //
-//GAME ENGINE STATE CLASS
+//GAME ENGINE CLASS
 //
 
 //Initializing static turn variable to 1 for the first turn
@@ -26,13 +26,19 @@ int GameEngine::turn = 1;
 
 //default constructor
 GameEngine::GameEngine() {
+    commandProcessor = new CommandProcessor();
     currentState = new startupState();
+    map = nullptr;
 }
 
 //destructor
 GameEngine::~GameEngine() {
     delete currentState;
     currentState = nullptr;
+    delete commandProcessor;
+    commandProcessor = nullptr;
+    delete map;
+    map = nullptr;
 }
 
 //parametrized constructor
@@ -71,6 +77,55 @@ void GameEngine::nextState(State* nextState) {
     this->setCurrentState(nextState);
 }
 
+void GameEngine::startupPhase() {
+    do{ // loop while not in assign reinforcement phase
+        Command* command = this->commandProcessor->getCommand(this);
+        // since get_command takes care of verifying the validity of the command in the given state of the game
+        // we can use is statements to execute the command and save the appropriate effect
+        string typed_command = command->get_typed_command();
+
+        if(typed_command == "loadmap"){
+            cout << "loading the map"<< endl;
+            command->saveEffect("map loaded");
+        }
+        else if(typed_command == "validatemap"){
+            cout << "validating the map"<< endl;
+            command->saveEffect("map validates");
+
+        }
+        else if(typed_command == "addplayer"){
+            cout << "Adding player"<< endl;
+            command->saveEffect("player added");
+
+        }
+        else if(typed_command == "gamestart"){
+            cout << "Starting the game"<< endl;
+            command->saveEffect("game started");
+
+        }
+        else{
+            cout << "SOMETHING WENT TERRIBLY WRONG!!!";
+            command->saveEffect("SOMETHING WENT WRONG");
+
+        }
+        this->getCurrentState()->transition(this, command->get_typed_command());
+    }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
+}
+
+void GameEngine::reinforcementPhase() {
+    for(Player* p : players){
+        cout << "num territories: " << p->getNumTerritories() << endl;
+        int armyUnits = floor(p->getNumTerritories() / 3);
+        cout << "army units : " << armyUnits << endl;
+        int continentBonus = map->allContinentsBonus(p);
+        cout << "continent bonus : " << continentBonus << endl;
+        int reinforcementPool = max(armyUnits + map->allContinentsBonus(p), 3);
+        cout << "reinforcement : " << reinforcementPool << endl;
+        p->setReinforcementPool(max(armyUnits + map->allContinentsBonus(p), 3));
+        cout << "Player: " << p->getPlayerID() << " got " <<  p->getReinforcementPool() <<
+        " armies during the reinforcement phase!\n" << endl;
+    }
+}
 
 //
 //ABSTRACT STATE CLASS
@@ -199,7 +254,7 @@ startupState &startupState::operator=(const startupState &s) {
 
 //method that holds all valid commands
 vector<string> startupState::getValidCommand() {
-    vector<string> vect = {"loadmap","validatemap","addplayer","assigncountries"};
+    vector<string> vect = {"loadmap","validatemap","addplayer","gamestart"};
     return vect;
 }
 
