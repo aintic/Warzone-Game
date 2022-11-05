@@ -16,6 +16,7 @@ using std::endl;
 
 class Player;
 class Command;
+class CommandProcessor;
 
 //
 //GAME ENGINE CLASS

@@ -37,6 +37,8 @@ GameEngine::~GameEngine() {
     currentState = nullptr;
     delete commandProcessor;
     commandProcessor = nullptr;
+    delete map;
+    map = nullptr;
 }
 
 //parametrized constructor
@@ -76,10 +78,37 @@ void GameEngine::nextState(State* nextState) {
 }
 
 void GameEngine::startupPhase() {
-    do{
+    do{ // loop while not in assign reinforcement phase
         Command* command = this->commandProcessor->getCommand(this);
+        // since get_command takes care of verifying the validity of the command in the given state of the game
+        // we can use is statements to execute the command and save the appropriate effect
+        string typed_command = command->get_typed_command();
+
+        if(typed_command == "loadmap"){
+            cout << "loading the map"<< endl;
+            command->saveEffect("map loaded");
+        }
+        else if(typed_command == "validatemap"){
+            cout << "validating the map"<< endl;
+            command->saveEffect("map validates");
+
+        }
+        else if(typed_command == "addplayer"){
+            cout << "Adding player"<< endl;
+            command->saveEffect("player added");
+
+        }
+        else if(typed_command == "gamestart"){
+            cout << "Starting the game"<< endl;
+            command->saveEffect("game started");
+
+        }
+        else{
+            cout << "SOMETHING WENT TERRIBLY WRONG!!!";
+            command->saveEffect("SOMETHING WENT WRONG");
+
+        }
         this->getCurrentState()->transition(this, command->get_typed_command());
-        // TODO: save effect of command
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 }
 
@@ -225,7 +254,7 @@ startupState &startupState::operator=(const startupState &s) {
 
 //method that holds all valid commands
 vector<string> startupState::getValidCommand() {
-    vector<string> vect = {"loadmap","validatemap","addplayer","assigncountries"};
+    vector<string> vect = {"loadmap","validatemap","addplayer","gamestart"};
     return vect;
 }
 
