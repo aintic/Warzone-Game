@@ -30,6 +30,6 @@ void testCommandProcessor(){
 }
 
 
-int main(){
-    testCommandProcessor();
-}
+//int main(){
+//    testCommandProcessor();
+//}
