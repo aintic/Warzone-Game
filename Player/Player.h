@@ -3,6 +3,7 @@
 #include <vector>
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -16,109 +17,41 @@ class Hand;
 //
 class Player{
 
+protected:
+    static int uniqueID;
 public:
-    /**
-     * default constructor
-     */
-    Player();
-
-    /**
-     * Player constructor: creates a Player object
-     * @param playerID
-     * @param name
-     */
-    Player(int playerID, string name);
-
-    /**
-     * Player constructor: creates a Player object
-     * @param playerID
-     * @param name
-     * @param territories
-     * @param hand
-     * @param orders
-     */
-    Player(int playerID, string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders);
-
-    /**
-     * copy constructor
-     * @param p
-     */
-    Player(const Player& p);
-
-    /**
-     * destructor
-     */
-    ~Player();
-
-    /**
-     * assignment operator
-     * @param p
-     * @return &Player
-     */
-    Player& operator=(const Player& p);
-
-    /**
-     * getters
-     * @return
-     */
+    Player(); //default constructor
+    Player(string name); //player constructor
+    Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders); //parametrized constructor
+    Player(const Player& p); //copy constructor
+    ~Player(); //destructor
+    Player& operator=(const Player& p); //assignment operator
+    //Getters and Setters
     int getPlayerID();
     OrdersList* getPlayerOrderList();
     Hand* getHand();
     string getName();
     vector<Territory*> getTerritories();
-
-    /**
-     * toDefend: return a list of territories to be defended
-     * @return vector<Territory*>
-     */
-    vector<Territory*> toDefend();
-
-    /**
-     * toAttack: return a list of territories to be attacked
-     * @return vector<Territory*>
-     */
-    vector<Territory*> toAttack();
-
-    /**
-     * issueOrder : creates an order object and Player object sets its orderlist
-     * @param p
-     */
-    void issueOrder();
-
-    /**
-     * issueOrder : method for testing purposes to add orders to orderList
-     * @param p
-     */
-    void issueOrder(Order* o);
-
-    /**
-     * addTerritory: adds player's territories
-     * @param territory
-     */
-    void addTerritory(Territory* territory);
-
-    /**
-     * setters
-     * @param orders
-     * @return
-     */
+    int getNumTerritories();
+    int getReinforcementPool();
     void setPlayerOrderList(OrdersList* orders);
-
-    /**
-     * setTerritories
-     * @return territories that are owned by player
-     */
     void setTerritories(vector<Territory*> t);
+    void setReinforcementPool(int armies);
+
+    vector<Territory*> toDefend(); //player territories to defend
+    vector<Territory*> toAttack(); //player territories to attack
+    void issueOrder(); //creates order object and adds to list of orders
+    void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
+    void conquerTerritory(Territory* t);
+    void addTerritory(Territory* territory); //adds player's territories ?
+    void removeTerritory(Territory* territory);
+    friend ostream& operator << (ostream& os, Player& p); //stream insertion operator
 
 private:
     string name;
     Hand* hand;
-    vector<Territory*> territories; // List of owned territories
-    OrdersList* order_list;
-    int playerID;
+    vector<Territory*> territories; //list of owned territories
+    OrdersList* order_list; //list of current orders
+    int playerID; //unique player ID
+    int reinforcementPool;
 };
-
-/**
- * Stream insertion operator
- */
-ostream& operator << (ostream& os, Player& p);
