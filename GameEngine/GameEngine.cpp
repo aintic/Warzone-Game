@@ -79,9 +79,18 @@ void GameEngine::reinforcementPhase() {
 }
 
 void GameEngine::issueOrderPhase() {
-for (Player *p : players){
-    p->issueOrder();
-}
+    int playersDoneIssuingOrders = 0;
+    while (playersDoneIssuingOrders != players.size()) {
+        playersDoneIssuingOrders = 0;
+        for (Player *p: players) {
+            if (p->getHasIssueNewOrder()) {
+                p->issueOrder();
+            }
+            else {
+                playersDoneIssuingOrders++;
+            }
+        }
+    }
 }
 //
 //ABSTRACT STATE CLASS
