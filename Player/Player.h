@@ -18,6 +18,8 @@ class Deck;
 //
 class Player{
 
+protected:
+    static int uniqueID;
 public:
     Player(); //default constructor
     Player(string name); //player constructor
@@ -52,7 +54,6 @@ private:
     Hand* hand;
     vector<Territory*> territories; //list of owned territories
     OrdersList* order_list; //list of current orders
-    static int numPlayers; //unique player ID
-    int playerID;
+    int playerID; //unique player ID
     int reinforcementPool;
 };

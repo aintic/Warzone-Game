@@ -2,6 +2,7 @@
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
+#include "../GameEngine/GameEngine.h"
 #include <map>
 #include <vector>
 
@@ -10,8 +11,11 @@ using namespace std;
 void testPlayers() {
 
     Player *p1 = new Player;
+    cout << p1->getPlayerID() << endl;
     Player *p2 = new Player;
-    cout << *p1 << endl;
+    cout << p2->getPlayerID() << endl;
+
+    GameEngine* game = new GameEngine;
 
     vector<string> neighbor = {"t1", "t2", "t3", "t4", "t5"};
 
@@ -41,7 +45,12 @@ void testPlayers() {
     //Creating map object
     Map* map = new Map("map 1", continents, territories);
     //Displaying map
-    cout << *map << endl;
+    //cout << *map << endl;
+
+    //Linking map and players to gameEngine
+    game->map = map;
+    game->players.push_back(p1);
+    game->players.push_back(p2);
 
     p1->addTerritory(t1);
     p1->addTerritory(t2);
@@ -51,10 +60,16 @@ void testPlayers() {
     p2->conquerTerritory(t3);
     p2->conquerTerritory(t4);
 
-    cout << "Continent bonus for p1: ";
+    cout << "\n\nContinent bonus for p1: ";
     cout << map->allContinentsBonus(p1) << endl;
     cout << "Continent bonus for p2: ";
     cout << map->allContinentsBonus(p2) << endl;
+
+    cout << "Player 1 currently owns : " << p1->getNumTerritories() << " territories" << endl;
+    cout << "Player 2 currently owns : " << p2->getNumTerritories() << " territories" << endl;
+
+    cout << "\nExecuting reinforcement phase..." << endl;
+    game->reinforcementPhase();
 
 
 //    cout << p1->getNumTerritories() << endl;

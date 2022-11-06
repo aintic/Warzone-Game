@@ -7,22 +7,22 @@
 
 
 using namespace std;
-
+//
 int main()
 {
-    // Map 
-	//testLoadMaps();
-
-    // Player
-    //testPlayers();
-
-    //Orders list
-    //testOrdersList();
-
-    //Cards
-    //testCards();
-
-    //GameEngine
-   //testGameStates();
-   testMainGameLoop();
+//    // Map
+//	testLoadMaps();
+//
+//    // Player
+    testPlayers();
+//
+//    //Orders list
+//    testOrdersList();
+//
+//    //Cards
+//    testCards();
+//
+//    //GameEngine
+//    testGameStates();
 }
+

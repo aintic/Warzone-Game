@@ -4,12 +4,12 @@
 #include "algorithm"
 using std::find_if;
 
-int Player::numPlayers = 0;
+
+int Player::uniqueID = 0;
 
 //Default constructor
 Player::Player() {
-    numPlayers++;
-    this->playerID = numPlayers;
+    this->playerID = ++uniqueID;
     this->name = "player";
     vector<Territory*> t;
     this->territories = t;
@@ -20,8 +20,7 @@ Player::Player() {
 
 //Constructor with name only
 Player::Player(string name) {
-    numPlayers++;
-    this->playerID = numPlayers;
+    this->playerID = ++uniqueID;
     this->name = name;
     vector<Territory*> t;
     this->territories = t;
@@ -33,8 +32,7 @@ Player::Player(string name) {
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
-    numPlayers++;
-    this->playerID = numPlayers;
+    this->playerID = ++uniqueID;
     this->name = name;
     this->territories = territories;
     this->hand = hand;
@@ -143,7 +141,7 @@ void Player::conquerTerritory(Territory* t) {
 
 //getters
 int Player::getPlayerID(){
-    return playerID;
+    return this->playerID;
 }
 
 string Player:: getName(){
