@@ -4,23 +4,24 @@
 #include "algorithm"
 using std::find_if;
 
-int Player::playerID = 0;
+int Player::numPlayers = 0;
 
 //Default constructor
 Player::Player() {
-    playerID++;
-    this->playerID = playerID;
+    numPlayers++;
+    this->playerID = numPlayers;
     this->name = "player";
     vector<Territory*> t;
     this->territories = t;
     this->hand = new Hand;
     this->order_list = new OrdersList();
+    this->reinforcementPool = 5;
 }
 
 //Constructor with name only
 Player::Player(string name) {
-    playerID++;
-    this->playerID = playerID;
+    numPlayers++;
+    this->playerID = numPlayers;
     this->name = name;
     vector<Territory*> t;
     this->territories = t;
@@ -32,8 +33,8 @@ Player::Player(string name) {
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards and list of orders
 Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
-    playerID++;
-    this->playerID = playerID;
+    numPlayers++;
+    this->playerID = numPlayers;
     this->name = name;
     this->territories = territories;
     this->hand = hand;
@@ -98,18 +99,27 @@ vector<Territory*> Player:: toAttack(){
     return toAttackTerritories;
 }
 
-//method for testing purposes to issue existing order
-void Player::issueOrder(Order* o) {
-    if(o) {
-        this->order_list->add(o);
-    }
+void Player::addOrder(Order *o){
+    this->order_list->add(o);
 }
 
 //creates an order object and adds it to the list of orders
-void Player::issueOrder(){
-    while(reinforcementPool != 0) {
+bool Player::issueOrder(Deck *deck) {
+    if(reinforcementPool != 0) {
         order_list->add(new Deploy);
+        cout << *this << " issued a new deploy order" << endl;
+        reinforcementPool--;
     }
+    else if (!this->hand->getCards().empty()) {
+        hand->play(*deck, this, 0);
+    }
+    else {
+        order_list->add(new Advance);
+        cout << *this << " issued a new advance order" << endl;
+        cout << *this << " is done issuing orders" << endl;
+        return false;
+    }
+    return true;
 }
 
 //adds a territory to the list of owned territories
@@ -172,13 +182,6 @@ void Player::setReinforcementPool(int armies) {
     this->reinforcementPool = armies;
 }
 
-bool Player::getHasIssueNewOrder() const{
-    return this->hasIssueNewOrder;
-}
-
-void Player::setHasIssueNewOrder(bool b) {
-    this->hasIssueNewOrder = b;
-}
 ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
 }
