@@ -94,10 +94,9 @@ Card* BombCard::clone() {
 }
 /**
  * BombCard Class play method
- * @return corresponding order instance
  */
-Order* BombCard::play(){
-    return new BombCardOrder;
+void BombCard::play(Player *player){
+    player->addOrder(new BombCardOrder);
 }
 /**
  * BombCard Class getter
@@ -146,9 +145,7 @@ Card* ReinforcementCard::clone() {
  * ReinforcementCard Class play method
  * @return corresponding order instance
  */
-Order* ReinforcementCard::play(){
-    return nullptr;
-}
+void ReinforcementCard::play(Player *player){}
 /**
  * ReinforcementCard Class getter
  */
@@ -197,8 +194,8 @@ Card* BlockadeCard::clone() {
  * BlockadeCard Class play method
  * @return corresponding order instance
  */
-Order* BlockadeCard::play() {
-    return new BlockadeCardOrder;
+void BlockadeCard::play(Player *player) {
+    player->addOrder(new BlockadeCardOrder);
 }
 
 /**
@@ -248,8 +245,8 @@ Card* AirliftCard::clone() {
  * AirliftCard Class play method
  * @return corresponding order instance
  */
-Order* AirliftCard::play() {
-    return new AirliftCardOrder;
+void AirliftCard::play(Player *player) {
+    player->addOrder(new AirliftCardOrder);
 }
 
 /**
@@ -300,8 +297,8 @@ Card* DiplomacyCard::clone(){
  * DiplomacyCard Class play method
  * @return corresponding order instance
  */
-Order* DiplomacyCard::play() {
-    return new Negotiate;
+void DiplomacyCard::play(Player *player) {
+    player->addOrder(new Negotiate);
 }
 
 /**
@@ -368,17 +365,15 @@ void Hand::addCard(Card *c){
  * Creates corresponding Order based on the played Card's type
  * @return Order created by playing card
  */
-Order* Hand::play(Deck& d, int index){
-    Order* o = nullptr;
+void Hand::play(Deck& d, Player* player, int index){
         if(index >= 0 && index < this->cards.size()){
-            o = this->cards.at(index)->play();
+            this->cards.at(index)->play(player);
             d.getCards().push_back(this->cards.at(index));
             this->cards.erase(this->cards.begin() + index);
         }
         else{
             cout << "Play failed - Invalid Index: " << index;
         }
-        return o;
     }
 
 /**
