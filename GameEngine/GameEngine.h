@@ -10,6 +10,7 @@ using std::ostream;
 using std::endl;
 
 class Player;
+class Deck;
 //
 //GAME ENGINE CLASS
 //
@@ -22,9 +23,11 @@ class GameEngine {
 private:
     class State* currentState;
     vector<Player*> players;
+    Deck* deck;
 
 public:
     GameEngine(); //default constructor
+    GameEngine(int numPlayers);
     ~GameEngine(); //destructor
     GameEngine(State* state); //parametrized constructor
     GameEngine(const GameEngine& g); //copy constructor

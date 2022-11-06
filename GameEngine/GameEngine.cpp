@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "../Player/Player.h"
+#include "../Cards/Cards.h"
 #include <iostream>
 
 
@@ -28,6 +29,13 @@ int GameEngine::turn = 1;
 //default constructor
 GameEngine::GameEngine() {
     currentState = new startupState();
+}
+
+GameEngine::GameEngine(int numPlayers) {
+    deck = new Deck;
+    for (int i = 0; i < numPlayers; i++){
+        this->players.push_back(new Player);
+    }
 }
 
 //destructor
@@ -79,14 +87,13 @@ void GameEngine::reinforcementPhase() {
 }
 
 void GameEngine::issueOrderPhase() {
+    cout << "Starting Issuing Orders Phase" << endl;
     int playersDoneIssuingOrders = 0;
+
     while (playersDoneIssuingOrders != players.size()) {
         playersDoneIssuingOrders = 0;
         for (Player *p: players) {
-            if (p->getHasIssueNewOrder()) {
-                p->issueOrder();
-            }
-            else {
+            if (!p->issueOrder(this->deck)) {
                 playersDoneIssuingOrders++;
             }
         }

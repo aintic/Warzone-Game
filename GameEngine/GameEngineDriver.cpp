@@ -2,6 +2,8 @@
 #include <string>
 #include "GameEngine.h"
 #include "../Map/Map.h"
+#include "../Player/Player.h"
+
 using std::cout;
 using std::cin;
 using std::string;
@@ -26,6 +28,8 @@ void testGameStates(){
 }
 
 void testMainGameLoop(){
+    GameEngine g(3);
 
+    g.issueOrderPhase();
 }
 
