@@ -14,17 +14,9 @@ void testCommandProcessor(){
     GameEngine* game;
     game = new GameEngine();
 
-    CommandProcessor* processor;
-    processor = new CommandProcessor();
+    game->startupPhase();
 
-
-    cout << *game; //Displays current game state
-
-    //Game loop that exists when the user enters 'end' command
-    do{
-        game->getCurrentState()->transition(game, processor->getCommand(game));
-    }while(true);
-
+    // win phase will be implemented after the main game loop is done
 
 
 //    (1) commands can be read from the console using the CommandProcessor class
@@ -38,8 +30,6 @@ void testCommandProcessor(){
 }
 
 
-
-//
 //int main(){
 //    testCommandProcessor();
 //}

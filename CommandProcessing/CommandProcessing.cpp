@@ -178,7 +178,7 @@ Command* CommandProcessor::getCommand(GameEngine* game){
         cout<< command->get_command_effect() << endl;
 
         // read a command
-        Command* command = this->readCommand();
+        command = this->readCommand();
 
         // validate the command
         valid = this->validate(command, game);
@@ -207,7 +207,7 @@ Command* CommandProcessor::readCommand(){
 void CommandProcessor::saveCommand(Command* c){
     cout << "\033[1;32m\t[Starting saveCommand()]]\033[0m\n" << endl;
     this->commands.push_back(c);
-    cout << "\033[1;32m\t\t[Command saved]]\033[0m\n" << endl;
+    cout << "\033[1;32m\t\t[Command saved]\033[0m\n" << endl;
     cout << "\033[1;32m\t[Exiting saveCommand()]]\033[0m\n" << endl;
 }
 
