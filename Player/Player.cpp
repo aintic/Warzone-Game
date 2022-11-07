@@ -1,7 +1,9 @@
 #include "Player.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
-using namespace std;
+#include "algorithm"
+using std::find_if;
+
 
 int Player::uniqueID = 0;
 
@@ -13,6 +15,7 @@ Player::Player() {
     this->territories = t;
     this->hand = new Hand;
     this->order_list = new OrdersList();
+    this->reinforcementPool = 5;
 }
 
 //Constructor with name only
@@ -77,25 +80,50 @@ vector<Territory*> Player:: toDefend(){
 
 //returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
-    return this->territories;
+    vector<Territory*> toAttackTerritories;
+    for (Territory *ownedTerritory : territories){
+        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) {
+            if (neighborTerritory->get_owner() != this) {
+                auto it = find_if(toAttackTerritories.begin(), toAttackTerritories.end(),
+                                  [&neighborTerritory](Territory *t) {
+                                      return t->get_id() == neighborTerritory->get_id();
+                                  });
+                if (it == toAttackTerritories.end()) {
+                    toAttackTerritories.push_back(neighborTerritory);
+                }
+            }
+        }
+    }
+    return toAttackTerritories;
 }
 
-//method for testing purposes to issue existing order
-void Player::issueOrder(Order* o) {
-    if(o) {
-        this->order_list->add(o);
-    }
+void Player::addOrder(Order *o){
+    this->order_list->add(o);
 }
 
 //creates an order object and adds it to the list of orders
-void Player::issueOrder(){
-    order_list->add(new Deploy);
+bool Player::issueOrder(Deck *deck) {
+    if(reinforcementPool != 0) {
+        order_list->add(new Deploy);
+        cout << *this << " issued a new deploy order" << endl;
+        reinforcementPool--;
+    }
+    else if (!this->hand->getCards().empty()) {
+        hand->play(*deck, this, 0);
+    }
+    else {
+        order_list->add(new Advance);
+        cout << *this << " issued a new advance order" << endl;
+        cout << *this << " is done issuing orders" << endl;
+        return false;
+    }
+    return true;
 }
 
 //adds a territory to the list of owned territories
 void Player::addTerritory(Territory* t){
-        territories.push_back(t); // can be used like p1->addTerritory(t1*)
-        t->set_owner(this);
+    territories.push_back(t); // can be used like p1->addTerritory(t1*)
+    t->set_owner(this);
 }
 
 //removes territory from players list of territories

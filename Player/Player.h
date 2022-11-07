@@ -8,6 +8,7 @@
 using namespace std;
 
 class Hand;
+class Deck;
 
 //
 //PLAYER CLASS
@@ -37,10 +38,11 @@ public:
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
     void setReinforcementPool(int armies);
+    void addOrder(Order *o);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
-    void issueOrder(); //creates order object and adds to list of orders
+    bool issueOrder(Deck *d); //creates order object and adds to list of orders
     void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?

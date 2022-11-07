@@ -16,6 +16,7 @@ using std::ostream;
 using std::endl;
 
 class Player;
+class Deck;
 class Command;
 class CommandProcessor;
 
@@ -30,11 +31,13 @@ class GameEngine {
 
 private:
     class State* currentState;
+    Deck* deck;
     CommandProcessor* commandProcessor;
 //    vector<Player*> players;
 //    Map* map;
 public:
     GameEngine(); //default constructor
+    GameEngine(int numPlayers);
     ~GameEngine(); //destructor
     GameEngine(State* state); //parametrized constructor
     GameEngine(const GameEngine& g); //copy constructor
@@ -44,13 +47,13 @@ public:
     void nextState(State* nextState); //method to change state
     static int turn; //count iterations of main game phase
     friend ostream& operator <<(ostream& stream, const GameEngine& g); //stream insertion operator
-
     vector<Player*> players;
     Map* map;
     void startupPhase();
     void reinforcementPhase();
     void executeOrdersPhase();
     void mainGameLoop();
+    void issueOrderPhase();
 };
 
 

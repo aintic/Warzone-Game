@@ -1,4 +1,6 @@
 #include "GameEngine.h"
+#include "../Player/Player.h"
+#include "../Cards/Cards.h"
 #include <iostream>
 #include <vector>
 
@@ -32,6 +34,13 @@ GameEngine::GameEngine() {
     commandProcessor = new CommandProcessor();
     currentState = new startupState();
     map = nullptr;
+}
+
+GameEngine::GameEngine(int numPlayers) {
+    deck = new Deck;
+    for (int i = 0; i < numPlayers; i++){
+        this->players.push_back(new Player);
+    }
 }
 
 //destructor
@@ -179,6 +188,19 @@ void GameEngine::mainGameLoop() {
     }while(players.size() > 1);
 }
 
+void GameEngine::issueOrderPhase() {
+    cout << "Starting Issuing Orders Phase" << endl;
+    int playersDoneIssuingOrders = 0;
+
+    while (playersDoneIssuingOrders != players.size()) {
+        playersDoneIssuingOrders = 0;
+        for (Player *p: players) {
+            if (!p->issueOrder(this->deck)) {
+                playersDoneIssuingOrders++;
+            }
+        }
+    }
+}
 //
 //ABSTRACT STATE CLASS
 //
