@@ -16,6 +16,9 @@ Player::Player() {
     this->hand = new Hand;
     this->order_list = new OrdersList();
     this->reinforcementPool = 5;
+    vector<int> f;
+    this->_friendlyList = f;
+    this->conquered = false;
 }
 
 //Constructor with name only
@@ -26,17 +29,23 @@ Player::Player(string name) {
     this->territories = t;
     this->hand = new Hand();
     this->order_list = new OrdersList();
+    vector<int> f;
+    this->_friendlyList = f;
+    this->conquered = false;
 }
 
 
 //Constructor with player id, territories, hand and orders
-//So, the player owns territories, owns hand cards and list of orders
+//So, the player owns territories, owns hand cards, list of orders and list of friendly players negotiated with
 Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
     this->playerID = ++uniqueID;
     this->name = name;
     this->territories = territories;
     this->hand = hand;
     this->order_list = orders;
+    vector<int> f;
+    this->_friendlyList = f;
+    this->conquered = false;
 }
 
 //copy constructor
@@ -48,6 +57,8 @@ Player::Player(const Player& p){
     }
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
+    this->_friendlyList = p._friendlyList;
+    this->conquered = p.conquered;
 }
 
 //destructor
@@ -59,6 +70,7 @@ Player::~Player()
         delete t;
     }
     territories.clear();
+    _friendlyList.clear();
 }
 
 //assignment operator
@@ -70,6 +82,8 @@ Player& Player::operator=(const Player& p){
     }
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
+    this->_friendlyList = p._friendlyList;
+    this->conquered = p.conquered;
     return *this;
 }
 
@@ -136,6 +150,30 @@ void Player::conquerTerritory(Territory* t) {
     Player* loser = t->get_owner();
     loser->removeTerritory(t);
     this->addTerritory(t);
+    this->conquered = true;
+}
+
+// add a friendly player when executing Negotiate order
+void Player::addFriendly(int playerID) {
+    _friendlyList.push_back(playerID);
+}
+
+// reset player's friendly list (at the end of every turn)
+void Player::resetFriendlyList() {
+    _friendlyList.clear();
+}
+
+// check if a player is friendly to current player
+bool Player::isFriendly(int playerID) {
+    int size = _friendlyList.size();
+
+    for (int i = 0; i < size; i++) {
+        if (_friendlyList[i] == playerID) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -165,6 +203,10 @@ int Player::getNumTerritories() {
 
 int Player::getReinforcementPool() {
     return reinforcementPool;
+}
+
+bool Player::getConquered() {
+    return conquered;
 }
 
 //setters

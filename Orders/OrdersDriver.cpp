@@ -7,13 +7,14 @@
  * Free function to test Order and OrdersList
  */
 void testOrdersList() {
+
     // create new orders' list and one order of each kind
     OrdersList* ol = new OrdersList;
     Order* testDeploy = new Deploy;
     Order* testAdvance = new Advance;
-    Order* testBomb = new BombCardOrder;
-    Order* testBlockade = new BlockadeCardOrder;
-    Order* testAirlift = new AirliftCardOrder;
+    Order* testBomb = new Bomb;
+    Order* testBlockade = new Blockade;
+    Order* testAirlift = new Airlift;
     Order* testNegotiate = new Negotiate;
 
     // add orders
