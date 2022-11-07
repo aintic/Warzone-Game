@@ -183,6 +183,7 @@ void GameEngine::executeOrdersPhase() {
         p->resetFriendlyList();
         if (p->getConquered()) {
             deck->draw(*p);
+            p->resetConquered();
         }
     }
     GameEngine::turn++;

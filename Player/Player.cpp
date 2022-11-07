@@ -176,6 +176,9 @@ bool Player::isFriendly(int playerID) {
     return false;
 }
 
+void Player::resetConquered() {
+    this->conquered = false;
+}
 
 //getters
 int Player::getPlayerID(){

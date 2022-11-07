@@ -57,6 +57,7 @@ public:
 
     // method to check whether a player have conquered a territory during this turn
     bool getConquered();
+    void resetConquered();
 
 private:
     string name;
