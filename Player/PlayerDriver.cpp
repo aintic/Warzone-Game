@@ -71,6 +71,79 @@ void testPlayers() {
     cout << "\nExecuting reinforcement phase..." << endl;
     game->reinforcementPhase();
 
+    game->issueOrderPhase();
+
+    for(Player* p : game->players){
+        cout << "Player " << p->getPlayerID() << " issued orders: " << endl;
+        cout << p->getPlayerOrderList()[0] << endl;
+    }
+
+    game->executeOrdersPhase();
+
+//    OrdersList* ol = new OrdersList;
+//    Order* testDeploy = new Deploy;
+//    Order* testAdvance = new Advance;
+//    Order* testAdvance2 = new Advance;
+//    Order* testBomb = new BombCardOrder;
+//    Order* testBlockade = new BlockadeCardOrder;
+//    Order* testAirlift = new AirliftCardOrder;
+//    Order* testNegotiate = new Negotiate;
+//
+//    // add orders
+//    ol->add(testDeploy);
+//    ol->add(testAdvance);
+//    ol->add(testAdvance2);
+//    ol->add(testBlockade);
+//    ol->add(testBomb);
+//
+//    OrdersList* ol2 = new OrdersList;
+//    Order* testDeploy2 = new Deploy;
+//    Order* testDeploy3 = new Deploy;
+//    Order* testDeploy4 = new Deploy;
+//    Order* testBomb2 = new BombCardOrder;
+//
+//    ol2->add(testDeploy2);
+//    ol2->add(testDeploy3);
+//    ol2->add(testDeploy4);
+//    ol2->add(testAirlift);
+//    ol2->add(testNegotiate);
+//    ol2->add(testBomb2);
+//
+//
+//    p1->setPlayerOrderList(ol);
+//    p2->setPlayerOrderList(ol2);
+
+
+    //game->mainGameLoop();
+    //game->executeOrdersPhase();
+
+
+
+
+
+//    cout << *p1->getPlayerOrderList()->getTopOrder() << endl;
+//    cout << *p1->getPlayerOrderList() << endl;
+//    //cout << *p2->getPlayerOrderList()->getTopOrder() << endl;
+//    OrdersList ord = *p2->getPlayerOrderList();
+//    cout << ord << endl;
+//
+//
+//    cout << *game->players[0] << endl;
+//    cout << *game->players[1] << endl;
+//    vector<Player*> copied;
+//    copied = game->players;
+//    cout << *copied[0] << endl;
+//    cout << *copied[1] << endl;
+//    copied.pop_back();
+//
+//    for(int i=0;i<copied.size();i++){
+//        cout << *copied[i] << endl;
+//    }
+//
+//    for(int i=0;i<game->players.size();i++){
+//        cout << *game->players[i] << endl;
+//    }
+
 
 //    cout << p1->getNumTerritories() << endl;
 //    cout << p2->getNumTerritories() << endl;
