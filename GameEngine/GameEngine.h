@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include "../Player/Player.h"
+#include "../Orders/Orders.h"
 #include "../Map/Map.h"
 #include "../CommandProcessing/CommandProcessing.h"
 
@@ -50,6 +51,8 @@ public:
     Map* map;
     void startupPhase();
     void reinforcementPhase();
+    void executeOrdersPhase();
+    void mainGameLoop();
     void issueOrderPhase();
 };
 

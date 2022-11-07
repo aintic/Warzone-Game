@@ -8,6 +8,8 @@
 #include <string>
 using namespace std;
 
+class GameEngine;
+
 class Order {
 public:
     // constructor
@@ -199,6 +201,10 @@ public:
     void remove(int);
     // execute then delete orders from list sequentially
     void executeList();
+
+    void executeOrder();
+    Order* getTopOrder();
+    vector<Order*> getOrderList();
 
 private:
     // list of orders

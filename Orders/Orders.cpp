@@ -569,3 +569,29 @@ void OrdersList::executeList() {
         cout << "\nExecuted all orders. List is now empty." << endl;
     }
 }
+
+//Method to execute a single order
+//maybe make it boolean? so if any more orders to execute it returns true
+void OrdersList::executeOrder() {
+    int size = _ordersList.size();
+
+    _ordersList.front()->execute();
+    delete _ordersList.front();
+    _ordersList.erase(_ordersList.begin());
+    cout << "New size of orderlist : " << size << " -> " << _ordersList.size() << endl;
+}
+
+
+//Make sure that it's never called on empty orderList
+Order* OrdersList::getTopOrder() {
+//    if(!_ordersList.empty()){
+        cout << "Top order : ";
+        Order* o = _ordersList.front();
+        cout << *o << endl;
+        return o;
+//    }
+}
+
+vector<Order *> OrdersList::getOrderList() {
+    return _ordersList;
+}
