@@ -6,7 +6,8 @@
 #include "../Player/Player.h"
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
-#include "../CommandProcessing/CommandProcessing.h"
+//#include "../CommandProcessing/CommandProcessing.h"
+#include "../LoggingObserver/LoggingObserver.h"
 
 using std::cout;
 using std::cin;
@@ -27,12 +28,14 @@ class CommandProcessor;
 //         of the game. With the currentState object, the game engine is able to transition to valid states from
 //         appropriate user input.
 //
-class GameEngine {
+class GameEngine : public ILoggable, public Subject{
 
 private:
     class State* currentState;
     Deck* deck;
     CommandProcessor* commandProcessor;
+    Command* command;
+
 //    vector<Player*> players;
 //    Map* map;
 public:
@@ -54,6 +57,11 @@ public:
     void executeOrdersPhase();
     void mainGameLoop();
     void issueOrderPhase();
+
+    GameEngine(Observer* _obs);
+    string stringToLog();
+    Observer* _observers = nullptr;
+
 };
 
 

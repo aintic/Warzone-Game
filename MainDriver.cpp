@@ -8,13 +8,13 @@
 
 using namespace std;
 //
-int main()
-{
+//int main()
+//{
 //    // Map
 //	testLoadMaps();
 //
 //    // Player
-    testPlayers();
+    //testPlayers();
 //
 //    //Orders list
 //    testOrdersList();
@@ -24,5 +24,5 @@ int main()
 //
 //    //GameEngine
 //    testGameStates();
-}
+//}
 

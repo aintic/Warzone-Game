@@ -6,11 +6,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "../LoggingObserver/LoggingObserver.h"
+#include "../GameEngine/GameEngine.h"
+
 using namespace std;
 
-class GameEngine;
+//class GameEngine;
 
-class Order {
+class Order : public ILoggable, public Subject{
 public:
     // constructor
     Order();
@@ -24,7 +27,7 @@ public:
     // verifies if order is valid
     virtual bool validate() const = 0;
     // execute order
-    virtual void execute() const = 0;
+    virtual void execute() = 0;
     // get order type
     virtual string getOrderType() const = 0;
     // clone order
@@ -33,12 +36,16 @@ public:
     virtual string orderEffect() const = 0;
 
     friend class OrdersList;
+    string stringToLog();
+
 };
 
 class Deploy : public Order {
 public:
     // constructor
     Deploy();
+
+    Deploy(GameEngine* game);
     // destructor
     ~Deploy();
     // stream insertion operator
@@ -46,7 +53,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
@@ -70,7 +77,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
@@ -95,7 +102,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
@@ -119,7 +126,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
@@ -143,7 +150,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
@@ -167,7 +174,7 @@ public:
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order

@@ -12,6 +12,13 @@ Command::Command() {
     this->typed_command = "";
 }
 
+Command::Command(Observer* _obs) {
+    this->typed_command = "";
+    this->Attach(_obs);
+    logger = _obs;
+}
+
+
 /**
  * @brief Constructor: Construct a new Command:: Command object
  *
@@ -100,6 +107,10 @@ void Command::saveEffect(std::string command_effect) {
 CommandProcessor::CommandProcessor() {
 }
 
+CommandProcessor::CommandProcessor(Observer* _obs) {
+    this->Attach(_obs);
+    logger = _obs;
+}
 /**
  * @brief Copy constructor: CommandProcessor a new CommandProcessor:: CommandProcessor object
  *
@@ -242,6 +253,21 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     }
 }
 
+string Command::stringToLog()
+{
 
+    string command = "Commands:  " + get_typed_command();
+    string command_effect = "\nCommand effect: " + get_command_effect();
+    return command + command_effect;
+}
+string CommandProcessor::stringToLog()
+{
+    string output = "Inserted command: ";
+    vector<Command*> temp = get_commands();
+    for(Command* x : temp){
+        output += x->get_typed_command() + "\n";
+    }
+    return output;
+}
 
 //*****************************************************************

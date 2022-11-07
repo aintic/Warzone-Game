@@ -36,6 +36,17 @@ GameEngine::GameEngine() {
     map = nullptr;
 }
 
+GameEngine::GameEngine(Observer* _obs) {
+    commandProcessor = new CommandProcessor(_obs);
+    command = new Command(_obs);
+    currentState = new startupState();
+    map = nullptr;
+    _observers = _obs;
+    this->Attach(_obs);
+}
+
+
+
 GameEngine::GameEngine(int numPlayers) {
     deck = new Deck;
     for (int i = 0; i < numPlayers; i++){
@@ -659,4 +670,9 @@ void endState::transition(GameEngine *gameEngine, string command) {
         delete gameEngine;
         exit(0);
     } else cout << "\nYou have entered an invalid command for the 'Win' state...\n";
+}
+
+
+string GameEngine::stringToLog() {
+    return "GameEngine string to log";
 }

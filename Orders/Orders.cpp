@@ -50,6 +50,10 @@ Order& Order::operator=(const Order& o) {
  */
 Deploy::Deploy() = default;
 
+Deploy::Deploy(GameEngine* game) {
+    this->Attach(game->_observers);
+}
+
 /**
  * Default destructor for Deploy
  */
@@ -78,11 +82,13 @@ bool Deploy::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Deploy::execute() const {
+void Deploy::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -142,7 +148,7 @@ bool Advance::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Advance::execute() const {
+void Advance::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -206,7 +212,7 @@ bool BombCardOrder::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void BombCardOrder::execute() const {
+void BombCardOrder::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -269,7 +275,7 @@ bool BlockadeCardOrder::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void BlockadeCardOrder::execute() const {
+void BlockadeCardOrder::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -333,7 +339,7 @@ bool AirliftCardOrder::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void AirliftCardOrder::execute() const {
+void AirliftCardOrder::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -397,7 +403,7 @@ bool Negotiate::validate() const {
 /**
  * Execute method - prints order effect if validate returns true
  */
-void Negotiate::execute() const {
+void Negotiate::execute() {
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
@@ -594,4 +600,9 @@ Order* OrdersList::getTopOrder() {
 
 vector<Order *> OrdersList::getOrderList() {
     return _ordersList;
+}
+
+string Order::stringToLog()
+{
+    return "Order: " + getOrderType();
 }
