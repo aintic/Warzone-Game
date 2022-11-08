@@ -11,13 +11,15 @@ void testOrdersExecution() {
 
 
     // create new orders' list and one order of each kind
-//    OrdersList* ol = new OrdersList;
-//    Order* testDeploy = new Deploy;
-//    Order* testAdvance = new Advance;
-//    Order* testBomb = new Bomb;
-//    Order* testBlockade = new Blockade;
-//    Order* testAirlift = new Airlift;
-//    Order* testNegotiate = new Negotiate;
+    OrdersList* ol = new OrdersList;
+    Order* testDeploy = new Deploy;
+    Order* testAdvance = new Advance;
+    Order* testBomb = new Bomb;
+    Order* testBlockade = new Blockade;
+    Order* testAirlift = new Airlift;
+    Order* testNegotiate = new Negotiate;
+
+
 //
 //    // add orders
 //    cout << "\n============= Add orders =============\n" << endl;
