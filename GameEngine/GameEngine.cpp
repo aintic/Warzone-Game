@@ -112,7 +112,11 @@ void GameEngine::startupPhase() {
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
             cout << "loading the map "<< map_string << endl;
 
-            // load the map
+            // delete previous map if any
+            delete this->map;
+            this->map = nullptr;
+
+            // load the new map
             string map_path = "Maps/" + map_string + ".map";
             this->map = MapLoader::loadMap(map_path);
 
@@ -128,7 +132,17 @@ void GameEngine::startupPhase() {
         }
         else if(typed_command == "validatemap"){
             cout << "validating the map"<< endl;
-            command->saveEffect("map validates");
+
+            //validate the map
+            this->map->validate();
+
+            if(this->map->get_valid()) {
+                command->saveEffect("map validated");
+            }
+            else{
+                go_to_next_state = false;
+                command->saveEffect("map not valid");
+            }
 
         }
         else if(token_command == "addplayer"){
@@ -150,6 +164,9 @@ void GameEngine::startupPhase() {
         }
         if(go_to_next_state){
             this->getCurrentState()->transition(this, token_command);
+        }
+        else{
+            cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 }
