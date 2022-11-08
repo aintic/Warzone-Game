@@ -15,36 +15,17 @@ class Player;
 
 //*****************************************************************
 // Territory: Represents the territory of a map (node of the graph)
-/**
- * @brief Territory class
- * 
- */
+//Territory class
 class Territory
 {
 public:
-    /**
-     * @brief Constructor: Construct a new Territory object
-     * 
-     * @param id 
-     * @param name 
-     * @param continent_name 
-     * @param x 
-     * @param y 
-     * @param neighbours_strings 
-     */
+    //Constructor: Construct a new Territory object
     Territory(int id, string name, string continent_name, int x, int y, vector <string>  neighbours_strings);
 
-    /**
-     * @brief Copy constructor: Construct a new Territory object
-     *
-     * @param t
-     */
+    //Copy constructor: Construct a new Territory object
     Territory(const Territory &t);
 
-    /**
-     * @brief Destructor: Destroy the Territory object
-     * 
-     */
+    //Destructor: Destroy the Territory object
     ~Territory();
 
     //stream insertion operator
@@ -54,7 +35,7 @@ public:
     Territory& operator=(const Territory& t);
 
     // Getters and setters
-    int get_id();
+    int get_id() const;
     void set_id(int id);
 
     int get_army_units();
@@ -101,51 +82,24 @@ private:
 //*****************************************************************
 // Continent: represents the continent of a map. Is a connected subgraph of a map.
 
-/**
- * @brief Continent Class
- * 
- */
+//Continent Class
 class Continent
 {
 public:
 
-    /**
-     * @brief Constructor: Construct a new Continent object
-     *
-     * @param id
-     * @param name
-     * @param score
-     */
+    //brief Constructor: Construct a new Continent object
     Continent(int id, string name, int score);
 
-    /**
-     * @brief Copy constructor: Construct a new Continent object
-     *
-     * @param c
-     */
+    // Copy constructor: Construct a new Continent object
     Continent(const Continent &c);
 
-    /**
-     * @brief Destructor: Destroy the Continent object
-     *
-     */
+    //Destructor: Destroy the Continent object
     ~Continent();
 
-    /**
-     * @brief Assignment Operator
-     *
-     * @param c
-     * @return Continent&
-     */
+    //Assignment Operator
     Continent& operator=(const Continent& c);
 
-    /**
-     * @brief Stream Insertion operator
-     *
-     * @param stream
-     * @param t
-     * @return ostream&
-     */
+    //Stream Insertion operator
     friend ostream& operator <<(ostream& stream, const Continent& c);
 
     // getters and setters
@@ -162,17 +116,10 @@ public:
     map <int, Territory*> get_territories();
     void set_territories(map <int, Territory*> territories);
 
-    /**
-     * @brief Get the continent size object
-     *
-     * @return int
-     */
+    //Get the continent size object
     int get_continent_size();
 
-    /**
-     * @brief Add a territory
-     *
-     */
+    //Add a territory
     void add_territory(pair<int, Territory*> pair);
 
 private:
@@ -188,55 +135,28 @@ private:
 //*****************************************************************
 // Map: is a connected graph representing a collection of territory
 
-/**
- * @brief Map Class
- * 
- */
+//Map Class
 class Map
 {
 public:
-    /**
-     * @brief Constructor: Construct a new Map object
-     *
-     */
+    //Constructor: Construct a new Map object
     Map(string name, map<int, Continent*> continents, map<int, Territory*> territories);
 
-    /**
-     * @brief Copy constructor: Construct a new Map object
-     *
-     * @param m
-     */
+    //Copy constructor: Construct a new Map object
     Map(const Map& m);
 
-    /**
-     * @brief Destructor: Destroy the Map object
-     *
-     */
+    //Destructor: Destroy the Map object
     ~Map();
 
-    /**
-     * @brief Assignment operator
-     *
-     * @param m
-     * @return Map&
-     */
+    //Assignment operator
     Map& operator=(const Map& m);
 
-    /**
-     * @brief Validate that the map is a connected graph,
-     * the continents are connected subgraphs, and each territory
-     * belongs to one and only one continent
-     *
-     */
+    //Validate that the map is a connected graph,
+    //the continents are connected subgraphs, and each territory
+    //belongs to one and only one continent
     void validate();
 
-    /**
-     * @brief Assignment insertion operator
-     *
-     * @param stream
-     * @param m
-     * @return ostream&
-     */
+    //Assignment insertion operator
     friend ostream& operator <<(ostream& stream, const Map& m);
 
     // Getters and setters
@@ -269,54 +189,25 @@ private:
 //MAP LOADER CLASS
 //
 
-/**
- * @brief Map loader Class
- *
- */
+//Map loader Class
 class MapLoader
 {
 public:
-    /**
-     * @brief Constructor: Construct a new Map Loader object
-     *
-     */
+   //Constructor: Construct a new Map Loader object
     MapLoader();
 
-    /**
-     * @brief Copy constructor: Construct a new MapLoader object
-     *
-     * @param m
-     */
+    //Copy constructor: Construct a new MapLoader object
     MapLoader(const MapLoader &m);
 
-    /**
-     * @brief Destructor: Destroy the Map Loader object
-     *
-     */
+    //Destructor: Destroy the Map Loader object
     ~MapLoader();
 
-    /**
-     * @brief Stream insertion operator
-     *
-     * @param stream
-     * @param m
-     * @return ostream&
-     */
+    //Stream insertion operator
     friend ostream& operator <<(ostream& stream, const MapLoader& m);
 
-    /**
-     * @brief Assignment operator
-     *
-     * @param m
-     * @return Territory&
-     */
+    //Assignment operator
     MapLoader& operator=(const MapLoader& m);
 
-    /**
-     * @brief Load map
-     *
-     * @param filePath
-     * @return Map*
-     */
+    //Load map
     static Map* loadMap(string filePath);
 };
