@@ -82,25 +82,33 @@ Player& Player::operator=(const Player& p){
 
 //returns a list of territories to be defended
 vector<Territory*> Player:: toDefend(){
+    sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
+        return  lhs->get_army_units() < rhs->get_army_units();
+    });
     return this->territories;
 }
 
 //returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
     vector<Territory*> toAttackTerritories;
-    for (Territory *ownedTerritory : territories){
-        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) {
-            if (neighborTerritory->get_owner() != this) {
+    for (Territory *ownedTerritory : territories){ //for each owned territory
+        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) { //for each owned territory's neighbour
+            if (neighborTerritory->get_owner() != this) {  //if the current player does not own the neighbor territory
+                // check if territory is already in toAttackTerritories
                 auto it = find_if(toAttackTerritories.begin(), toAttackTerritories.end(),
                                   [&neighborTerritory](Territory *t) {
                                       return t->get_id() == neighborTerritory->get_id();
                                   });
-                if (it == toAttackTerritories.end()) {
+                if (it == toAttackTerritories.end()) { //if territory is not in toAttackTerritories add it
                     toAttackTerritories.push_back(neighborTerritory);
                 }
             }
         }
     }
+    // sort toAttack territories by # of army units ascending
+    sort(toAttackTerritories.begin(), toAttackTerritories.end(), [](Territory *lhs, Territory *rhs){
+        return  lhs->get_army_units() < rhs->get_army_units();
+    });
     return toAttackTerritories;
 }
 
@@ -110,10 +118,10 @@ void Player::addOrder(Order *o){
 
 //creates an order object and adds it to the list of orders
 bool Player::issueOrder(Deck *deck) {
-    if(reinforcementPool != 0) {
-        order_list->add(new Deploy);
+    if(issuableReinforcementPool != 0) {
+        order_list->add(new Deploy(this->toDefend().at(0), this, 1));
+        issuableReinforcementPool--;
         cout << *this << " issued a new deploy order" << endl;
-        reinforcementPool--;
     }
     else if (!this->hand->getCards().empty()) {
         hand->play(*deck, this, 0);
@@ -216,6 +224,10 @@ void Player::setTerritories(vector<Territory*> t){
 
 void Player::setReinforcementPool(int armies) {
     this->reinforcementPool = armies;
+}
+
+void Player::setIssuableReinforcementPool(int armies) {
+    this->issuableReinforcementPool = armies;
 }
 
 ostream& operator<<(ostream& os, Player& p){
