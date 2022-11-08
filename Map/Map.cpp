@@ -823,6 +823,6 @@ Map* MapLoader::loadMap(string filePath) {
 
     // If file does not exist, return an empty map, otherwise return map with parsed information
     Map* map_result = new Map(filePath, continents, territories);
-    std::cout << endl << "Successfully created a map object for "<< filePath << endl << endl;
+    std::cout << endl << "Successfully created a map object for "<< filePath << endl;
     return map_result;
 }

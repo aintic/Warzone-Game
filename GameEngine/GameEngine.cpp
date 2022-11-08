@@ -96,6 +96,7 @@ void GameEngine::nextState(State *nextState) {
 
 void GameEngine::startupPhase() {
     do { // loop while not in assign reinforcement phase
+        bool go_to_next_state = true;
         Command *command = this->commandProcessor->getCommand(this);
         // since get_command takes care of verifying the validity of the command in the given state of the game
         // we can use is statements to execute the command and save the appropriate effect
@@ -111,8 +112,19 @@ void GameEngine::startupPhase() {
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
             cout << "loading the map "<< map_string << endl;
 
-            string effect = "Loaded map <" +map_string + ">";
-            command->saveEffect(effect);
+            // load the map
+            string map_path = "Maps/" + map_string + ".map";
+            this->map = MapLoader::loadMap(map_path);
+
+            if(this->map == nullptr){
+                string effect = "Could not load the map <" +map_string + ">";
+                command->saveEffect(effect);
+                go_to_next_state = false;
+            }
+            else{
+                string effect = "Loaded map <" +map_string + ">";
+                command->saveEffect(effect);
+            }
         }
         else if(typed_command == "validatemap"){
             cout << "validating the map"<< endl;
@@ -136,7 +148,9 @@ void GameEngine::startupPhase() {
             command->saveEffect("SOMETHING WENT WRONG");
 
         }
-        this->getCurrentState()->transition(this, token_command);
+        if(go_to_next_state){
+            this->getCurrentState()->transition(this, token_command);
+        }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 }
 
@@ -274,9 +288,9 @@ ostream &operator<<(ostream &stream, const State &s) {
 
 ostream &operator<<(ostream &stream, const startupState &s) {
     if (s.step == 1) {
-        return stream << "\nLoading another map... Still in '" << s.getStateName() << "' state." << endl;
+        return stream << "\nLoaded another map... Still in '" << s.getStateName() << "' state." << endl;
     } else if (s.step == 3) {
-        return stream << "\nLoading another player... Still in '" << s.getStateName() << "' state." << endl;
+        return stream << "\nLoaded another player... Still in '" << s.getStateName() << "' state." << endl;
     } else if (s.step == 4) {
         return stream << "\nYou have entered an invalid command for the '" << s.getStateName() << "' state..." << endl;
     }
