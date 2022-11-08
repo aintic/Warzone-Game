@@ -96,7 +96,7 @@ Card* BombCard::clone() {
  * BombCard Class play method
  */
 void BombCard::play(Player *player){
-    player->addOrder(new Bomb);
+    player->addOrder(new Bomb(player->toAttack().back(), player));
 }
 /**
  * BombCard Class getter
@@ -195,7 +195,7 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-    player->addOrder(new Blockade);
+    player->addOrder(new Blockade(player->toDefend().back(), player));
 }
 
 /**
@@ -246,7 +246,9 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
-    player->addOrder(new Airlift);
+    vector<Territory*> toDefendTerritories = player->toDefend();
+    // send half the armies of the most populated territory to the least populated
+    player->addOrder(new Airlift(toDefendTerritories.back(), toDefendTerritories.front(), player, toDefendTerritories.back()->get_army_units() / 2));
 }
 
 /**
@@ -298,7 +300,7 @@ Card* DiplomacyCard::clone(){
  * @return corresponding order instance
  */
 void DiplomacyCard::play(Player *player) {
-    player->addOrder(new Negotiate);
+    player->addOrder(new Negotiate(player, player->toAttack().back()->get_owner()));
 }
 
 /**
