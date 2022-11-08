@@ -220,18 +220,13 @@ bool Advance::validate() const {
         vector<Territory*> neighbors = sourceTer->get_neighbours();
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
-
-                    // if yes, jump to "isAdjacent" section below
-                    goto isAdjacent;
+                    // return true, target territory IS adjacent
+                    cout << "Order validated." << endl;
+                    return true;
                 }
             }
-        // return false, since we're out of loop and target territory IS NOT adjacent
+        // return false, target territory IS NOT adjacent
         return false;
-        // return true, target territory IS adjacent
-        isAdjacent: {
-            cout << "Order validated." << endl;
-            return true;
-        };
     }
 }
 
@@ -242,8 +237,8 @@ void Advance::execute() {
     // if order is valid,
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
-        // if both the source and target territories belong to the current player
-        if (sourceTer->get_owner()->getPlayerID() == currentPl->getPlayerID() && targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
+        // if both source and target territories belong to the current player (checked source territory in validate())
+        if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             // move army units to target territory
@@ -303,7 +298,7 @@ void Advance::execute() {
             }
             // if current player cannot conquer territory
             else {
-                cout << "You could not conquered this territory.\n" << endl;
+                cout << "You could not conquer this territory.\n" << endl;
                 // move surviving army units back to source territory
                 // reduce army units in target territory to surviving defenders
                 sourceTer->set_army_units(sourceTer->get_army_units() + survivingAttackers);
@@ -401,20 +396,14 @@ bool Bomb::validate() const {
             vector<Territory*> neighbors = ownedTer->get_neighbours();
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
-
-                    // if yes, jump to "isAdjacent" section below
-                    goto isAdjacent;
+                    // return true, target territory IS adjacent
+                    cout << "Order validated." << endl;
+                    return true;
                 }
             }
         }
-        // return false, since we're out of loop and target territory IS NOT adjacent
+        // return false, target territory IS NOT adjacent
         return false;
-
-        // return true, target territory IS adjacent
-        isAdjacent: {
-            cout << "Order validated." << endl;
-            return true;
-        };
     }
 }
 

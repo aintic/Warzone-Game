@@ -181,9 +181,9 @@ void GameEngine::executeOrdersPhase() {
     } while (!allOrdersDone);
     for (Player *p : players) {
         p->resetFriendlyList();
-        if (p->getConquered()) {
+        if (p->getConquerer()) {
             deck->draw(*p);
-            p->resetConquered();
+            p->resetConquerer();
         }
     }
     GameEngine::turn++;

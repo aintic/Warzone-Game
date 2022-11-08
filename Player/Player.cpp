@@ -169,8 +169,8 @@ bool Player::isFriendly(int playerID) {
     return false;
 }
 
-void Player::resetConquered() {
-    this->conquered = false;
+void Player::resetConquerer() {
+    this->conquerer = false;
 }
 
 //getters
@@ -201,8 +201,8 @@ int Player::getReinforcementPool() {
     return reinforcementPool;
 }
 
-bool Player::getConquered() {
-    return conquered;
+bool Player::getConquerer() {
+    return conquerer;
 }
 
 //setters
