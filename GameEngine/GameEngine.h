@@ -4,10 +4,9 @@
 #include <vector>
 #include <cmath>
 #include "../Player/Player.h"
+#include "../Orders/Orders.h"
 #include "../Map/Map.h"
 #include "../CommandProcessing/CommandProcessing.h"
-#include "../LoggingObserver/LoggingObserver.h"
-#include "../Orders/Orders.h"
 
 using std::cout;
 using std::cin;
@@ -15,7 +14,6 @@ using std::string;
 using std::vector;
 using std::ostream;
 using std::endl;
-
 
 class Player;
 class Deck;
@@ -47,6 +45,7 @@ public:
     GameEngine(const GameEngine& g); //copy constructor
     GameEngine& operator =(const GameEngine& g); //assignment operator
     State* getCurrentState(); //currentState getter
+    vector<Player*> getPlayers();// players list getter
     void setCurrentState(State* state); //currentState setter
     void nextState(State* nextState); //method to change state
     static int turn; //count iterations of main game phase
@@ -63,6 +62,8 @@ public:
     string stringToLog();
     Observer* _observers = nullptr;
 
+
+    friend class Orders;
 };
 
 

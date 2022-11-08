@@ -94,6 +94,11 @@ void GameEngine::setCurrentState(State *state) {
     currentState = state;
 }
 
+// getter for list of players
+vector<Player*> GameEngine::getPlayers() {
+    return players;
+}
+
 //method to move to next state. Taking care of memory leak.
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
@@ -187,6 +192,13 @@ void GameEngine::executeOrdersPhase() {
             }
         }
     } while (!allOrdersDone);
+    for (Player *p : players) {
+        p->resetFriendlyList();
+        if (p->getConquered()) {
+            deck->draw(*p);
+            p->resetConquered();
+        }
+    }
     GameEngine::turn++;
     this->nextState(new reinforcementState());
 }

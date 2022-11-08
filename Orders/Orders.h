@@ -5,10 +5,16 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string>
 #include "../LoggingObserver/LoggingObserver.h"
+#include <stdlib.h>
+#include <time.h>
 
+class Territory;
+class Player;
 class GameEngine;
+using namespace std;
 
 using namespace std;
 
@@ -18,6 +24,8 @@ class Order : public ILoggable, public Subject{
 public:
     // constructor
     Order();
+    // parametized constructor
+    Order(Player *currentPl);
     // destructor
     virtual ~Order() = 0;
     // assignment operator
@@ -39,6 +47,10 @@ public:
     friend class OrdersList;
     string stringToLog();
 
+
+protected:
+    Player *currentPl;
+    GameEngine *game;
 };
 
 class Deploy : public Order {
@@ -47,8 +59,10 @@ public:
     Deploy();
 
     Deploy(GameEngine* game);
+    // parametized constructor
+    Deploy(Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~Deploy();
+    ~Deploy() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Deploy& o);
     // verifies if order is valid
@@ -65,6 +79,8 @@ public:
 private:
     // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    int army_units;
 };
 
 class Advance : public Order {
@@ -74,8 +90,10 @@ public:
 
     Advance(GameEngine* game);
 
+    // parametized constructor
+    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~Advance();
+    ~Advance() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Advance& o);
     // verifies if order is valid
@@ -90,23 +108,25 @@ public:
     string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    Territory *sourceTer;
+    int army_units;
 };
 
-class BombCardOrder : public Order {
+class Bomb : public Order {
 public:
     //constructor
-    BombCardOrder();
 
-    BombCardOrder(GameEngine* game);
+    Bomb(GameEngine* game);
 
-
+    Bomb();
+    // parametized constructor
+    Bomb(Territory *targetTer, Player *currentPl);
     // destructor
-    ~BombCardOrder();
+    ~Bomb() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const BombCardOrder& o);
-
+    friend ostream& operator << (ostream& out,  const Bomb& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -119,21 +139,23 @@ public:
     string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
 };
 
-class BlockadeCardOrder : public Order {
+class Blockade : public Order {
 public:
     // constructor
-    BlockadeCardOrder();
 
-    BlockadeCardOrder(GameEngine* game);
+    Blockade(GameEngine* game);
 
+    Blockade();
+    // parametized constructor
+    Blockade(Territory *targetTer, Player *currentPl);
     // destructor
-    ~BlockadeCardOrder();
+    ~Blockade() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const BlockadeCardOrder& o);
+    friend ostream& operator << (ostream& out,  const Blockade& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -146,21 +168,22 @@ public:
     string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
 };
 
-class AirliftCardOrder : public Order {
+class Airlift : public Order {
 public:
     // constructor
-    AirliftCardOrder();
+    Airlift();
 
-    AirliftCardOrder(GameEngine* game);
-
+    Airlift(GameEngine* game);
+    // parametized constructor
+    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~AirliftCardOrder();
+    ~Airlift() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const AirliftCardOrder& o);
+    friend ostream& operator << (ostream& out,  const Airlift& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
@@ -173,19 +196,23 @@ public:
     string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    Territory *sourceTer;
+    int army_units;
 };
 
 class Negotiate : public Order {
 public:
     //constructor
     Negotiate();
+    // parametized constructor
+    Negotiate(Player *currentPl, Player *enemyPl);
     Negotiate(GameEngine* game);
 
 
     // destructor
-    ~Negotiate();
+    ~Negotiate() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Negotiate& o);
     // verifies if order is valid
@@ -202,6 +229,7 @@ public:
 private:
     // string for type of order
     const static string _orderType;
+    Player *enemyPl;
 };
 
 class OrdersList : public ILoggable, public Subject{
@@ -222,9 +250,9 @@ public:
     // add order to list
     void add(Order* o);
     // move orders from one position to another
-    void move(int, int);
+    void move(int currentPos, int newPos);
     // remove an order at specified position
-    void remove(int);
+    void remove(int pos);
     // execute then delete orders from list sequentially
     void executeList();
 
