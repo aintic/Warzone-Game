@@ -84,18 +84,31 @@ void GameEngine::startupPhase() {
         // we can use is statements to execute the command and save the appropriate effect
         string typed_command = command->get_typed_command();
 
-        if(typed_command == "loadmap"){
-            cout << "loading the map"<< endl;
-            command->saveEffect("map loaded");
+        // for commands like loadmap and add player, the valid command is only the first token of the command
+        // for example loadmap examplemap --> valid token is loadmap
+        string delimiter = " ";
+        string token_command = typed_command.substr(0, typed_command.find(delimiter));
+
+        if(token_command == "loadmap"){
+
+            string map_string = typed_command.substr(token_command.length() + delimiter.length());
+            cout << "loading the map "<< map_string << endl;
+
+            string effect = "Loaded map <" +map_string + ">";
+            command->saveEffect(effect);
         }
         else if(typed_command == "validatemap"){
             cout << "validating the map"<< endl;
             command->saveEffect("map validates");
 
         }
-        else if(typed_command == "addplayer"){
-            cout << "Adding player"<< endl;
-            command->saveEffect("player added");
+        else if(token_command == "addplayer"){
+
+            string player_string = typed_command.substr(token_command.length() + delimiter.length());
+            cout << "Adding the player "<< player_string << endl;
+
+            string effect = "Added player <" + player_string + ">";
+            command->saveEffect(effect);
 
         }
         else if(typed_command == "gamestart"){
@@ -108,7 +121,7 @@ void GameEngine::startupPhase() {
             command->saveEffect("SOMETHING WENT WRONG");
 
         }
-        this->getCurrentState()->transition(this, command->get_typed_command());
+        this->getCurrentState()->transition(this, token_command);
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 }
 

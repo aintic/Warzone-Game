@@ -196,7 +196,7 @@ Command* CommandProcessor::readCommand(){
     cout << "\033[1;31m\t[Starting readCommand()]]\033[0m" << endl;
     string string_command;
     cout << "\n\t\tPlease enter command to move to the next state:  ";
-    cin >> string_command;
+    std::getline(std::cin, string_command);
     cout << "\033[1;31m\t[Exiting readCommand()]]\033[0m\n" << endl;
     return new Command(string_command);
 }
@@ -222,14 +222,20 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
 
     string typed_command = command->get_typed_command();
 
+    // for commands like loadmap and add player, the valid command is only the first token of the command
+    // for example loadmap examplemap --> valid token is loadmap
+    string delimiter = " ";
+    string token_command = typed_command.substr(0, typed_command.find(delimiter));
+
     State* currentState = game->getCurrentState();
 
     vector<string> valid_commands = currentState->getSpecificValidCommands();
 
     // check is typed command is in vector of allowed commands
-    if (std::find(valid_commands.begin(), valid_commands.end(), typed_command) != valid_commands.end())
+    if (std::find(valid_commands.begin(), valid_commands.end(), token_command) != valid_commands.end())
     {
         // if it is, return valid
+        cout << "\033[1;33m\t\t[Command is valid]]\033[0m\n" << endl;
         cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
         return true;
     }
@@ -237,6 +243,7 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
         // otherwise save the command error in the effect string of the command
         string error = currentState->getWrongCommandError();
         command->set_command_effect(error);
+        cout << "\033[1;33m\t\t[Command is not valid]]\033[0m\n" << endl;
         cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
         return false;
     }
