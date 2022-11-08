@@ -14,7 +14,7 @@ int main()
 //	testLoadMaps();
 //
 //    // Player
-    testPlayers();
+//    testPlayers();
 //
 //    //Orders list
 //    testOrdersList();

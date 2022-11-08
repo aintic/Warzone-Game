@@ -96,7 +96,7 @@ Card* BombCard::clone() {
  * BombCard Class play method
  */
 void BombCard::play(Player *player){
-    player->addOrder(new BombCardOrder);
+    player->addOrder(new Bomb);
 }
 /**
  * BombCard Class getter
@@ -195,7 +195,7 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-    player->addOrder(new BlockadeCardOrder);
+    player->addOrder(new Blockade);
 }
 
 /**
@@ -246,7 +246,7 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
-    player->addOrder(new AirliftCardOrder);
+    player->addOrder(new Airlift);
 }
 
 /**

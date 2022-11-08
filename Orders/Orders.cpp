@@ -3,6 +3,9 @@
 //
 
 #include "Orders.h"
+#include "Player.h"
+#include "Map.h"
+#include "GameEngine.h"
 
 using namespace std;
 
@@ -246,6 +249,7 @@ void Advance::execute() {
             // move army units to target territory
             targetTer->set_army_units(targetTer->get_army_units() + army_units);
         }
+        // if target territory belongs to enemy player
         else {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
@@ -502,7 +506,7 @@ void Blockade::execute() {
         targetTer->set_army_units(targetTer->get_army_units() * 2);
 
         // get the list of players from the game engine
-        vector<Player*> players = game.getPlayers();
+        vector<Player*> players = game->getPlayers();
         for (Player *p : players) {
             // if there's already a player called Neutral, assign the target territory to them and exit
             if (p->getName().compare("Neutral") == 0) {

@@ -9,9 +9,6 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
-#include "Player.h"
-#include "Map.h"
-#include "GameEngine.h"
 
 class Territory;
 class Player;
@@ -46,6 +43,7 @@ public:
 
 protected:
     Player *currentPl;
+    GameEngine *game;
 };
 
 class Deploy : public Order {
