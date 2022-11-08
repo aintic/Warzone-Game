@@ -251,6 +251,8 @@ void Advance::execute() {
         }
         // if target territory belongs to enemy player and has 0 army units
         else if (targetTer->get_army_units() == 0) {
+            // take army units from source territory
+            sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             cout << "You have conquered this territory!\n" << endl;
             // current player gains target territory, enemy player loses it
             // army units get added to target territory
