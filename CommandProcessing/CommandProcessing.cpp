@@ -229,11 +229,26 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
 
     State* currentState = game->getCurrentState();
 
+    string state_name = currentState->getStateName();
+
     vector<string> valid_commands = currentState->getSpecificValidCommands();
 
     // check is typed command is in vector of allowed commands
     if (std::find(valid_commands.begin(), valid_commands.end(), token_command) != valid_commands.end())
     {
+        // if loadmap or addplayer, we need a name for the map and the player
+        if(token_command == "loadmap" || token_command == "addplayer"){
+            if(typed_command.length() <= (token_command.length() + 1)){
+
+                // command is incomplete. ex: loadmap instead of loadmap <mapname>
+                string error = currentState->getWrongCommandError();
+                command->set_command_effect(error);
+                cout << "\033[1;33m\t\t[Command is not valid]]\033[0m\n" << endl;
+                cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
+                return false;
+            }
+        }
+
         // if it is, return valid
         cout << "\033[1;33m\t\t[Command is valid]]\033[0m\n" << endl;
         cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
