@@ -98,6 +98,8 @@ void GameEngine::setCurrentState(State *state) {
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
+    Notify(this);
+
 }
 
 void GameEngine::startupPhase() {
@@ -674,5 +676,5 @@ void endState::transition(GameEngine *gameEngine, string command) {
 
 
 string GameEngine::stringToLog() {
-    return "GameEngine string to log";
+    return "Currently in " + this->getCurrentState()->getStateName() + " state";
 }

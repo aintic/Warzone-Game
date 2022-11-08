@@ -7,7 +7,8 @@
 #include <vector>
 #include <string>
 #include "../LoggingObserver/LoggingObserver.h"
-#include "../GameEngine/GameEngine.h"
+
+class GameEngine;
 
 using namespace std;
 
@@ -70,6 +71,9 @@ class Advance : public Order {
 public:
     // constructor
     Advance();
+
+    Advance(GameEngine* game);
+
     // destructor
     ~Advance();
     // stream insertion operator
@@ -94,6 +98,10 @@ class BombCardOrder : public Order {
 public:
     //constructor
     BombCardOrder();
+
+    BombCardOrder(GameEngine* game);
+
+
     // destructor
     ~BombCardOrder();
     // stream insertion operator
@@ -119,6 +127,9 @@ class BlockadeCardOrder : public Order {
 public:
     // constructor
     BlockadeCardOrder();
+
+    BlockadeCardOrder(GameEngine* game);
+
     // destructor
     ~BlockadeCardOrder();
     // stream insertion operator
@@ -143,6 +154,9 @@ class AirliftCardOrder : public Order {
 public:
     // constructor
     AirliftCardOrder();
+
+    AirliftCardOrder(GameEngine* game);
+
     // destructor
     ~AirliftCardOrder();
     // stream insertion operator
@@ -167,6 +181,9 @@ class Negotiate : public Order {
 public:
     //constructor
     Negotiate();
+    Negotiate(GameEngine* game);
+
+
     // destructor
     ~Negotiate();
     // stream insertion operator
@@ -187,10 +204,12 @@ private:
     const static string _orderType;
 };
 
-class OrdersList {
+class OrdersList : public ILoggable, public Subject{
 public:
     // constructor
     OrdersList();
+
+    OrdersList(GameEngine* game);
     // copy constructor
     OrdersList(const OrdersList &ol);
     // destructor
@@ -212,6 +231,7 @@ public:
     void executeOrder();
     Order* getTopOrder();
     vector<Order*> getOrderList();
+    string stringToLog();
 
 private:
     // list of orders

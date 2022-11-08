@@ -24,8 +24,11 @@ Command::Command(Observer* _obs) {
  *
  * @param typed_command
  */
-Command::Command(string typed_command) {
+Command::Command(string typed_command, Observer* _obs) {
     this->typed_command = typed_command;
+    this->Attach(_obs);
+    logger = _obs;
+
 }
 
 /**
@@ -94,6 +97,7 @@ void Command::set_typed_command(std::string typed_command)
  */
 void Command::saveEffect(std::string command_effect) {
     this->set_command_effect(command_effect);
+    Notify(this);
 }
 
 //*****************************************************************
@@ -209,7 +213,7 @@ Command* CommandProcessor::readCommand(){
     cout << "\n\t\tPlease enter command to move to the next state:  ";
     cin >> string_command;
     cout << "\033[1;31m\t[Exiting readCommand()]]\033[0m\n" << endl;
-    return new Command(string_command);
+    return new Command(string_command, logger);
 }
 
 /**
@@ -220,6 +224,8 @@ void CommandProcessor::saveCommand(Command* c){
     this->commands.push_back(c);
     cout << "\033[1;32m\t\t[Command saved]\033[0m\n" << endl;
     cout << "\033[1;32m\t[Exiting saveCommand()]]\033[0m\n" << endl;
+    Notify(this);
+
 }
 
 /**

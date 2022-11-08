@@ -20,28 +20,45 @@ int main(){
     GameEngine* game = new GameEngine(_observers);
 
 
-    game->startupPhase();
+    //game->startupPhase();
 
+    //game transition part
+    State* map_loaded = new startupState(1);
+    State* map_validated = new startupState(2);
+    State* players_added = new startupState(3);
 
-    //OrdersList* ol = new OrdersList;
+    game->nextState(map_loaded);
+    game->nextState(map_validated);
+    game->nextState(players_added);
 
+    Player* p1 = new Player();
     Order* testDeploy = new Deploy(game);
 
-    testDeploy->execute();
+    OrdersList* ol = new OrdersList(game);
 
-    /*Order* testAdvance = new Advance(game);
+    p1->getPlayerOrderList()->add(testDeploy);
+
+
+/*
+    Order* testDeploy = new Deploy(game);
+
+
+    Order* testAdvance = new Advance(game);
     Order* testBomb = new BombCardOrder(game);
     Order* testBlockade = new BlockadeCardOrder(game);
     Order* testAirlift = new AirliftCardOrder(game);
     Order* testNegotiate = new Negotiate(game);
-*/
-    //Player* p1 = new Player();
-    //p1->getPlayerOrderList()->add(testDeploy);
 
+    testDeploy->execute();
+    testAdvance->execute();
+    testBomb->execute();
+    testBlockade->execute();
+    testAirlift->execute();
+    testNegotiate->execute();
 
+    OrdersList* ol = new OrdersList(game);
 
-    /*
-
+    cout << "\n============= Add orders =============\n" << endl;
     ol->add(testDeploy);
     ol->add(testAdvance);
     ol->add(testBomb);
@@ -49,5 +66,8 @@ int main(){
     ol->add(testAirlift);
     ol->add(testNegotiate);
 */
+
+
+
 
 }

@@ -4,10 +4,10 @@
 #include <vector>
 #include <cmath>
 #include "../Player/Player.h"
-#include "../Orders/Orders.h"
 #include "../Map/Map.h"
-//#include "../CommandProcessing/CommandProcessing.h"
+#include "../CommandProcessing/CommandProcessing.h"
 #include "../LoggingObserver/LoggingObserver.h"
+#include "../Orders/Orders.h"
 
 using std::cout;
 using std::cin;
@@ -15,6 +15,7 @@ using std::string;
 using std::vector;
 using std::ostream;
 using std::endl;
+
 
 class Player;
 class Deck;

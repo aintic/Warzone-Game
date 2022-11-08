@@ -3,6 +3,7 @@
 //
 
 #include "Orders.h"
+#include "../GameEngine/GameEngine.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ Order& Order::operator=(const Order& o) {
  * Default constructor for Deploy
  */
 Deploy::Deploy() = default;
+
 
 Deploy::Deploy(GameEngine* game) {
     this->Attach(game->_observers);
@@ -120,6 +122,9 @@ string Deploy::orderEffect() const {
  */
 Advance::Advance() = default;
 
+Advance::Advance(GameEngine* game) {
+    this->Attach(game->_observers);
+}
 /**
  * Default destructor for Advance
  */
@@ -153,6 +158,8 @@ void Advance::execute() {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -184,6 +191,9 @@ string Advance::orderEffect() const {
  */
 BombCardOrder::BombCardOrder() = default;
 
+BombCardOrder::BombCardOrder(GameEngine* game) {
+    this->Attach(game->_observers);
+}
 /**
  * Default destructor for BombCardOrder
  */
@@ -217,6 +227,8 @@ void BombCardOrder::execute() {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -247,6 +259,9 @@ string BombCardOrder::orderEffect() const {
  */
 BlockadeCardOrder::BlockadeCardOrder() = default;
 
+BlockadeCardOrder::BlockadeCardOrder(GameEngine* game) {
+    this->Attach(game->_observers);
+}
 /**
  * Default destructor for BlockadeCardOrder
  */
@@ -280,6 +295,8 @@ void BlockadeCardOrder::execute() {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -311,6 +328,9 @@ string BlockadeCardOrder::orderEffect() const {
  */
 AirliftCardOrder::AirliftCardOrder() = default;
 
+AirliftCardOrder::AirliftCardOrder(GameEngine* game) {
+    this->Attach(game->_observers);
+}
 /**
  * Default destructor for AirliftCardOrder
  */
@@ -344,6 +364,8 @@ void AirliftCardOrder::execute() {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -375,6 +397,9 @@ string AirliftCardOrder::orderEffect() const {
  */
 Negotiate::Negotiate() = default;
 
+Negotiate::Negotiate(GameEngine* game) {
+    this->Attach(game->_observers);
+}
 /**
  * Default destructor for Negotiate
  */
@@ -408,6 +433,8 @@ void Negotiate::execute() {
         cout << "Executing " << *this << " order. \n";
         cout << orderEffect() << "\n\n";
     }
+    Notify(this);
+
 }
 
 /**
@@ -439,6 +466,10 @@ string Negotiate::orderEffect() const {
  */
 OrdersList::OrdersList() = default;
 
+OrdersList::OrdersList(GameEngine* game){
+    this->Attach(game->_observers);
+
+}
 /**
  * Destructor for OrdersList
  */
@@ -510,6 +541,8 @@ OrdersList& OrdersList::operator=(const OrdersList& ol) {
 void OrdersList::add(Order* o) {
     // add new order to vector
     _ordersList.push_back(o);
+    Notify(this);
+
 }
 
 /**
@@ -605,4 +638,9 @@ vector<Order *> OrdersList::getOrderList() {
 string Order::stringToLog()
 {
     return "Order: " + getOrderType();
+}
+string OrdersList::stringToLog() {
+    string lastOrder = _ordersList.back()->getOrderType();
+
+    return "Order Issued: " + lastOrder;
 }

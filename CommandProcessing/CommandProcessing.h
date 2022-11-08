@@ -39,7 +39,7 @@ public:
      *
      * @param typed_command
      */
-    Command(string typed_command);
+    Command(string typed_command, Observer* _obs);
 
     /**
      * @brief Copy constructor: Construct a new Command object
@@ -108,6 +108,7 @@ public:
 
      */
     CommandProcessor();
+
     CommandProcessor(Observer* _obs);
     /**
      * @brief Copy constructor: Construct a new CommandProcessor object
