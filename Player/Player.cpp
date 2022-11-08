@@ -52,9 +52,7 @@ Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersL
 Player::Player(const Player& p){
     playerID = getPlayerID();
     name = p.name;
-    for (Territory* t : p.territories){
-        this->addTerritory(new Territory(*t));
-    }
+    this->territories = p.territories;
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
     this->_friendlyList = p._friendlyList;
@@ -66,9 +64,6 @@ Player::~Player()
 {
     delete hand;
     delete order_list;
-    for (Territory* t : territories){
-        delete t;
-    }
     territories.clear();
     _friendlyList.clear();
 }
@@ -77,9 +72,7 @@ Player::~Player()
 Player& Player::operator=(const Player& p){
     playerID = p.playerID;
     name = p.name;
-    for (Territory* t : p.territories){
-        this->addTerritory(new Territory(*t));
-    }
+    this->territories = p.territories;
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
     this->_friendlyList = p._friendlyList;

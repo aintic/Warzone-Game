@@ -71,7 +71,6 @@ private:
     const static string _orderType;
     Territory *targetTer;
     int army_units;
-
 };
 
 class Advance : public Order {

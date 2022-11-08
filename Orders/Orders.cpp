@@ -249,7 +249,15 @@ void Advance::execute() {
             // move army units to target territory
             targetTer->set_army_units(targetTer->get_army_units() + army_units);
         }
-        // if target territory belongs to enemy player
+        // if target territory belongs to enemy player and has 0 army units
+        else if (targetTer->get_army_units() == 0) {
+            cout << "You have conquered this territory!\n" << endl;
+            // current player gains target territory, enemy player loses it
+            // army units get added to target territory
+            currentPl->conquerTerritory(targetTer);
+            targetTer->set_army_units(army_units);
+        }
+        // if target territory belongs to enemy player and has >0 army units
         else {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
@@ -287,7 +295,7 @@ void Advance::execute() {
             if (survivingAttackers > 0 && survivingDefenders == 0) {
                 cout << "You have conquered this territory!\n" << endl;
                 // current player gains target territory, enemy player loses it
-                // surviving army units gets added to target territory
+                // surviving army units get added to target territory
                 currentPl->conquerTerritory(targetTer);
                 targetTer->set_army_units(survivingAttackers);
             }
@@ -295,7 +303,7 @@ void Advance::execute() {
             else {
                 cout << "You could not conquered this territory.\n" << endl;
                 // move surviving army units back to source territory
-                // reduce army units in target territories to surviving defenders
+                // reduce army units in target territory to surviving defenders
                 sourceTer->set_army_units(sourceTer->get_army_units() + survivingAttackers);
                 targetTer->set_army_units(survivingDefenders);
             }
