@@ -106,7 +106,7 @@ Territory::~Territory() {
 
 // Getters and Setters
 
-int Territory::get_id()
+int Territory::get_id() const
 {
     return this->id;
 }

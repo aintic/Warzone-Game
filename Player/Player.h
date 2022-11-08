@@ -8,6 +8,7 @@
 using namespace std;
 
 class Hand;
+class Deck;
 
 //
 //PLAYER CLASS
@@ -25,7 +26,7 @@ public:
     Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders); //parametrized constructor
     Player(const Player& p); //copy constructor
     ~Player(); //destructor
-    Player& operator=(const Player& p); //assignment operator
+    Player& operator = (const Player& p); //assignment operator
     //Getters and Setters
     int getPlayerID();
     OrdersList* getPlayerOrderList();
@@ -37,15 +38,26 @@ public:
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
     void setReinforcementPool(int armies);
+    void addOrder(Order *o);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
-    void issueOrder(); //creates order object and adds to list of orders
+    bool issueOrder(Deck *d); //creates order object and adds to list of orders
     void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
     void removeTerritory(Territory* territory);
     friend ostream& operator << (ostream& os, Player& p); //stream insertion operator
+
+    // methods to manipulate friendly players
+    // a player is friendly if there was a Negotiate order executed with them during this turn
+    bool isFriendly(int playerID); // check if a player is friendly
+    void addFriendly(int playerID);
+    void resetFriendlyList();
+
+    // method to check whether a player have conquered a territory during this turn
+    bool getConquerer();
+    void resetConquerer();
 
 private:
     string name;
@@ -54,4 +66,6 @@ private:
     OrdersList* order_list; //list of current orders
     int playerID; //unique player ID
     int reinforcementPool;
+    vector<int> _friendlyList; // list of IDs of friendly players
+    bool conquerer; // whether the player conquered a territory during this turn
 };
