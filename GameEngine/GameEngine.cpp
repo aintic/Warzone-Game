@@ -107,6 +107,7 @@ void GameEngine::startupPhase() {
         string delimiter = " ";
         string token_command = typed_command.substr(0, typed_command.find(delimiter));
 
+        // MAP LOADING
         if(token_command == "loadmap"){
 
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
@@ -130,6 +131,7 @@ void GameEngine::startupPhase() {
                 command->saveEffect(effect);
             }
         }
+        // MAP VALIDATING
         else if(typed_command == "validatemap"){
             cout << "validating the map"<< endl;
 
@@ -145,21 +147,61 @@ void GameEngine::startupPhase() {
             }
 
         }
+
+        // ADDING PLAYERS
         else if(token_command == "addplayer"){
 
-            string player_string = typed_command.substr(token_command.length() + delimiter.length());
-            cout << "Adding the player "<< player_string << endl;
+            string player_name = typed_command.substr(token_command.length() + delimiter.length());
+            int number_of_players = this->getPlayers().size();
 
-            string effect = "Added player <" + player_string + ">";
-            command->saveEffect(effect);
+            // check if max number of players is reached
+            if(number_of_players >=6){
+                string message = "Cannot add more players to the game.";
+                cout << message <<endl;
+                cout << "Please use the command <gamestart>." << endl;
+                go_to_next_state = false;
+                command->saveEffect(message);
+            }
+            else{
+                cout << "Adding the player "<< player_name << endl;
 
-        } else if (typed_command == "gamestart") {
-            cout << "Starting the game" << endl;
-            command->saveEffect("game started");
+                // Add the player
+                this->players.push_back(new Player(player_name));
 
-        } else {
-            cout << "SOMETHING WENT TERRIBLY WRONG!!!";
-            command->saveEffect("SOMETHING WENT WRONG");
+                string effect = "Added player <" + player_name + ">";
+                command->saveEffect(effect);
+            }
+            number_of_players = this->players.size();
+            cout << "Current number of players: " << number_of_players << endl;
+        }
+
+        // STARTING THE GAME
+        else if (typed_command == "gamestart") {
+
+            if(this->getPlayers().size() < 2){
+                int number_of_players = this->getPlayers().size();
+                string message = "Not enough players to start the game.";
+                cout << message << " Current number of players is " << number_of_players << "." <<endl;
+                cout << "To start the game, please make sure to add 2 to 6 players. " << endl;
+                go_to_next_state = false;
+                command->saveEffect(message);
+            }
+            else{
+                cout << "Starting the game" << endl;
+
+                // start the game
+
+
+
+                command->saveEffect("game started");
+            }
+        }
+
+        // NEVER REACH THIS POINT
+        else {
+            cout << "Something went wrong, please try again...";
+            command->saveEffect("Something went wrong");
+            go_to_next_state = false;
 
         }
         if(go_to_next_state){
