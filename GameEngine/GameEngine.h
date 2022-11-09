@@ -61,6 +61,7 @@ public:
     GameEngine(Observer* _obs);
     string stringToLog();
     Observer* _observers = nullptr;
+    Observer* getObserver();
 
 
     friend class Orders;

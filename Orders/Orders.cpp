@@ -63,20 +63,26 @@ Order& Order::operator=(const Order& o) {
 Deploy::Deploy() : Order() {
     this->targetTer = nullptr;
     this->army_units = 0;
+    this->Attach(game->getObserver());
+};
+
+Deploy::Deploy(GameEngine* game) : Order() {
+    this->targetTer = nullptr;
+    this->army_units = 0;
+    this->Attach(game->_observers);
+
 };
 
 /**
  * Parametized constructor for Deploy
  */
-Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
     this->army_units = army_units;
-}
-
-
-Deploy::Deploy(GameEngine* game) {
     this->Attach(game->_observers);
+
 }
+
 
 /**
  * Default destructor for Deploy
@@ -171,18 +177,25 @@ Advance::Advance() : Order() {
     this->army_units = 0;
 };
 
+Advance::Advance(GameEngine* game) : Order() {
+    this->sourceTer = nullptr;
+    this->targetTer = nullptr;
+    this->army_units = 0;
+    this->Attach(game->_observers);
+
+};
+
 /**
  * Parametized constructor for Advance
  */
-Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game) : Order(currentPl) {
     this->sourceTer = sourceTer;
     this->targetTer = targetTer;
     this->army_units = army_units;
+    this->Attach(game->_observers);
+
 }
 
-Advance::Advance(GameEngine* game) {
-    this->Attach(game->_observers);
-}
 /**
  * Default destructor for Advance
  */
@@ -355,18 +368,24 @@ string Advance::orderEffect() const {
 /**
  * Default constructor for Bomb
  */
+
 Bomb::Bomb() : Order() {
     this->targetTer = nullptr;
 };
 
-BombCardOrder::BombCardOrder(GameEngine* game) {
+Bomb::Bomb(GameEngine* game) : Order() {
+    this->targetTer = nullptr;
     this->Attach(game->_observers);
-}
+
+};
+
 /**
  * Parametized constructor for Bomb
  */
-Bomb::Bomb(Territory *targetTer, Player *currentPl) : Order(currentPl) {
+Bomb::Bomb(Territory *targetTer, Player *currentPl, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
+    this->Attach(game->_observers);
+
 }
 
 /**
@@ -476,18 +495,22 @@ string Bomb::orderEffect() const {
 /**
  * Default constructor for Blockade
  */
-Blockade::Blockade() : Order() {
+Blockade::Blockade() = default;
+
+
+Blockade::Blockade(GameEngine* game) : Order() {
     this->targetTer = nullptr;
+    this->Attach(game->_observers);
 };
 
-BlockadeCardOrder::BlockadeCardOrder(GameEngine* game) {
-    this->Attach(game->_observers);
-}
+
 /**
  * Parametized constructor for Blockade
  */
-Blockade::Blockade(Territory *targetTer, Player *currentPl) : Order(currentPl) {
+Blockade::Blockade(Territory *targetTer, Player *currentPl, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
+    this->Attach(game->_observers);
+
 }
 /**
  * Default destructor for Blockade
@@ -587,16 +610,23 @@ Airlift::Airlift() : Order() {
     this->army_units = 0;
 };
 
-AirliftCardOrder::AirliftCardOrder(GameEngine* game) {
+Airlift::Airlift(GameEngine* game) : Order() {
+    this->sourceTer = nullptr;
+    this->targetTer = nullptr;
+    this->army_units = 0;
     this->Attach(game->_observers);
-}
+
+};
+
 /**
  * Parametized constructor for Airlift
  */
-Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_unit, GameEngine* game) : Order(currentPl) {
     this->sourceTer = sourceTer;
     this->targetTer = targetTer;
     this->army_units = army_units;
+    this->Attach(game->_observers);
+
 }
 
 /**
@@ -695,15 +725,19 @@ Negotiate::Negotiate() : Order() {
     this->enemyPl = nullptr;
 };
 
+Negotiate::Negotiate(GameEngine* game) : Order() {
+    this->enemyPl = nullptr;
+    this->Attach(game->_observers);
+
+};
+
 /**
  * Parametized constructor for Negotiate
  */
-Negotiate::Negotiate(Player *currentPl, Player *enemyPl) : Order(currentPl) {
+Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine* game) : Order(currentPl) {
     this->enemyPl = enemyPl;
-}
-
-Negotiate::Negotiate(GameEngine* game) {
     this->Attach(game->_observers);
+
 }
 /**
  * Default destructor for Negotiate
@@ -793,6 +827,9 @@ string Negotiate::orderEffect() const {
  */
 OrdersList::OrdersList() = default;
 
+OrdersList::OrdersList(GameEngine* game){
+    this->Attach(game->_observers);
+}
 /**
  * Destructor for OrdersList
  */

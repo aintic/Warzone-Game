@@ -60,7 +60,7 @@ public:
 
     Deploy(GameEngine* game);
     // parametized constructor
-    Deploy(Territory *targetTer, Player *currentPl, int army_units);
+    Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
     // destructor
     ~Deploy() override;
     // stream insertion operator
@@ -91,7 +91,7 @@ public:
     Advance(GameEngine* game);
 
     // parametized constructor
-    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
+    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
     // destructor
     ~Advance() override;
     // stream insertion operator
@@ -117,12 +117,11 @@ private:
 class Bomb : public Order {
 public:
     //constructor
+    Bomb();
 
     Bomb(GameEngine* game);
-
-    Bomb();
     // parametized constructor
-    Bomb(Territory *targetTer, Player *currentPl);
+    Bomb(Territory *targetTer, Player *currentPl, GameEngine* game);
     // destructor
     ~Bomb() override;
     // stream insertion operator
@@ -146,12 +145,11 @@ private:
 class Blockade : public Order {
 public:
     // constructor
+    Blockade();
 
     Blockade(GameEngine* game);
-
-    Blockade();
     // parametized constructor
-    Blockade(Territory *targetTer, Player *currentPl);
+    Blockade(Territory *targetTer, Player *currentPl, GameEngine* game);
     // destructor
     ~Blockade() override;
     // stream insertion operator
@@ -179,7 +177,7 @@ public:
 
     Airlift(GameEngine* game);
     // parametized constructor
-    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
+    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
     // destructor
     ~Airlift() override;
     // stream insertion operator
@@ -206,9 +204,10 @@ class Negotiate : public Order {
 public:
     //constructor
     Negotiate();
-    // parametized constructor
-    Negotiate(Player *currentPl, Player *enemyPl);
+
     Negotiate(GameEngine* game);
+    // parametized constructor
+    Negotiate(Player *currentPl, Player *enemyPl, GameEngine* game);
 
 
     // destructor

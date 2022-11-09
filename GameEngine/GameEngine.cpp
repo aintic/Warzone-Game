@@ -686,6 +686,9 @@ void endState::transition(GameEngine *gameEngine, string command) {
     } else cout << "\nYou have entered an invalid command for the 'Win' state...\n";
 }
 
+Observer *GameEngine::getObserver() {
+    return _observers;
+}
 
 string GameEngine::stringToLog() {
     return "Currently in " + this->getCurrentState()->getStateName() + " state";

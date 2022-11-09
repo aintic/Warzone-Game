@@ -22,6 +22,8 @@ int main(){
 
     //game->startupPhase();
 
+
+    /*
     //game transition part
     State* map_loaded = new startupState(1);
     State* map_validated = new startupState(2);
@@ -30,16 +32,21 @@ int main(){
     game->nextState(map_loaded);
     game->nextState(map_validated);
     game->nextState(players_added);
+*/
 
+    //Orderlist part
+    /*
     Player* p1 = new Player();
     Order* testDeploy = new Deploy(game);
 
     OrdersList* ol = new OrdersList(game);
 
+    p1->setPlayerOrderList(ol);
     p1->getPlayerOrderList()->add(testDeploy);
-
+*/
 
 /*
+    //Order execute part
     Order* testDeploy = new Deploy(game);
 
 
