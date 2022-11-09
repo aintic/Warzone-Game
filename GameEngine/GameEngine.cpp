@@ -1,8 +1,10 @@
 #include "GameEngine.h"
-#include "../Player/Player.h"
 #include "../Cards/Cards.h"
 #include <iostream>
 #include <vector>
+#include <map>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -140,6 +142,11 @@ void GameEngine::startupPhase() {
 
             if(this->map->get_valid()) {
                 command->saveEffect("map validated");
+
+                cout<< "Number of continents: " << this->map->get_continents().size() << endl;
+                cout<< "Number of territories: " << this->map->get_territories().size() << endl;
+
+
             }
             else{
                 go_to_next_state = false;
@@ -178,6 +185,7 @@ void GameEngine::startupPhase() {
         // STARTING THE GAME
         else if (typed_command == "gamestart") {
 
+            // not enough players
             if(this->getPlayers().size() < 2){
                 int number_of_players = this->getPlayers().size();
                 string message = "Not enough players to start the game.";
@@ -187,9 +195,44 @@ void GameEngine::startupPhase() {
                 command->saveEffect(message);
             }
             else{
-                cout << "Starting the game" << endl;
+                cout << "Starting the game\n" << endl;
 
                 // start the game
+
+                cout << "a) fairly distributing all the territories to the players: " << endl;
+
+                int counter = 0;
+                ::map<int, Territory *> territories = this->map->get_territories();
+
+                // Assign each territory to a player in a round-robin fashion as to ensure that
+                // no player should have more than one territory more than any other player.
+                for(pair<int,Territory*> territory : territories){
+                    int player_index = counter % this->players.size();
+                    this->players[player_index]->addTerritory(territory.second);
+                    counter++;
+                }
+
+                for(Player *player : this->players){
+                    cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
+                }
+
+
+                cout << "\nb) determining randomly the order of play of the players in the game: " << endl;
+
+                // shuffle the order of players
+                std::random_shuffle(this->players.begin(), this->players.end());
+
+                counter = 1;
+                for(Player *player : this->players){
+                    cout << counter << ": " << player->getName() << endl;
+                    counter++;
+                }
+
+
+
+                //c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
+                //d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+                //e) switch the game to the play phase
 
 
 
