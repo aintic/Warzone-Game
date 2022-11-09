@@ -18,7 +18,7 @@ Player::Player() {
     this->reinforcementPool = 5;
     vector<int> f;
     this->_friendlyList = f;
-    this->conquered = false;
+    this->conquerer = false;
 }
 
 //Constructor with name only
@@ -31,7 +31,7 @@ Player::Player(string name) {
     this->order_list = new OrdersList();
     vector<int> f;
     this->_friendlyList = f;
-    this->conquered = false;
+    this->conquerer = false;
 }
 
 
@@ -45,7 +45,7 @@ Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersL
     this->order_list = orders;
     vector<int> f;
     this->_friendlyList = f;
-    this->conquered = false;
+    this->conquerer = false;
 }
 
 //copy constructor
@@ -56,7 +56,7 @@ Player::Player(const Player& p){
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
     this->_friendlyList = p._friendlyList;
-    this->conquered = p.conquered;
+    this->conquerer = p.conquerer;
 }
 
 //destructor
@@ -76,7 +76,7 @@ Player& Player::operator=(const Player& p){
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
     this->_friendlyList = p._friendlyList;
-    this->conquered = p.conquered;
+    this->conquerer = p.conquerer;
     return *this;
 }
 
@@ -143,7 +143,7 @@ void Player::conquerTerritory(Territory* t) {
     Player* loser = t->get_owner();
     loser->removeTerritory(t);
     this->addTerritory(t);
-    this->conquered = true;
+    this->conquerer = true;
 }
 
 // add a friendly player when executing Negotiate order
@@ -169,8 +169,8 @@ bool Player::isFriendly(int playerID) {
     return false;
 }
 
-void Player::resetConquered() {
-    this->conquered = false;
+void Player::resetConquerer() {
+    this->conquerer = false;
 }
 
 //getters
@@ -201,8 +201,8 @@ int Player::getReinforcementPool() {
     return reinforcementPool;
 }
 
-bool Player::getConquered() {
-    return conquered;
+bool Player::getConquerer() {
+    return conquerer;
 }
 
 //setters
@@ -219,7 +219,7 @@ void Player::setReinforcementPool(int armies) {
 }
 
 ostream& operator<<(ostream& os, Player& p){
-    return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
+    return os << "Name: " << p.getName() << ", ID: " << p.getPlayerID();
 }
 
 

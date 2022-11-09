@@ -17,8 +17,12 @@ const string Blockade::_orderType = "Blockade";
 const string Airlift::_orderType = "Airlift";
 const string Negotiate::_orderType = "Negotiate";
 
+// *****************************************************************************************************************
+// ORDER
+// *****************************************************************************************************************
+
 /**
- * Default constructor for Order
+ *  Constructor for Order
  */
 Order::Order() {
     this->currentPl = nullptr;
@@ -26,15 +30,19 @@ Order::Order() {
 
 /**
  * Parametized constructor for Order
+ * @param currentPl - player issuing order
  */
  Order::Order(Player *currentPl) {
     this->currentPl = currentPl;
 }
 
 /**
- * Default destructor for Order
+ *  Destructor for Order
  */
-Order::~Order() = default;
+Order::~Order() {
+    this->currentPl = nullptr;
+    this->game = nullptr;
+}
 
 /**
  * Stream insertion operator for Order
@@ -52,13 +60,17 @@ ostream& operator << (ostream& out,  const Order& o) {
  * @param o - Orders object
  * @return Order object
  */
-Order& Order::operator=(const Order& o) {
+Order& Order::operator = (const Order& o) {
     Order::operator = (o);
     return *this;
 }
 
+// *****************************************************************************************************************
+// DEPLOY ORDER
+// *****************************************************************************************************************
+
 /**
- * Default constructor for Deploy
+ *  Constructor for Deploy
  */
 Deploy::Deploy() : Order() {
     this->targetTer = nullptr;
@@ -75,6 +87,9 @@ Deploy::Deploy(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Deploy
+ * @param currentPl - player issuing order
+ * @param targetTer - target territory
+ * @param army_units - army units to deploy
  */
 Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
@@ -85,9 +100,11 @@ Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngi
 
 
 /**
- * Default destructor for Deploy
+ * Destructor for Deploy
  */
-Deploy::~Deploy() = default;
+Deploy::~Deploy() {
+    this->targetTer = nullptr;
+}
 
 /**
  * Stream insertion operator for Deploy
@@ -98,6 +115,22 @@ Deploy::~Deploy() = default;
 ostream& operator << (ostream& out,  const Deploy& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Deploy::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Deploy - cloned object
+ */
+Order* Deploy::clone() const {
+    return new Deploy(*this);
 }
 
 /**
@@ -144,32 +177,12 @@ void Deploy::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Deploy::getOrderType() const {
-    return _orderType;
-}
+// *****************************************************************************************************************
+// ADVANCE ORDER
+// *****************************************************************************************************************
 
 /**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Deploy - cloned object
- */
-Order* Deploy::clone() const {
-    return new Deploy(*this);
-}
-
-/**
- * Method returning order's effect
- * @return string
- */
-string Deploy::orderEffect() const {
-    return "Put a certain number of army units on a target territory.";
-}
-
-/**
- * Default constructor for Advance
+ * Constructor for Advance
  */
 Advance::Advance() : Order() {
     this->sourceTer = nullptr;
@@ -187,6 +200,10 @@ Advance::Advance(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Advance
+ * @param currentPl - player issuing order
+ * @param sourceTer - source territory
+ * @param targetTer - target territory
+ * @param army_units - army units to advance
  */
 Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game) : Order(currentPl) {
     this->sourceTer = sourceTer;
@@ -197,9 +214,12 @@ Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 }
 
 /**
- * Default destructor for Advance
+ * Destructor for Advance
  */
-Advance::~Advance() = default;
+Advance::~Advance() {
+    this->sourceTer = nullptr;
+    this->targetTer = nullptr;
+}
 
 /**
  * Stream insertion operator for Advance
@@ -210,6 +230,22 @@ Advance::~Advance() = default;
 ostream& operator << (ostream& out,  const Advance& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Advance::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Advance - cloned object
+ */
+Order* Advance::clone() const {
+    return new Advance(*this);
 }
 
 /**
@@ -243,18 +279,13 @@ bool Advance::validate() const {
         vector<Territory*> neighbors = sourceTer->get_neighbours();
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
-
-                    // if yes, jump to "isAdjacent" section below
-                    goto isAdjacent;
+                    // return true, target territory IS adjacent
+                    cout << "Order validated." << endl;
+                    return true;
                 }
             }
-        // return false, since we're out of loop and target territory IS NOT adjacent
+        // return false, target territory IS NOT adjacent
         return false;
-        // return true, target territory IS adjacent
-        isAdjacent: {
-            cout << "Order validated." << endl;
-            return true;
-        };
     }
 }
 
@@ -265,8 +296,8 @@ void Advance::execute() {
     // if order is valid,
     if (validate()) {
         cout << "Executing " << *this << " order. \n";
-        // if both the source and target territories belong to the current player
-        if (sourceTer->get_owner()->getPlayerID() == currentPl->getPlayerID() && targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
+        // if both source and target territories belong to the current player (checked source territory in validate())
+        if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             // move army units to target territory
@@ -274,6 +305,8 @@ void Advance::execute() {
         }
         // if target territory belongs to enemy player and has 0 army units
         else if (targetTer->get_army_units() == 0) {
+            // take army units from source territory
+            sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             cout << "You have conquered this territory!\n" << endl;
             // current player gains target territory, enemy player loses it
             // army units get added to target territory
@@ -324,7 +357,7 @@ void Advance::execute() {
             }
             // if current player cannot conquer territory
             else {
-                cout << "You could not conquered this territory.\n" << endl;
+                cout << "You could not conquer this territory.\n" << endl;
                 // move surviving army units back to source territory
                 // reduce army units in target territory to surviving defenders
                 sourceTer->set_army_units(sourceTer->get_army_units() + survivingAttackers);
@@ -341,29 +374,9 @@ void Advance::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Advance::getOrderType() const {
-    return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Advance - cloned object
- */
-Order* Advance::clone() const {
-    return new Advance(*this);
-}
-
-/**
- * Method returning order's effect
- * @return string
- */
-string Advance::orderEffect() const {
-    return "Move a certain number of army units from one territory (source) to another (target).";
-}
+// *****************************************************************************************************************
+// BOMB ORDER
+// *****************************************************************************************************************
 
 /**
  * Default constructor for Bomb
@@ -381,6 +394,8 @@ Bomb::Bomb(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Bomb
+ * @param currentPl - player issuing order
+ * @param targetTer - target territory
  */
 Bomb::Bomb(Territory *targetTer, Player *currentPl, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
@@ -389,9 +404,11 @@ Bomb::Bomb(Territory *targetTer, Player *currentPl, GameEngine* game) : Order(cu
 }
 
 /**
- * Default destructor for Bomb
+ * Destructor for Bomb
  */
-Bomb::~Bomb() = default;
+Bomb::~Bomb() {
+    this->targetTer = nullptr;
+}
 
 /**
  * Stream insertion operator for Bomb
@@ -402,6 +419,22 @@ Bomb::~Bomb() = default;
 ostream& operator << (ostream& out,  const Bomb& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Bomb::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return BombCardOrder - cloned object
+ */
+Order* Bomb::clone() const {
+    return new Bomb(*this);
 }
 
 /**
@@ -433,20 +466,14 @@ bool Bomb::validate() const {
             vector<Territory*> neighbors = ownedTer->get_neighbours();
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
-
-                    // if yes, jump to "isAdjacent" section below
-                    goto isAdjacent;
+                    // return true, target territory IS adjacent
+                    cout << "Order validated." << endl;
+                    return true;
                 }
             }
         }
-        // return false, since we're out of loop and target territory IS NOT adjacent
+        // return false, target territory IS NOT adjacent
         return false;
-
-        // return true, target territory IS adjacent
-        isAdjacent: {
-            cout << "Order validated." << endl;
-            return true;
-        };
     }
 }
 
@@ -469,28 +496,9 @@ void Bomb::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Bomb::getOrderType() const {
-    return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return BombCardOrder - cloned object
- */
-Order* Bomb::clone() const {
-    return new Bomb(*this);
-}
-/**
- * Method returning order's effect
- * @return string
- */
-string Bomb::orderEffect() const {
-    return "Destroy half of the army units located on a target territory. (Requires card)";
-}
+// *****************************************************************************************************************
+// BLOCKADE ORDER
+// *****************************************************************************************************************
 
 /**
  * Default constructor for Blockade
@@ -506,6 +514,8 @@ Blockade::Blockade(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Blockade
+ * @param currentPl - player issuing order
+ * @param targetTer - target territory
  */
 Blockade::Blockade(Territory *targetTer, Player *currentPl, GameEngine* game) : Order(currentPl) {
     this->targetTer = targetTer;
@@ -513,9 +523,11 @@ Blockade::Blockade(Territory *targetTer, Player *currentPl, GameEngine* game) : 
 
 }
 /**
- * Default destructor for Blockade
+ * Destructor for Blockade
  */
-Blockade::~Blockade() = default;
+Blockade::~Blockade() {
+    this->targetTer = nullptr;
+}
 
 /**
  * Stream insertion operator for Blockade
@@ -526,6 +538,22 @@ Blockade::~Blockade() = default;
 ostream& operator << (ostream& out,  const Blockade& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Blockade::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return BlockadeCardOrder - cloned object
+ */
+Order* Blockade::clone() const {
+    return new Blockade(*this);
 }
 
 /**
@@ -577,29 +605,9 @@ void Blockade::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Blockade::getOrderType() const {
-    return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return BlockadeCardOrder - cloned object
- */
-Order* Blockade::clone() const {
-    return new Blockade(*this);
-}
-
-/**
- * Method returning order's effect
- * @return string
- */
-string Blockade::orderEffect() const {
-    return "Triple the number of army units on a target territory and make it neutral. (Requires card)";
-}
+// *****************************************************************************************************************
+// AIRLIFT ORDER
+// *****************************************************************************************************************
 
 /**
  * Default constructor for Airlift
@@ -620,6 +628,10 @@ Airlift::Airlift(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Airlift
+ * @param currentPl - player issuing order
+ * @param sourceTer - source territory
+ * @param targetTer - target territory
+ * @param army_units - army units to airlift
  */
 Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_unit, GameEngine* game) : Order(currentPl) {
     this->sourceTer = sourceTer;
@@ -630,9 +642,12 @@ Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 }
 
 /**
- * Default destructor for Airlift
+ * Destructor for Airlift
  */
-Airlift::~Airlift() = default;
+Airlift::~Airlift() {
+    this->sourceTer = nullptr;
+    this->targetTer = nullptr;
+}
 
 /**
  * Stream insertion operator for Airlift
@@ -643,6 +658,22 @@ Airlift::~Airlift() = default;
 ostream& operator << (ostream& out,  const Airlift& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Airlift::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return AirliftCardOrder - cloned object
+ */
+Order* Airlift::clone() const {
+    return new Airlift(*this);
 }
 
 /**
@@ -694,29 +725,9 @@ void Airlift::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Airlift::getOrderType() const {
-    return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return AirliftCardOrder - cloned object
- */
-Order* Airlift::clone() const {
-    return new Airlift(*this);
-}
-
-/**
- * Method returning order's effect
- * @return string
- */
-string Airlift::orderEffect() const {
-    return "Advance a certain number of army units from one from one territory (source) to another (target). (Requires card)";
-}
+// *****************************************************************************************************************
+// NEGOTIATE ORDER
+// *****************************************************************************************************************
 
 /**
  * Default constructor for Negotiate
@@ -733,6 +744,8 @@ Negotiate::Negotiate(GameEngine* game) : Order() {
 
 /**
  * Parametized constructor for Negotiate
+ * @param currentPl - player issuing order
+ * @param enemyPl - enemy player to negotiate with
  */
 Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine* game) : Order(currentPl) {
     this->enemyPl = enemyPl;
@@ -740,9 +753,11 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine* game) : Ord
 
 }
 /**
- * Default destructor for Negotiate
+ * Destructor for Negotiate
  */
-Negotiate::~Negotiate() = default;
+Negotiate::~Negotiate() {
+    this->enemyPl = nullptr;
+}
 
 /**
  * Stream insertion operator for Negotiate
@@ -753,6 +768,22 @@ Negotiate::~Negotiate() = default;
 ostream& operator << (ostream& out,  const Negotiate& o) {
     out << o.getOrderType();
     return out;
+}
+
+/**
+ * Getter for order type
+ * @return constant string for type of order
+ */
+string Negotiate::getOrderType() const {
+    return _orderType;
+}
+
+/**
+ * Clone method - invokes default copy constructor since there is no object data member
+ * @return Negotiate - cloned object
+ */
+Order* Negotiate::clone() const {
+    return new Negotiate(*this);
 }
 
 /**
@@ -798,32 +829,12 @@ void Negotiate::execute() {
 
 }
 
-/**
- * Getter for order type
- * @return constant string for type of order
- */
-string Negotiate::getOrderType() const {
-    return _orderType;
-}
+// *****************************************************************************************************************
+// ORDERSLIST
+// *****************************************************************************************************************
 
 /**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Negotiate - cloned object
- */
-Order* Negotiate::clone() const {
-    return new Negotiate(*this);
-}
-
-/**
- * Method returning order's effect
- * @return string
- */
-string Negotiate::orderEffect() const {
-    return "Prevent attacks between the current player and another target player until the end of the turn. (Requires card)";
-}
-
-/**
- * Default constructor for OrdersList
+ * Constructor for OrdersList
  */
 OrdersList::OrdersList() = default;
 
@@ -839,6 +850,7 @@ OrdersList::~OrdersList(){
     for (int i = 0; i < size; i++) {
         delete _ordersList[i];
     }
+    _ordersList.clear();
 };
 
 /**

@@ -56,8 +56,8 @@ public:
     void resetFriendlyList();
 
     // method to check whether a player have conquered a territory during this turn
-    bool getConquered();
-    void resetConquered();
+    bool getConquerer();
+    void resetConquerer();
 
 private:
     string name;
@@ -67,5 +67,5 @@ private:
     int playerID; //unique player ID
     int reinforcementPool;
     vector<int> _friendlyList; // list of IDs of friendly players
-    bool conquered; // whether the player conquered a territory during this turn
+    bool conquerer; // whether the player conquered a territory during this turn
 };

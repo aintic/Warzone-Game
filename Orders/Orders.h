@@ -41,8 +41,6 @@ public:
     virtual string getOrderType() const = 0;
     // clone order
     virtual Order* clone() const = 0;
-    // return order effect string
-    virtual string orderEffect() const = 0;
 
     friend class OrdersList;
     string stringToLog();
@@ -73,8 +71,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order *clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     // string for type of order
@@ -104,8 +100,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     const static string _orderType;
@@ -134,8 +128,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     const static string _orderType;
@@ -162,8 +154,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     const static string _orderType;
@@ -190,8 +180,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     const static string _orderType;
@@ -222,8 +210,6 @@ public:
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
     // string for type of order

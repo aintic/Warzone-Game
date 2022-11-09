@@ -177,7 +177,7 @@ void CommandProcessor::set_commands(vector<Command*> commands)
  * @return
  */
 Command* CommandProcessor::getCommand(GameEngine* game){
-    cout << "\033[1;34m[Starting getCommand()]]\033[0m\n" << endl;
+    cout << "\033[1;34m[Starting getCommand()]\033[0m\n" << endl;
 
     // read a command
     Command* command = this->readCommand();
@@ -199,7 +199,7 @@ Command* CommandProcessor::getCommand(GameEngine* game){
         valid = this->validate(command, game);
     }
 
-    cout << "\033[1;34m[Exiting getCommand()]]\033[0m\n" << endl;
+    cout << "\033[1;34m[Exiting getCommand()]\033[0m\n" << endl;
     return command;
 }
 
@@ -208,11 +208,11 @@ Command* CommandProcessor::getCommand(GameEngine* game){
  * @return
  */
 Command* CommandProcessor::readCommand(){
-    cout << "\033[1;31m\t[Starting readCommand()]]\033[0m" << endl;
+    cout << "\033[1;31m\t[Starting readCommand()]\033[0m" << endl;
     string string_command;
     cout << "\n\t\tPlease enter command to move to the next state:  ";
-    cin >> string_command;
-    cout << "\033[1;31m\t[Exiting readCommand()]]\033[0m\n" << endl;
+    std::getline(std::cin, string_command);
+    cout << "\033[1;31m\t[Exiting readCommand()]\033[0m\n" << endl;
     return new Command(string_command, logger);
 }
 
@@ -220,12 +220,11 @@ Command* CommandProcessor::readCommand(){
  * @brief  Gets commands from the console as a string
  */
 void CommandProcessor::saveCommand(Command* c){
-    cout << "\033[1;32m\t[Starting saveCommand()]]\033[0m\n" << endl;
+    cout << "\033[1;32m\t[Starting saveCommand()]\033[0m\n" << endl;
     this->commands.push_back(c);
     cout << "\033[1;32m\t\t[Command saved]\033[0m\n" << endl;
-    cout << "\033[1;32m\t[Exiting saveCommand()]]\033[0m\n" << endl;
+    cout << "\033[1;32m\t[Exiting saveCommand()]\033[0m\n" << endl;
     Notify(this);
-
 }
 
 /**
@@ -235,26 +234,48 @@ void CommandProcessor::saveCommand(Command* c){
  */
 bool CommandProcessor::validate(Command* command, GameEngine* game){
 
-    cout << "\033[1;33m\t[Starting validate()]]\033[0m\n" << endl;
+    cout << "\033[1;33m\t[Starting validate()]\033[0m\n" << endl;
 
     string typed_command = command->get_typed_command();
 
+    // for commands like loadmap and add player, the valid command is only the first token of the command
+    // for example loadmap examplemap --> valid token is loadmap
+    string delimiter = " ";
+    string token_command = typed_command.substr(0, typed_command.find(delimiter));
+
     State* currentState = game->getCurrentState();
+
+    string state_name = currentState->getStateName();
 
     vector<string> valid_commands = currentState->getSpecificValidCommands();
 
     // check is typed command is in vector of allowed commands
-    if (std::find(valid_commands.begin(), valid_commands.end(), typed_command) != valid_commands.end())
+    if (std::find(valid_commands.begin(), valid_commands.end(), token_command) != valid_commands.end())
     {
+        // if loadmap or addplayer, we need a name for the map and the player
+        if(token_command == "loadmap" || token_command == "addplayer"){
+            if(typed_command.length() <= (token_command.length() + 1)){
+
+                // command is incomplete. ex: loadmap instead of loadmap <mapname>
+                string error = currentState->getWrongCommandError();
+                command->set_command_effect(error);
+                cout << "\033[1;33m\t\t[Command is not valid]\033[0m\n" << endl;
+                cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
+                return false;
+            }
+        }
+
         // if it is, return valid
-        cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
+        cout << "\033[1;33m\t\t[Command is valid]\033[0m\n" << endl;
+        cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
         return true;
     }
     else {
         // otherwise save the command error in the effect string of the command
         string error = currentState->getWrongCommandError();
         command->set_command_effect(error);
-        cout << "\033[1;33m\t[Exiting validate()]]\033[0m\n" << endl;
+        cout << "\033[1;33m\t\t[Command is not valid]\033[0m\n" << endl;
+        cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
         return false;
     }
 }
