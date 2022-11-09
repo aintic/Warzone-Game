@@ -83,7 +83,7 @@ Player& Player::operator=(const Player& p){
 //returns a list of territories to be defended
 vector<Territory*> Player:: toDefend(){
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
-        return  lhs->get_army_units() < rhs->get_army_units();
+        return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
     });
     return this->territories;
 }
@@ -99,7 +99,7 @@ vector<Territory*> Player:: toAttack(){
                                   [&neighborTerritory](Territory *t) {
                                       return t->get_id() == neighborTerritory->get_id();
                                   });
-                if (it == toAttackTerritories.end()) { //if territory is not in toAttackTerritories add it
+                if (it == toAttackTerritories.end()) { //if territory is not already in toAttackTerritories add it
                     toAttackTerritories.push_back(neighborTerritory);
                 }
             }
@@ -119,8 +119,11 @@ void Player::addOrder(Order *o){
 //creates an order object and adds it to the list of orders
 bool Player::issueOrder(Deck *deck) {
     if(issuableReinforcementPool != 0) {
-        order_list->add(new Deploy(this->toDefend().at(0), this, 1));
-        issuableReinforcementPool--;
+        Territory *targetTerr = this->toDefend().at(0); // owned territory with the lowest number of army units (actual + issued)
+        order_list->add(new Deploy(targetTerr, this, 1)); // deploy one army on weakest
+        issuableReinforcementPool--; // decrement player's reinforcement pool
+        targetTerr->set_issued_army_units(targetTerr->get_issued_army_units()+ 1); // increment territory's issued army units
+
         cout << *this << " issued a new deploy order" << endl;
     }
     else if (!this->hand->getCards().empty()) {
