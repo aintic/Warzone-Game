@@ -231,16 +231,22 @@ void GameEngine::startupPhase() {
                 cout << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: " << endl;
                 for(Player* player : this->players){
                     player->setReinforcementPool(50);
+                    cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
                 }
 
                 cout << "\nd) players draw 2 initial cards from the deck using the deck’s draw() method: " << endl;
+                this->deck = new Deck;
+
+                cout<< *(this->deck) << endl << endl;
+
                 for(Player* player : this->players){
                     this->deck->draw(*player);
                     this->deck->draw(*player);
+
+                    cout << player->getName() << "'s hand: " << *player->getHand() << endl;
                 }
 
-
-                cout << "\ne) switch the game to the play phase: " << endl;
+                cout << "\ne) switching the game to the play phase: " << endl;
 
 
                 command->saveEffect("a) fairly distributing all the territories to the players\nb) determining randomly the order of play of the players in the game\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool\nd) players draw 2 initial cards from the deck using the deck’s draw() method\ne) switch the game to the play phase");
@@ -261,6 +267,7 @@ void GameEngine::startupPhase() {
             cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
+    mainGameLoop();
 }
 
 void GameEngine::reinforcementPhase() {
@@ -588,7 +595,6 @@ void startupState::transition(GameEngine *gameEngine, string command) {
 //default constructor
 reinforcementState::reinforcementState() {
     setStateName(stateName);
-    cout << "\nTurn #" << GameEngine::turn << "\n";
 }
 
 //default destructor
