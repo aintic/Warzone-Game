@@ -228,15 +228,22 @@ void GameEngine::startupPhase() {
                     counter++;
                 }
 
+                cout << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: " << endl;
+                for(Player* player : this->players){
+                    player->setReinforcementPool(50);
+                }
+
+                cout << "\nd) players draw 2 initial cards from the deck using the deck’s draw() method: " << endl;
+                for(Player* player : this->players){
+                    this->deck->draw(*player);
+                    this->deck->draw(*player);
+                }
 
 
-                //c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
-                //d) let each player draw 2 initial cards from the deck using the deck’s draw() method
-                //e) switch the game to the play phase
+                cout << "\ne) switch the game to the play phase: " << endl;
 
 
-
-                command->saveEffect("game started");
+                command->saveEffect("a) fairly distributing all the territories to the players\nb) determining randomly the order of play of the players in the game\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool\nd) players draw 2 initial cards from the deck using the deck’s draw() method\ne) switch the game to the play phase");
             }
         }
 
