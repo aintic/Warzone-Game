@@ -5,15 +5,22 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string>
-using namespace std;
+#include <stdlib.h>
+#include <time.h>
 
+class Territory;
+class Player;
 class GameEngine;
+using namespace std;
 
 class Order {
 public:
     // constructor
     Order();
+    // parametized constructor
+    Order(Player *currentPl);
     // destructor
     virtual ~Order() = 0;
     // assignment operator
@@ -24,160 +31,166 @@ public:
     // verifies if order is valid
     virtual bool validate() const = 0;
     // execute order
-    virtual void execute() const = 0;
+    virtual void execute() = 0;
     // get order type
     virtual string getOrderType() const = 0;
     // clone order
     virtual Order* clone() const = 0;
-    // return order effect string
-    virtual string orderEffect() const = 0;
 
     friend class OrdersList;
+
+protected:
+    Player *currentPl;
+    GameEngine *game;
 };
 
 class Deploy : public Order {
 public:
     // constructor
     Deploy();
+    // parametized constructor
+    Deploy(Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~Deploy();
+    ~Deploy() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Deploy& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order *clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    int army_units;
 };
 
 class Advance : public Order {
 public:
     // constructor
     Advance();
+    // parametized constructor
+    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~Advance();
+    ~Advance() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Advance& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    Territory *sourceTer;
+    int army_units;
 };
 
-class BombCardOrder : public Order {
+class Bomb : public Order {
 public:
     //constructor
-    BombCardOrder();
+    Bomb();
+    // parametized constructor
+    Bomb(Territory *targetTer, Player *currentPl);
     // destructor
-    ~BombCardOrder();
+    ~Bomb() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const BombCardOrder& o);
-
+    friend ostream& operator << (ostream& out,  const Bomb& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
 };
 
-class BlockadeCardOrder : public Order {
+class Blockade : public Order {
 public:
     // constructor
-    BlockadeCardOrder();
+    Blockade();
+    // parametized constructor
+    Blockade(Territory *targetTer, Player *currentPl);
     // destructor
-    ~BlockadeCardOrder();
+    ~Blockade() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const BlockadeCardOrder& o);
+    friend ostream& operator << (ostream& out,  const Blockade& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
 };
 
-class AirliftCardOrder : public Order {
+class Airlift : public Order {
 public:
     // constructor
-    AirliftCardOrder();
+    Airlift();
+    // parametized constructor
+    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
-    ~AirliftCardOrder();
+    ~Airlift() override;
     // stream insertion operator
-    friend ostream& operator << (ostream& out,  const AirliftCardOrder& o);
+    friend ostream& operator << (ostream& out,  const Airlift& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Territory *targetTer;
+    Territory *sourceTer;
+    int army_units;
 };
 
 class Negotiate : public Order {
 public:
     //constructor
     Negotiate();
+    // parametized constructor
+    Negotiate(Player *currentPl, Player *enemyPl);
     // destructor
-    ~Negotiate();
+    ~Negotiate() override;
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Negotiate& o);
     // verifies if order is valid
     bool validate() const override;
     // execute order
-    void execute() const override;
+    void execute() override;
     // get order type
     string getOrderType() const override;
     // clone order
     Order* clone() const override;
-    // return order effect string
-    string orderEffect() const override;
 
 private:
-    // string for type of order
     const static string _orderType;
+    Player *enemyPl;
 };
 
 class OrdersList {
@@ -196,9 +209,9 @@ public:
     // add order to list
     void add(Order* o);
     // move orders from one position to another
-    void move(int, int);
+    void move(int currentPos, int newPos);
     // remove an order at specified position
-    void remove(int);
+    void remove(int pos);
     // execute then delete orders from list sequentially
     void executeList();
 
@@ -207,6 +220,5 @@ public:
     vector<Order*> getOrderList();
 
 private:
-    // list of orders
     vector<Order*> _ordersList;
 };

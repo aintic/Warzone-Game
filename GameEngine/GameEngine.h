@@ -43,6 +43,7 @@ public:
     GameEngine(const GameEngine& g); //copy constructor
     GameEngine& operator =(const GameEngine& g); //assignment operator
     State* getCurrentState(); //currentState getter
+    vector<Player*> getPlayers();// players list getter
     void setCurrentState(State* state); //currentState setter
     void nextState(State* nextState); //method to change state
     static int turn; //count iterations of main game phase
@@ -54,6 +55,8 @@ public:
     void executeOrdersPhase();
     void mainGameLoop();
     void issueOrderPhase();
+
+    friend class Orders;
 };
 
 
