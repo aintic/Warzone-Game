@@ -261,7 +261,7 @@ void Player::setIssuableReinforcementPool(int armies) {
 }
 
 ostream& operator<<(ostream& os, Player& p){
-    return os << "Name: " << p.getName() << " ID: " << p.getPlayerID();
+    return os << "Name: " << p.getName() << ", ID: " << p.getPlayerID();
 }
 
 
