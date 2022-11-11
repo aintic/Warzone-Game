@@ -310,8 +310,8 @@ void GameEngine::executeOrdersPhase() {
     do {
         allOrdersDone = true;
         for (Player *p: players) {
-            cout << "Checking next order of player " << p->getPlayerID() << endl;
             if (!p->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
+                cout << "Checking next order of player " << p->getPlayerID() << endl;
                 p->getPlayerOrderList()->executeOrder(); //executes deploy order
                 allOrdersDone = false;
                 cout << "Executed order of player " << p->getPlayerID() << "\n\n";
