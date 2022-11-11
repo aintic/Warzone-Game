@@ -336,8 +336,6 @@ void GameEngine::executeOrdersPhase() {
 }
 
 void GameEngine::mainGameLoop() {
-
-    cout << "Turn #" << turn << endl;
     do{
         reinforcementPhase();
 
@@ -595,6 +593,7 @@ void startupState::transition(GameEngine *gameEngine, string command) {
 //default constructor
 reinforcementState::reinforcementState() {
     setStateName(stateName);
+    cout << "\nTurn #" << GameEngine::turn << "\n";
 }
 
 //default destructor
