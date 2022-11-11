@@ -1,8 +1,10 @@
 #include "GameEngine.h"
-#include "../Player/Player.h"
 #include "../Cards/Cards.h"
 #include <iostream>
 #include <vector>
+#include <map>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -96,6 +98,7 @@ void GameEngine::nextState(State *nextState) {
 
 void GameEngine::startupPhase() {
     do { // loop while not in assign reinforcement phase
+        bool go_to_next_state = true;
         Command *command = this->commandProcessor->getCommand(this);
         // since get_command takes care of verifying the validity of the command in the given state of the game
         // we can use is statements to execute the command and save the appropriate effect
@@ -106,38 +109,165 @@ void GameEngine::startupPhase() {
         string delimiter = " ";
         string token_command = typed_command.substr(0, typed_command.find(delimiter));
 
+        // MAP LOADING
         if(token_command == "loadmap"){
 
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
             cout << "loading the map "<< map_string << endl;
 
-            string effect = "Loaded map <" +map_string + ">";
-            command->saveEffect(effect);
+            // delete previous map if any
+            delete this->map;
+            this->map = nullptr;
+
+            // load the new map
+            string map_path = "Maps/" + map_string + ".map";
+            this->map = MapLoader::loadMap(map_path);
+
+            if(this->map == nullptr){
+                string effect = "Could not load the map <" +map_string + ">";
+                command->saveEffect(effect);
+                go_to_next_state = false;
+            }
+            else{
+                string effect = "Loaded map <" +map_string + ">";
+                command->saveEffect(effect);
+            }
         }
+        // MAP VALIDATING
         else if(typed_command == "validatemap"){
             cout << "validating the map"<< endl;
-            command->saveEffect("map validates");
+
+            //validate the map
+            this->map->validate();
+
+            if(this->map->get_valid()) {
+                command->saveEffect("map validated");
+
+                cout<< "Number of continents: " << this->map->get_continents().size() << endl;
+                cout<< "Number of territories: " << this->map->get_territories().size() << endl;
+
+
+            }
+            else{
+                go_to_next_state = false;
+                command->saveEffect("map not valid");
+            }
 
         }
+
+        // ADDING PLAYERS
         else if(token_command == "addplayer"){
 
-            string player_string = typed_command.substr(token_command.length() + delimiter.length());
-            cout << "Adding the player "<< player_string << endl;
+            string player_name = typed_command.substr(token_command.length() + delimiter.length());
+            int number_of_players = this->getPlayers().size();
 
-            string effect = "Added player <" + player_string + ">";
-            command->saveEffect(effect);
+            // check if max number of players is reached
+            if(number_of_players >=6){
+                string message = "Cannot add more players to the game.";
+                cout << message <<endl;
+                cout << "Please use the command <gamestart>." << endl;
+                go_to_next_state = false;
+                command->saveEffect(message);
+            }
+            else{
+                cout << "Adding the player "<< player_name << endl;
 
-        } else if (typed_command == "gamestart") {
-            cout << "Starting the game" << endl;
-            command->saveEffect("game started");
+                // Add the player
+                this->players.push_back(new Player(player_name));
 
-        } else {
-            cout << "SOMETHING WENT TERRIBLY WRONG!!!";
-            command->saveEffect("SOMETHING WENT WRONG");
+                string effect = "Added player <" + player_name + ">";
+                command->saveEffect(effect);
+            }
+            number_of_players = this->players.size();
+            cout << "Current number of players: " << number_of_players << endl;
+        }
+
+        // STARTING THE GAME
+        else if (typed_command == "gamestart") {
+
+            // not enough players
+            if(this->getPlayers().size() < 2){
+                int number_of_players = this->getPlayers().size();
+                string message = "Not enough players to start the game.";
+                cout << message << " Current number of players is " << number_of_players << "." <<endl;
+                cout << "To start the game, please make sure to add 2 to 6 players. " << endl;
+                go_to_next_state = false;
+                command->saveEffect(message);
+            }
+            else{
+                cout << "Starting the game\n" << endl;
+
+                // start the game
+
+                cout << "a) fairly distributing all the territories to the players: " << endl;
+
+                int counter = 0;
+                ::map<int, Territory *> territories = this->map->get_territories();
+
+                // Assign each territory to a player in a round-robin fashion as to ensure that
+                // no player should have more than one territory more than any other player.
+                for(pair<int,Territory*> territory : territories){
+                    int player_index = counter % this->players.size();
+                    this->players[player_index]->addTerritory(territory.second);
+                    counter++;
+                }
+
+                for(Player *player : this->players){
+                    cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
+                }
+
+
+                cout << "\nb) determining randomly the order of play of the players in the game: " << endl;
+
+                // shuffle the order of players
+                std::random_shuffle(this->players.begin(), this->players.end());
+
+                counter = 1;
+                for(Player *player : this->players){
+                    cout << counter << ": " << player->getName() << endl;
+                    counter++;
+                }
+
+                cout << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: " << endl;
+                for(Player* player : this->players){
+                    player->setReinforcementPool(50);
+                    cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
+                }
+
+                cout << "\nd) players draw 2 initial cards from the deck using the deck’s draw() method: " << endl;
+                this->deck = new Deck;
+
+                cout<< *(this->deck) << endl << endl;
+
+                for(Player* player : this->players){
+                    this->deck->draw(*player);
+                    this->deck->draw(*player);
+
+                    cout << player->getName() << "'s hand: " << *player->getHand() << endl;
+                }
+
+                cout << "\ne) switching the game to the play phase: " << endl;
+
+
+                command->saveEffect("a) fairly distributing all the territories to the players\nb) determining randomly the order of play of the players in the game\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool\nd) players draw 2 initial cards from the deck using the deck’s draw() method\ne) switch the game to the play phase");
+            }
+        }
+
+        // NEVER REACH THIS POINT
+        else {
+            cout << "Something went wrong, please try again...";
+            command->saveEffect("Something went wrong");
+            go_to_next_state = false;
 
         }
-        this->getCurrentState()->transition(this, token_command);
+        if(go_to_next_state){
+            this->getCurrentState()->transition(this, token_command);
+        }
+        else{
+            cout << "Still in " << currentState->getStateName() << " state." << endl;
+        }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
+    mainGameLoop();
 }
 
 void GameEngine::reinforcementPhase() {
@@ -180,8 +310,8 @@ void GameEngine::executeOrdersPhase() {
     do {
         allOrdersDone = true;
         for (Player *p: players) {
-            cout << "Checking next order of player " << p->getPlayerID() << endl;
             if (!p->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
+                cout << "Checking next order of player " << p->getPlayerID() << endl;
                 p->getPlayerOrderList()->executeOrder(); //executes deploy order
                 allOrdersDone = false;
                 cout << "Executed order of player " << p->getPlayerID() << "\n\n";
@@ -274,9 +404,9 @@ ostream &operator<<(ostream &stream, const State &s) {
 
 ostream &operator<<(ostream &stream, const startupState &s) {
     if (s.step == 1) {
-        return stream << "\nLoading another map... Still in '" << s.getStateName() << "' state." << endl;
+        return stream << "\nLoaded another map... Still in '" << s.getStateName() << "' state." << endl;
     } else if (s.step == 3) {
-        return stream << "\nLoading another player... Still in '" << s.getStateName() << "' state." << endl;
+        return stream << "\nLoaded another player... Still in '" << s.getStateName() << "' state." << endl;
     } else if (s.step == 4) {
         return stream << "\nYou have entered an invalid command for the '" << s.getStateName() << "' state..." << endl;
     }
@@ -465,7 +595,6 @@ void startupState::transition(GameEngine *gameEngine, string command) {
 //default constructor
 reinforcementState::reinforcementState() {
     setStateName(stateName);
-    cout << "\nTurn #" << GameEngine::turn << "\n";
 }
 
 //default destructor

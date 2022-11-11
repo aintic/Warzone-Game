@@ -170,6 +170,8 @@ public:
     map<int, Continent*> get_continents();
     void set_continents(map<int, Continent*> continents);
 
+    bool get_valid();
+
     int allContinentsBonus(Player* player);
 
 private:
