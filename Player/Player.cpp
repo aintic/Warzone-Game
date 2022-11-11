@@ -16,6 +16,9 @@ Player::Player() {
     this->hand = new Hand;
     this->order_list = new OrdersList();
     this->reinforcementPool = 5;
+    this->issuableReinforcementPool = 0;
+    this->advanceAttackOrdersIssued = 0;
+    this->advanceDefendOrdersIssued = 0;
     vector<int> f;
     this->_friendlyList = f;
     this->conquerer = false;
@@ -112,6 +115,18 @@ vector<Territory*> Player:: toAttack(){
     return toAttackTerritories;
 }
 
+Territory* Player::strongestOwnedNeighbor(Territory* territory) {
+    vector<Territory*> ownedNeighbors;
+    for (Territory *t : territory->get_neighbours()) {
+        if (t->get_owner() == this) {
+            ownedNeighbors.push_back(t);
+        }
+    }
+    return *max_element(ownedNeighbors.begin(), ownedNeighbors.end(), [](Territory* a, Territory* b){
+        return a->get_army_units() < b->get_army_units();
+    });
+}
+
 void Player::addOrder(Order *o){
     this->order_list->add(o);
 }
@@ -119,7 +134,7 @@ void Player::addOrder(Order *o){
 //creates an order object and adds it to the list of orders
 bool Player::issueOrder(Deck *deck) {
     if(issuableReinforcementPool != 0) {
-        Territory *targetTerr = this->toDefend().at(0); // owned territory with the lowest number of army units (actual + issued)
+        Territory *targetTerr = this->toDefend().front(); // owned territory with the lowest number of army units (actual + issued)
         order_list->add(new Deploy(targetTerr, this, 1)); // deploy one army on weakest
         issuableReinforcementPool--; // decrement player's reinforcement pool
         targetTerr->set_issued_army_units(targetTerr->get_issued_army_units()+ 1); // increment territory's issued army units
@@ -129,9 +144,21 @@ bool Player::issueOrder(Deck *deck) {
     else if (!this->hand->getCards().empty()) {
         hand->play(*deck, this, 0);
     }
+    else if (advanceAttackOrdersIssued < 2 && advanceAttackOrdersIssued < toAttack().size()){
+        Territory *targetTerr = toAttack().at(advanceAttackOrdersIssued);
+        Territory *sourceTerr = strongestOwnedNeighbor(targetTerr);
+        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1));
+
+        cout << *this << " issued a new advance order to their own territory" << endl;
+    }
+    else if (advanceDefendOrdersIssued < 1 && toDefend().size() > 1){
+        Territory *targetTerr = toDefend().front();
+        Territory *sourceTerr = toDefend().back();
+        order_list->add(new Advance(sourceTerr, targetTerr, this, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2 ));
+
+        cout << *this << " issued a new advance order to an enemy territory" << endl;
+    }
     else {
-        order_list->add(new Advance);
-        cout << *this << " issued a new advance order" << endl;
         cout << *this << " is done issuing orders" << endl;
         return false;
     }
