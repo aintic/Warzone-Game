@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include "../Player/Player.h"
+#include "../Orders/Orders.h"
 #include "../Map/Map.h"
 #include "../CommandProcessing/CommandProcessing.h"
 
@@ -15,6 +16,7 @@ using std::ostream;
 using std::endl;
 
 class Player;
+class Deck;
 class Command;
 class CommandProcessor;
 
@@ -29,25 +31,32 @@ class GameEngine {
 
 private:
     class State* currentState;
+    Deck* deck;
     CommandProcessor* commandProcessor;
 //    vector<Player*> players;
 //    Map* map;
 public:
     GameEngine(); //default constructor
+    GameEngine(int numPlayers);
     ~GameEngine(); //destructor
     GameEngine(State* state); //parametrized constructor
     GameEngine(const GameEngine& g); //copy constructor
     GameEngine& operator =(const GameEngine& g); //assignment operator
     State* getCurrentState(); //currentState getter
+    vector<Player*> getPlayers();// players list getter
     void setCurrentState(State* state); //currentState setter
     void nextState(State* nextState); //method to change state
     static int turn; //count iterations of main game phase
     friend ostream& operator <<(ostream& stream, const GameEngine& g); //stream insertion operator
-
     vector<Player*> players;
     Map* map;
     void startupPhase();
     void reinforcementPhase();
+    void executeOrdersPhase();
+    void mainGameLoop();
+    void issueOrderPhase();
+
+    friend class Orders;
 };
 
 

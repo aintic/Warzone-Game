@@ -59,13 +59,13 @@ void testCards(){
     cout << "Play all 5 cards in each player's hand:" << endl;
 
     for (Card* c : p1->getHand()->getCards()){
-        p1->issueOrder(p1->getHand()->play(*d, 0));
+        p1->getHand()->play(*d, p1, 0);
     }
     for (Card* c : p2->getHand()->getCards()){
-        p2->issueOrder(p2->getHand()->play(*d, 0));
+        p2->getHand()->play(*d, p2, 0);
     }
     for (Card* c : p3->getHand()->getCards()){
-        p3->issueOrder(p3->getHand()->play(*d, 0));
+        p3->getHand()->play(*d, p3, 0);
     }
 
 

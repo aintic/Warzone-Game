@@ -24,7 +24,7 @@ public:
     // Clone method for dynamic copies
     virtual Card* clone() = 0;
     // Virtual play method to be overridden by subclasses
-    virtual Order* play() = 0;
+    virtual void play(Player *player) = 0;
     // Getters
     virtual string getCardType() = 0;
     int getId() const;
@@ -46,8 +46,8 @@ public:
     ~BombCard();
     // Clone method for dynamic copies
     Card* clone();
-    // Play method to return corresponding order
-    Order* play();
+    // Play method to return add corresponding order to Player's orders list
+    void play(Player *player);
     // Getter
     string getCardType();
 private:
@@ -65,8 +65,8 @@ public:
     ~ReinforcementCard();
     // Clone method for dynamic copies
     Card* clone();
-    // Play method to return corresponding order
-    Order* play();
+    // Play method to return add corresponding order to Player's orders list
+    void play(Player *player);
     // Getter
     string getCardType();
 private:
@@ -86,8 +86,8 @@ public:
     ~BlockadeCard();
     // Clone method for dynamic copies
     Card* clone();
-    // Play method to return corresponding order
-    Order* play();
+    // Play method to return add corresponding order to Player's orders list
+    void play(Player *player);
     // Getter
     string getCardType();
 private:
@@ -107,8 +107,8 @@ public:
     ~AirliftCard();
     // Clone method for dynamic copies
     Card* clone();
-    // Play method to return corresponding order
-    Order* play();
+    // Play method to return add corresponding order to Player's orders list
+    void play(Player *player);
     // Getter
     string getCardType();
 private:
@@ -128,8 +128,8 @@ public:
     ~DiplomacyCard();
     // Clone method for dynamic copies
     Card* clone();
-    // Play method to return corresponding order
-    Order* play();
+    // Play method to return add corresponding order to Player's orders list
+    void play(Player *player);
     // Getter
     string getCardType();
 private:
@@ -180,7 +180,7 @@ public:
     // Adds passed Card to Hand
     void addCard(Card *c);
     // Removes card at index from Hand and adds it to the Deck
-    Order* play(Deck& d,  int index);
+    void play(Deck& d, Player *player, int index);
     // Getter
     vector<Card *> &getCards();
     // Checks if Hand is empty
