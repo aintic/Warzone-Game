@@ -88,6 +88,11 @@ vector<Player*> GameEngine::getPlayers() {
     return players;
 }
 
+// game deck getter
+Deck* GameEngine::getDeck() {
+    return deck;
+}
+
 //method to move to next state. Taking care of memory leak.
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
@@ -203,7 +208,10 @@ void GameEngine::mainGameLoop() {
 void GameEngine::issueOrderPhase() {
     cout << "Starting Issuing Orders Phase" << endl;
     int playersDoneIssuingOrders = 0;
-
+    for (Player *p : this->players){
+        p->setIssuableReinforcementPool(p->getReinforcementPool());
+    }
+    int numCycles = 0; // number of round robin cycles
     while (playersDoneIssuingOrders != players.size()) {
         playersDoneIssuingOrders = 0;
         for (Player *p: players) {
