@@ -38,8 +38,11 @@ public:
     int get_id() const;
     void set_id(int id);
 
-    int get_army_units();
+    int get_army_units() const;
     void set_army_units(int army_units);
+
+    int get_issued_army_units() const;
+    void set_issued_army_units(int army_units);
 
     string get_name();
     void set_name(string name);
@@ -69,6 +72,7 @@ private:
     Player* owner;
     int id;
     int army_units{};
+    int issuedArmyUnits; // number of army units that are waiting to be executed
     string name;
     int x;
     int y;
