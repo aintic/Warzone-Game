@@ -16,6 +16,15 @@ void testCommandProcessor(){
 
     game->startupPhase();
 
+
+
+    //TODO:
+    //hey mike just a heads up, (from today's lecture),
+    // check out point 1.3.4 and 1.3.5 of the grading sheet.
+    // it seems like readCommand and saveCommand must be protected.
+    // 🙂 he said he put some hints in the grading sheet so we kinda
+    // have a structure to follow
+
     // win phase will be implemented after the main game loop is done
 
 
