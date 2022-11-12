@@ -11,10 +11,11 @@ using namespace std;
 //
 int main()
 {
+
     //Assignment 1:
 
     // Map
-	//testLoadMaps();
+	  //testLoadMaps();
 
     // Player
     //testPlayers();
