@@ -1,4 +1,6 @@
 #include "CommandProcessing.h"
+#include "fstream"
+#include "iostream"
 
 
 //*****************************************************************
@@ -39,7 +41,7 @@ Command::Command(const Command &c){
  * @return ostream&
  */
 ostream& operator <<(ostream& stream, const Command& c){
-    stream << "Command: \n"<< "Typed Command: "<< c.typed_command << "\nCommand Effect: "<< c.command_effect << endl;
+    stream << "Command: \n"<< "\tTyped Command: \""<< c.typed_command << "\""<< "\n\tCommand Effect: \""<< c.command_effect << "\""<<endl;
     return stream;
 }
 
@@ -87,6 +89,7 @@ void Command::set_typed_command(std::string typed_command)
  */
 void Command::saveEffect(std::string command_effect) {
     this->set_command_effect(command_effect);
+    cout<< "\n[[Saving command effect]]\n" << *this<< endl;
 }
 
 //*****************************************************************
@@ -118,7 +121,7 @@ CommandProcessor::CommandProcessor(const CommandProcessor &c){
  */
 ostream& operator <<(ostream& stream, const CommandProcessor& c){
     for(Command *command: c.commands){
-        stream << command << endl;
+        stream <<"\t" << *command << endl;
     }
     return stream;
 }
@@ -162,7 +165,7 @@ void CommandProcessor::set_commands(vector<Command*> commands)
  * @return
  */
 Command* CommandProcessor::getCommand(GameEngine* game){
-    cout << "\033[1;34m[Starting getCommand()]\033[0m\n" << endl;
+    cout << "\n[[Starting getCommand()]]\n" << endl;
 
     // read a command
     Command* command = this->readCommand();
@@ -184,7 +187,6 @@ Command* CommandProcessor::getCommand(GameEngine* game){
         valid = this->validate(command, game);
     }
 
-    cout << "\033[1;34m[Exiting getCommand()]\033[0m\n" << endl;
     return command;
 }
 
@@ -193,11 +195,10 @@ Command* CommandProcessor::getCommand(GameEngine* game){
  * @return
  */
 Command* CommandProcessor::readCommand(){
-    cout << "\033[1;31m\t[Starting readCommand()]\033[0m" << endl;
+    cout << "[[Starting readCommand()]]" << endl;
     string string_command;
-    cout << "\n\t\tPlease enter command to move to the next state:  ";
+    cout << "\n\tPlease enter command to move to the next state:  ";
     std::getline(std::cin, string_command);
-    cout << "\033[1;31m\t[Exiting readCommand()]\033[0m\n" << endl;
     return new Command(string_command);
 }
 
@@ -205,10 +206,9 @@ Command* CommandProcessor::readCommand(){
  * @brief  Gets commands from the console as a string
  */
 void CommandProcessor::saveCommand(Command* c){
-    cout << "\033[1;32m\t[Starting saveCommand()]\033[0m\n" << endl;
+    cout << "\n[[Starting saveCommand()]]" << endl;
     this->commands.push_back(c);
-    cout << "\033[1;32m\t\t[Command saved]\033[0m\n" << endl;
-    cout << "\033[1;32m\t[Exiting saveCommand()]\033[0m\n" << endl;
+    cout << "Saving command in the command processor." << endl;
 }
 
 /**
@@ -218,7 +218,12 @@ void CommandProcessor::saveCommand(Command* c){
  */
 bool CommandProcessor::validate(Command* command, GameEngine* game){
 
-    cout << "\033[1;33m\t[Starting validate()]\033[0m\n" << endl;
+    cout << "\n[[Starting validate()]]" << endl;
+
+    if(command == nullptr){
+        cout << "Validating: Command is NOT VALID" << endl;
+        return false;
+    }
 
     string typed_command = command->get_typed_command();
 
@@ -243,23 +248,20 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
                 // command is incomplete. ex: loadmap instead of loadmap <mapname>
                 string error = currentState->getWrongCommandError();
                 command->set_command_effect(error);
-                cout << "\033[1;33m\t\t[Command is not valid]\033[0m\n" << endl;
-                cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
+                cout << "Validating: Command is NOT VALID" << endl;
                 return false;
             }
         }
 
         // if it is, return valid
-        cout << "\033[1;33m\t\t[Command is valid]\033[0m\n" << endl;
-        cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
+        cout << "Validating: Command is VALID" << endl;
         return true;
     }
     else {
         // otherwise save the command error in the effect string of the command
         string error = currentState->getWrongCommandError();
         command->set_command_effect(error);
-        cout << "\033[1;33m\t\t[Command is not valid]\033[0m\n" << endl;
-        cout << "\033[1;33m\t[Exiting validate()]\033[0m\n" << endl;
+        cout << "Validating: Command is NOT VALID" << endl;
         return false;
     }
 }
@@ -267,3 +269,183 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
 
 
 //*****************************************************************
+// FileLineReader: Represents the reader of the file of commands
+
+/**
+ * Default Constructor
+ */
+FileLineReader::FileLineReader() {
+    this->next_line = 0;
+}
+
+/**
+ * Copy constructor
+ * @param f
+ */
+FileLineReader::FileLineReader(const FileLineReader& f) {
+    this->set_file_lines(f.file_lines);
+    this->next_line = f.next_line;
+}
+
+/**
+ * Assignment operator
+ * @param fileReader
+ * @return
+ */
+FileLineReader& FileLineReader::operator= (const FileLineReader& fileReader) {
+    this->set_file_lines(fileReader.file_lines);
+    this->next_line = fileReader.next_line;
+    return *this;
+}
+
+/**
+ *
+ * @param fileName
+ */
+string FileLineReader::readLineFromFile(string file_name) {
+
+    ifstream file;
+    int current_line = 0;
+    string line;
+
+    file.open(file_name);
+
+    if (file.fail()) {
+        cout << "File failed to open. Only valid file names can be used." << endl;
+        file.close();
+        return "";
+    }
+
+    while(!file.eof()) {
+        getline(file, line);
+        if(current_line == this->next_line) {
+            cout << "reading \"" + line +"\"" << endl;
+            this->next_line++;
+            file.close();
+            return line;
+        }
+        current_line ++;
+    }
+
+    cout << "End of file reached, no more commands to read." << endl;
+    file.close();
+    return "-1";
+}
+
+
+
+/**
+ * Getter of file lines
+ * @return
+ */
+vector<string> FileLineReader::get_file_lines() {
+    return file_lines;
+}
+
+/**
+ * Setter of file lines
+ * @return
+ */
+void FileLineReader::set_file_lines(vector<string> file_lines) {
+    this->file_lines =  file_lines;
+}
+
+// Destructor
+FileLineReader::~FileLineReader() {
+}
+
+
+//*****************************************************************
+// FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
+// get, read, save and validate commands from a file.
+/**
+ *  Default constructor
+ * @param file_name
+ */
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name){
+
+    this->fileLineReader = new FileLineReader();
+    this->file_name = file_name;
+}
+
+/**
+ * Copy constructor
+ * @param f
+ */
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& f) : CommandProcessor(f){
+
+    this->fileLineReader = f.fileLineReader;
+    this->file_name = f.file_name;
+}
+
+/**
+ * Assignment operator
+ * @param f
+ * @return
+ */
+FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator= (const FileCommandProcessorAdapter& f) {
+
+    CommandProcessor::operator=(f);
+    this->fileLineReader = f.fileLineReader;
+    this->file_name = f.file_name;
+    return *this;
+}
+
+/**
+ * Destructor
+ */
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+    delete this->fileLineReader;
+}
+
+
+/**
+ * read command from file
+ * @return
+ */
+Command* FileCommandProcessorAdapter::readCommand() {
+
+    cout << "[[Starting readCommand() of the adapter]]" << endl;
+
+    string line_from_file = this->fileLineReader->readLineFromFile(this->file_name);
+
+    // signal end of file
+    if(line_from_file == "-1"){
+        return nullptr;
+    }
+
+    return new Command(line_from_file);
+}
+
+/**
+ * @brief Gets the command from the console input, saves it and validates it
+ * @return
+ */
+Command* FileCommandProcessorAdapter::getCommand(GameEngine* game){
+    cout << "\n[[Starting getCommand() in Adapter]]\n" << endl;
+
+    // read a command
+    Command* command = this->readCommand();
+
+    // validate the command
+    bool valid = this->validate(command, game);
+
+    //save the command
+    this->saveCommand(command);
+
+    // while not valid, show the error, and ask for another command
+    while (!valid){
+        if(command == nullptr){
+            break;
+        }
+        cout<< command->get_command_effect() << endl;
+
+        // read a command
+        command = this->readCommand();
+
+        // validate the command
+        valid = this->validate(command, game);
+    }
+
+    return command;
+}
