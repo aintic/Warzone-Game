@@ -14,7 +14,7 @@ void testCommandProcessor(){
     const string CONSOLE_STRING = "-console";
     const string FILE_STRING = "-file";
 
-    cout << "\nTESTING COMMAND PROCESSING\n\n";
+    cout << "\nTESTING COMMAND PROCESSING:\n\n";
 
     bool valid_initial_command = false;
     CommandProcessor * processor;
@@ -23,7 +23,7 @@ void testCommandProcessor(){
 
     while(!valid_initial_command){
 
-        cout << "Please enter (-console>) to input commands from the console or (-file <filename>) to let the game read the commands from a file: " << endl;
+        cout << "Please enter (-console) to input commands from the console or (-file <filename>) to let the game read the commands from a file: " << endl;
 
         string user_input;
 
@@ -33,7 +33,7 @@ void testCommandProcessor(){
         string first_word = user_input.substr(0, user_input.find(delimiter));
 
         if(user_input == CONSOLE_STRING){
-            cout << "Reading from console..." << endl;
+            cout << "[[Reading from console]]" << endl;
             processor = new CommandProcessor();
             valid_initial_command = true;
         }
@@ -48,7 +48,7 @@ void testCommandProcessor(){
             }
             else{
                 valid_initial_command = true;
-                cout << "Reading from file..." << endl;
+                cout << "[[Reading from file]]" << endl;
                 processor = new FileCommandProcessorAdapter(file_name);
             }
             file.close();
@@ -69,6 +69,8 @@ void testCommandProcessor(){
 //    result in the correct effect and state change. This driver function must be in the
 //    CommandProcessingDriver.cpp file.
     game->startupPhase(processor);
+
+    cout<< "\nCommand processor list of saved commands :\n" << *processor<< endl;
 
     delete game;
 

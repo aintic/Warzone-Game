@@ -125,7 +125,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
         if(token_command == "loadmap"){
 
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
-            cout << "loading the map "<< map_string << endl;
+            cout << "\n<<Loading the map "<< map_string << ">>" << endl;
 
             // delete previous map if any
             delete this->map;
@@ -147,7 +147,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
         }
         // MAP VALIDATING
         else if(typed_command == "validatemap"){
-            cout << "validating the map"<< endl;
+            cout << "\n<< validating the map>>"<< endl;
 
             //validate the map
             this->map->validate();
@@ -182,7 +182,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 command->saveEffect(message);
             }
             else{
-                cout << "Adding the player "<< player_name << endl;
+                cout << "\n<<Adding the player "<< player_name << ">>" << endl;
 
                 // Add the player
                 this->players.push_back(new Player(player_name));
@@ -207,7 +207,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 command->saveEffect(message);
             }
             else{
-                cout << "Starting the game\n" << endl;
+                cout << "\n<<Starting the game>>\n" << endl;
 
                 // start the game
 
@@ -503,16 +503,16 @@ string startupState::getWrongCommandError() {//method to get wrong command error
     string error_string = "Something went wrong...";
     switch (step) {
         case 0:
-            error_string = "Invalid command for the 'Start' state...";
+            error_string = "Invalid command for the 'Start' state...\n";
             break;
         case 1:
-            error_string = "Invalid command for the 'Map Loaded' state...";
+            error_string = "Invalid command for the 'Map Loaded' state...\n";
             break;
         case 2:
-            error_string = "Invalid command for the 'Map Validated' state...";
+            error_string = "Invalid command for the 'Map Validated' state...\n";
             break;
         case 3:
-            error_string = "Invalid command for the 'Players Added' state...";
+            error_string = "Invalid command for the 'Players Added' state...\n";
             break;
     }
     return error_string;
