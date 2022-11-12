@@ -20,7 +20,7 @@ int main(){
     GameEngine* game = new GameEngine(_observers);
 
 
-    game->startupPhase();
+    //game->startupPhase();
 
 
 

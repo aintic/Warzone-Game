@@ -149,6 +149,7 @@ public:
     vector<Command*> get_commands();
     void set_commands(vector <Command*> commands);
     string stringToLog();
+    bool validate(Command* command, GameEngine* game);
 
 
 private:
@@ -160,7 +161,6 @@ private:
      * a corresponding error message is saved in the effect of the command.
      * @return
      */
-    bool validate(Command* command, GameEngine* game);
 
 protected:
     /**
@@ -174,9 +174,6 @@ protected:
      */
     void saveCommand(Command*);
 
-private:
-    // Private methods and command list
-    vector<Command*> commands;
 
 };
 
