@@ -237,17 +237,62 @@ private:
 //*****************************************************************
 // FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
 // get, read, save and validate commands from a file.
+
+/**
+ * FileCommandProcessorAdapter adapts the file reader to act as a command processor
+ */
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
+    /**
+     * Default constructor
+     * @param file_name
+     */
     FileCommandProcessorAdapter(string file_name);
+
+    /**
+     * Copy constructor
+     */
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
+
+    /**
+     * Assignment operator
+     * @return
+     */
     FileCommandProcessorAdapter& operator= (const FileCommandProcessorAdapter&);
+
+    /**
+     * Destructor
+     */
     ~FileCommandProcessorAdapter();
+
+    /**
+     * Read command from file
+     * @return
+     */
     Command* readCommand();
+
+    /**
+     * stream insertion operator
+     * @return
+     */
     friend ostream& operator<< (ostream&, const vector<string>);
+
+    /**
+     * Get Command
+     * @param game
+     * @return
+     */
     Command* getCommand(GameEngine* game) override;
 
 private:
+
+    /**
+     * File line reader pointer
+     */
     FileLineReader* fileLineReader;
+
+    /**
+     * File name
+     */
     string file_name;
 };
