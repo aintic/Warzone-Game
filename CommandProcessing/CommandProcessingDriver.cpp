@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "CommandProcessingDriver.h"
 #include "../GameEngine/GameEngine.h"
+
 using std::cout;
 using std::cin;
 using std::string;
@@ -9,36 +11,71 @@ using std::string;
 using namespace std;
 
 void testCommandProcessor(){
+    const string CONSOLE_STRING = "-console";
+    const string FILE_STRING = "-file";
+
     cout << "\nTESTING COMMAND PROCESSING\n\n";
+
+    bool valid_initial_command = false;
+    CommandProcessor * processor;
+    string file_name;
+
+
+    while(!valid_initial_command){
+
+        cout << "Please enter (-console>) to input commands from the console or (-file <filename>) to let the game read the commands from a file: " << endl;
+
+        string user_input;
+
+        getline(cin, user_input);
+
+        string delimiter = " ";
+        string first_word = user_input.substr(0, user_input.find(delimiter));
+
+        if(user_input == CONSOLE_STRING){
+            cout << "Reading from console..." << endl;
+            processor = new CommandProcessor();
+            valid_initial_command = true;
+        }
+        else if(first_word == FILE_STRING && user_input.length() > FILE_STRING.length() + delimiter.length()){
+            file_name = "../CommandProcessing/Commands/" + user_input.substr(FILE_STRING.length() + delimiter.length()) + ".txt";
+
+            ifstream file;
+
+            file.open(file_name);
+            if(file.fail()){
+                cout << "File failed to open. please enter a valid file name:" << endl;
+            }
+            else{
+                valid_initial_command = true;
+                cout << "Reading from file..." << endl;
+                processor = new FileCommandProcessorAdapter(file_name);
+            }
+            file.close();
+        }
+        else{
+            cout<< "Invalid command." << endl;
+        }
+    }
+
+
 
     GameEngine* game;
     game = new GameEngine();
 
-    game->startupPhase();
-
-
-
-    //TODO:
-    //hey mike just a heads up, (from today's lecture),
-    // check out point 1.3.4 and 1.3.5 of the grading sheet.
-    // it seems like readCommand and saveCommand must be protected.
-    // 🙂 he said he put some hints in the grading sheet so we kinda
-    // have a structure to follow
-
-    // win phase will be implemented after the main game loop is done
-
-
 //    (1) commands can be read from the console using the CommandProcessor class
-
 //    (2) commands can be read from a saved text file using the FileCommandProcessorAdapter
-
 //    (3) commands that are invalid in the current game state are rejected, and valid commands
 //    result in the correct effect and state change. This driver function must be in the
 //    CommandProcessingDriver.cpp file.
+    game->startupPhase(processor);
+
+    delete game;
+
+    cout<< "See you next time!" << endl;
+
+
+
+
 
 }
-
-
-//int main(){
-//    testCommandProcessor();
-//}
