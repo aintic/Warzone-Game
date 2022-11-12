@@ -20,10 +20,10 @@ int main(){
     GameEngine* game = new GameEngine(_observers);
 
 
-    //game->startupPhase();
+    game->startupPhase();
 
 
-    /*
+
     //game transition part
     State* map_loaded = new startupState(1);
     State* map_validated = new startupState(2);
@@ -32,7 +32,6 @@ int main(){
     game->nextState(map_loaded);
     game->nextState(map_validated);
     game->nextState(players_added);
-*/
 
     //Orderlist part
     /*
