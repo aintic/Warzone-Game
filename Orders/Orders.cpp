@@ -37,11 +37,27 @@ Order::Order() {
 }
 
 /**
- *  Destructor for Order
+ *  Default destructor for Order
  */
-Order::~Order() {
-    this->currentPl = nullptr;
-    this->game = nullptr;
+Order::~Order() = default;
+
+/**
+ *  Copy constructor for Order
+ */
+Order::Order(const Order &o) {
+    this->currentPl = o.currentPl;
+    this->game = o.game;
+}
+
+/**
+ * Assignment operator for Order
+ * @param o - Orders object
+ * @return Order object
+ */
+Order& Order::operator = (const Order& o) {
+    currentPl = o.currentPl;
+    game = o.game;
+    return *this;
 }
 
 /**
@@ -53,16 +69,6 @@ Order::~Order() {
 ostream& operator << (ostream& out,  const Order& o) {
     out << o.getOrderType();
     return out;
-}
-
-/**
- * Assignment operator for Order
- * @param o - Orders object
- * @return Order object
- */
-Order& Order::operator = (const Order& o) {
-    Order::operator = (o);
-    return *this;
 }
 
 // *****************************************************************************************************************
@@ -89,10 +95,36 @@ Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units) : Order(
 }
 
 /**
- * Destructor for Deploy
+ * Default destructor for Deploy
  */
-Deploy::~Deploy() {
-    this->targetTer = nullptr;
+Deploy::~Deploy() = default;
+
+/**
+ *  Copy constructor for Deploy
+ */
+Deploy::Deploy(const Deploy &o) : Order(o) {
+    this->targetTer = o.targetTer;
+    this->army_units = o.army_units;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Deploy - cloned order
+ */
+Order* Deploy::clone() const {
+    return new Deploy(*this);
+}
+
+/**
+ * Assignment operator for Deploy
+ * @param o - deploy order
+ * @return deploy order
+ */
+Deploy& Deploy::operator = (const Deploy& o) {
+    Order::operator = (o);
+    targetTer = o.targetTer;
+    army_units = o.army_units;
+    return *this;
 }
 
 /**
@@ -115,14 +147,6 @@ string Deploy::getOrderType() const {
 }
 
 /**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Deploy - cloned object
- */
-Order* Deploy::clone() const {
-    return new Deploy(*this);
-}
-
-/**
  * Validate Deploy
  * @return boolean
  */
@@ -136,6 +160,11 @@ bool Deploy::validate() const {
     // return false, if # army units to deploy > # army units available in reinforcement pool
     else if (army_units > currentPl->getReinforcementPool()) {
         cout << "Not enough army units in your reinforcement pool." << endl;
+        return false;
+    }
+    // return false, if the # of army units to deploy is less than 1
+    else if (army_units < 1) {
+        cout << "Cannot deploy less than 1 army unit." << endl;
         return false;
     }
     // return true for valid order
@@ -191,11 +220,38 @@ Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 }
 
 /**
- * Destructor for Advance
+ * Default destructor for Advance
  */
-Advance::~Advance() {
-    this->sourceTer = nullptr;
-    this->targetTer = nullptr;
+Advance::~Advance() = default;
+
+/**
+ *  Copy constructor for Advance
+ */
+Advance::Advance(const Advance &o) : Order(o) {
+    this->sourceTer = o.sourceTer;
+    this->targetTer = o.targetTer;
+    this->army_units = o.army_units;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Advance - cloned order
+ */
+Order* Advance::clone() const {
+    return new Advance(*this);
+}
+
+/**
+ * Assignment operator for Advance
+ * @param o - Advance order
+ * @return Advance order
+ */
+Advance& Advance::operator = (const Advance& o) {
+    Order::operator = (o);
+    sourceTer = o.sourceTer;
+    targetTer = o.targetTer;
+    army_units = o.army_units;
+    return *this;
 }
 
 /**
@@ -218,14 +274,6 @@ string Advance::getOrderType() const {
 }
 
 /**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Advance - cloned object
- */
-Order* Advance::clone() const {
-    return new Advance(*this);
-}
-
-/**
  * Validate Advance
  * @return boolean
  */
@@ -236,7 +284,7 @@ bool Advance::validate() const {
         cout << "You must advance from a territory you own." << endl;
         return false;
     }
-    // return false, if # army units to advance exceeds the amount available in source territory
+    // return false, if # army units to advance > # available in source territory
     else if (army_units > sourceTer->get_army_units()) {
         cout << "Not enough army units in source territory to advance." << endl;
         return false;
@@ -370,10 +418,34 @@ Bomb::Bomb(Territory *targetTer, Player *currentPl) : Order(currentPl) {
 }
 
 /**
- * Destructor for Bomb
+ * Default destructor for Bomb
  */
-Bomb::~Bomb() {
-    this->targetTer = nullptr;
+Bomb::~Bomb() = default;
+
+/**
+ *  Copy constructor for Bomb
+ */
+Bomb::Bomb(const Bomb &o) : Order(o) {
+    this->targetTer = o.targetTer;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Bomb - cloned order
+ */
+Order* Bomb::clone() const {
+    return new Bomb(*this);
+}
+
+/**
+ * Assignment operator for Bomb
+ * @param o - Bomb order
+ * @return Bomb order
+ */
+Bomb& Bomb::operator = (const Bomb& o) {
+    Order::operator = (o);
+    targetTer = o.targetTer;
+    return *this;
 }
 
 /**
@@ -393,14 +465,6 @@ ostream& operator << (ostream& out,  const Bomb& o) {
  */
 string Bomb::getOrderType() const {
     return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return BombCardOrder - cloned object
- */
-Order* Bomb::clone() const {
-    return new Bomb(*this);
 }
 
 /**
@@ -480,10 +544,34 @@ Blockade::Blockade(Territory *targetTer, Player *currentPl) : Order(currentPl) {
     this->targetTer = targetTer;
 }
 /**
- * Destructor for Blockade
+ * Default destructor for Blockade
  */
-Blockade::~Blockade() {
-    this->targetTer = nullptr;
+Blockade::~Blockade() = default;
+
+/**
+ *  Copy constructor for Blockade
+ */
+Blockade::Blockade(const Blockade &o) : Order(o) {
+    this->targetTer = o.targetTer;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Blockade - cloned order
+ */
+Order* Blockade::clone() const {
+    return new Blockade(*this);
+}
+
+/**
+ * Assignment operator for Blockade
+ * @param o - Blockade order
+ * @return Blockade order
+ */
+Blockade& Blockade::operator = (const Blockade& o) {
+    Order::operator = (o);
+    targetTer = o.targetTer;
+    return *this;
 }
 
 /**
@@ -503,14 +591,6 @@ ostream& operator << (ostream& out,  const Blockade& o) {
  */
 string Blockade::getOrderType() const {
     return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return BlockadeCardOrder - cloned object
- */
-Order* Blockade::clone() const {
-    return new Blockade(*this);
 }
 
 /**
@@ -544,17 +624,21 @@ void Blockade::execute() {
         // get the list of players from the game engine
         vector<Player*> players = game->getPlayers();
         for (Player *p : players) {
-            // if there's already a player called Neutral, assign the target territory to them and exit
+            // if there's already a player called Neutral, assign the target territory to them
+            // remove target territory from current player and exit
             if (p->getName().compare("Neutral") == 0) {
                 p->addTerritory(targetTer);
+                currentPl->removeTerritory(targetTer);
                 cout << *this << " order executed. \n" << endl;
                 return;
             }
         }
         // create player called Neutral if there isn't one, add to players list
-        // and assign target territory to them
+        // assign target territory to Neutral player
+        // remove target territory from current player
         Player *neutral = new Player("Neutral");
         neutral->addTerritory(targetTer);
+        currentPl->removeTerritory(targetTer);
         players.push_back(neutral);
         cout << *this << " order executed. \n" << endl;
     }
@@ -587,11 +671,38 @@ Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 }
 
 /**
- * Destructor for Airlift
+ * Default destructor for Airlift
  */
-Airlift::~Airlift() {
-    this->sourceTer = nullptr;
-    this->targetTer = nullptr;
+Airlift::~Airlift() = default;
+
+/**
+ *  Copy constructor for Airlift
+ */
+Airlift::Airlift(const Airlift &o) : Order(o) {
+    this->sourceTer = o.sourceTer;
+    this->targetTer = o.targetTer;
+    this->army_units = o.army_units;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Airlift - cloned order
+ */
+Order* Airlift::clone() const {
+    return new Airlift(*this);
+}
+
+/**
+ * Assignment operator for Airlift
+ * @param o - Airlift order
+ * @return Airlift order
+ */
+Airlift& Airlift::operator = (const Airlift& o) {
+    Order::operator = (o);
+    sourceTer = o.sourceTer;
+    targetTer = o.targetTer;
+    army_units = o.army_units;
+    return *this;
 }
 
 /**
@@ -611,14 +722,6 @@ ostream& operator << (ostream& out,  const Airlift& o) {
  */
 string Airlift::getOrderType() const {
     return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return AirliftCardOrder - cloned object
- */
-Order* Airlift::clone() const {
-    return new Airlift(*this);
 }
 
 /**
@@ -689,10 +792,34 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl) : Order(currentPl) {
 }
 
 /**
- * Destructor for Negotiate
+ * Default destructor for Negotiate
  */
-Negotiate::~Negotiate() {
-    this->enemyPl = nullptr;
+Negotiate::~Negotiate() = default;
+
+/**
+ *  Copy constructor for Negotiate
+ */
+Negotiate::Negotiate(const Negotiate &o) : Order(o) {
+    this->enemyPl = o.enemyPl;
+}
+
+/**
+ * Clone method - invokes copy constructor
+ * @return Negotiate - cloned order
+ */
+Order* Negotiate::clone() const {
+    return new Negotiate(*this);
+}
+
+/**
+ * Assignment operator for Negotiate
+ * @param o - Negotiate order
+ * @return Negotiate order
+ */
+Negotiate& Negotiate::operator = (const Negotiate& o) {
+    Order::operator = (o);
+    enemyPl = o.enemyPl;
+    return *this;
 }
 
 /**
@@ -712,14 +839,6 @@ ostream& operator << (ostream& out,  const Negotiate& o) {
  */
 string Negotiate::getOrderType() const {
     return _orderType;
-}
-
-/**
- * Clone method - invokes default copy constructor since there is no object data member
- * @return Negotiate - cloned object
- */
-Order* Negotiate::clone() const {
-    return new Negotiate(*this);
 }
 
 /**
@@ -783,6 +902,10 @@ OrdersList::~OrdersList(){
     }
     _ordersList.clear();
 };
+
+Order* OrdersList::getOrder(int pos) const {
+    return this->_ordersList[pos];
+}
 
 /**
  * Copy constructor for OrdersList - makes deep copy

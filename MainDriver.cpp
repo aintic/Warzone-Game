@@ -17,7 +17,7 @@ int main()
 //    testPlayers();
 //
 //    //Orders list
-//    testOrdersList();
+//    testOrdersExecution();
 //
 //    //Cards
 //    testCards();

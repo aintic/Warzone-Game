@@ -23,6 +23,8 @@ public:
     Order(Player *currentPl);
     // destructor
     virtual ~Order() = 0;
+    // copy constructor
+    Order(const Order &o);
     // assignment operator
     Order& operator = (const Order& o);
     // stream insertion operator
@@ -52,7 +54,11 @@ public:
     Deploy(Territory *targetTer, Player *currentPl, int army_units);
     // destructor
     ~Deploy() override;
-    // stream insertion operator
+    // copy constructor
+    Deploy(const Deploy &o);
+    // assignment operator
+    Deploy& operator = (const Deploy& o);
+        // stream insertion operator
     friend ostream& operator << (ostream& out,  const Deploy& o);
     // verifies if order is valid
     bool validate() const override;
@@ -77,6 +83,10 @@ public:
     Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
     ~Advance() override;
+    // copy constructor
+    Advance(const Advance &o);
+    // assignment operator
+    Advance& operator = (const Advance& o);
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Advance& o);
     // verifies if order is valid
@@ -103,6 +113,10 @@ public:
     Bomb(Territory *targetTer, Player *currentPl);
     // destructor
     ~Bomb() override;
+    // copy constructor
+    Bomb(const Bomb &o);
+    // assignment operator
+    Bomb& operator = (const Bomb& o);
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Bomb& o);
     // verifies if order is valid
@@ -127,6 +141,10 @@ public:
     Blockade(Territory *targetTer, Player *currentPl);
     // destructor
     ~Blockade() override;
+    // copy constructor
+    Blockade(const Blockade &o);
+    // assignment operator
+    Blockade& operator = (const Blockade& o);
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Blockade& o);
     // verifies if order is valid
@@ -151,6 +169,10 @@ public:
     Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units);
     // destructor
     ~Airlift() override;
+    // copy constructor
+    Airlift(const Airlift &o);
+    // assignment operator
+    Airlift& operator = (const Airlift& o);
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Airlift& o);
     // verifies if order is valid
@@ -177,6 +199,10 @@ public:
     Negotiate(Player *currentPl, Player *enemyPl);
     // destructor
     ~Negotiate() override;
+    // copy constructor
+    Negotiate(const Negotiate &o);
+    // assignment operator
+    Negotiate& operator = (const Negotiate& o);
     // stream insertion operator
     friend ostream& operator << (ostream& out,  const Negotiate& o);
     // verifies if order is valid
@@ -218,7 +244,8 @@ public:
     void executeOrder();
     Order* getTopOrder();
     vector<Order*> getOrderList();
+    Order* getOrder(int pos) const;
 
-private:
+        private:
     vector<Order*> _ordersList;
 };
