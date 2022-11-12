@@ -75,6 +75,6 @@ void testOrdersExecution() {
 
 
     // cleanup
-    delete ol;
-    ol = NULL;
+    // delete ol;
+    // ol = NULL;
 }
