@@ -17,7 +17,7 @@ using namespace std;
     //testPlayers();
 //
 //    //Orders list
-//    testOrdersList();
+//    testOrdersExecution();
 //
 //    //Cards
 //    testCards();

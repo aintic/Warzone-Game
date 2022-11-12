@@ -472,10 +472,10 @@ void Map::validate(){
     bool map_is_connected_graph = seen_territories.size() == this->territories.size();
 
     if(map_is_connected_graph){
-        std:: cout<< "(1) Map is a connected graph.✅" << endl;
+        std:: cout<< "(1) Map is a connected graph :)" << endl;
     }
     else{
-        std:: cout<< "(1) Map is not a connected graph.❌" << endl;
+        std:: cout<< "(1) Map is not a connected graph :(" << endl;
     }
     
 
@@ -523,10 +523,10 @@ void Map::validate(){
     }
 
     if(continents_are_connected_graphs){
-        std:: cout<< "(2) Continents are connected subgraphs.✅" << endl;
+        std:: cout<< "(2) Continents are connected subgraphs :)" << endl;
     }
     else{
-        std:: cout<< "(2) Continents aren not connected subgraphs.❌" << endl;
+        std:: cout<< "(2) Continents aren not connected subgraphs :(" << endl;
     }
 
 
@@ -556,20 +556,20 @@ void Map::validate(){
     }
 
     if(territory_belong_to_one_continent){
-        std:: cout<< "(3) Each territory belongs to one and only one continent.✅" << endl;
+        std:: cout<< "(3) Each territory belongs to one and only one continent :)" << endl;
     }
     else{
-        std:: cout<< "(3) Not each of the territory belongs to one and only one continent.❌" << endl;
+        std:: cout<< "(3) Not each of the territory belongs to one and only one continent :(" << endl;
     }
 
     bool valid = territory_belong_to_one_continent && map_is_connected_graph && continents_are_connected_graphs;
 
     if (valid){
-        std::cout << endl << this->get_name() << " is VALID ✅✅✅"<< endl <<endl;
+        std::cout << endl << this->get_name() << " is VALID :)"<< endl <<endl;
         this->valid = true;
     }
     else{
-        std::cout << endl << this->get_name() << " is INVALID ❌❌❌"<< endl <<endl;
+        std::cout << endl << this->get_name() << " is INVALID :("<< endl <<endl;
         this->valid = false;
     }
 }
