@@ -51,7 +51,7 @@ public:
     friend ostream& operator <<(ostream& stream, const GameEngine& g); //stream insertion operator
     vector<Player*> players;
     Map* map;
-    void startupPhase();
+    void startupPhase(CommandProcessor* c);
     void reinforcementPhase();
     void executeOrdersPhase();
     void mainGameLoop();

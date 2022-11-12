@@ -133,26 +133,11 @@ public:
      * @brief Gets the command from the console input, saves it and validates it
      * @return
      */
-    Command* getCommand(GameEngine* game);
+    virtual Command* getCommand(GameEngine* game);
 
     // Getters and setters for the command list
     vector<Command*> get_commands();
     void set_commands(vector <Command*> commands);
-
-private:
-    // Private methods and command list
-    vector<Command*> commands;
-
-    /**
-     * @brief Stores the command internally in a collection of Command objects
-     * @return
-     */
-    Command* readCommand();
-
-    /**
-     * @brief  Gets commands from the console as a string
-     */
-    void saveCommand(Command*);
 
     /**
      * @brief Checks if the command is valid in the current game state. If the command is not valid,
@@ -161,4 +146,108 @@ private:
      */
     bool validate(Command* command, GameEngine* game);
 
+protected:
+    /**
+     * @brief Stores the command internally in a collection of Command objects
+     * @return
+     */
+
+    Command* readCommand();
+    /**
+     * @brief  Gets commands from the console as a string
+     */
+    void saveCommand(Command*);
+
+private:
+    // Private methods and command list
+    vector<Command*> commands;
+
+};
+
+//*****************************************************************
+// FineLineReader: Represents the file reader that reads a file of commands
+/**
+ * @brief FileLineReader class
+ *
+ */
+class FileLineReader {
+public:
+
+    /**
+     * @brief Constructor: Construct a new FileLineReader object
+
+     */
+    FileLineReader();
+
+    /**
+     * @brief Copy constructor: Construct a new FileLineReader object
+     * @param c
+     */
+    FileLineReader(const FileLineReader &f);
+
+    /**
+     * @brief Destructor: Destroy the FileLineReader object
+     *
+     */
+    ~FileLineReader();
+
+    /**
+     * @brief Stream insertion operator
+     *
+     * @param stream
+     * @param f
+     * @return ostream&
+     */
+    friend ostream& operator <<(ostream& stream, const FileLineReader& f);
+
+    /**
+     * @brief Assignment operator
+     *
+     * @param f
+     * @return Command&
+     */
+    FileLineReader& operator=(const FileLineReader& f);
+
+
+    /**
+     * @brief ReadLineFromFile
+     *
+     */
+    string readLineFromFile(string);
+
+    /**
+     * Getter for the file lines
+     * @return
+     */
+    vector<string> get_file_lines();
+
+    /**
+     * Setter for the file lines
+     * @return
+     */
+    void set_file_lines(vector<string>);
+
+
+private:
+    vector<string> file_lines;
+    int next_line;
+};
+
+
+//*****************************************************************
+// FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
+// get, read, save and validate commands from a file.
+class FileCommandProcessorAdapter : public CommandProcessor {
+public:
+    FileCommandProcessorAdapter(string file_name);
+    FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
+    FileCommandProcessorAdapter& operator= (const FileCommandProcessorAdapter&);
+    ~FileCommandProcessorAdapter();
+    Command* readCommand();
+    friend ostream& operator<< (ostream&, const vector<string>);
+    Command* getCommand(GameEngine* game) override;
+
+private:
+    FileLineReader* fileLineReader;
+    string file_name;
 };
