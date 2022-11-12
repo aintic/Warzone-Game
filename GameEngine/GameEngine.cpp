@@ -33,9 +33,9 @@ int GameEngine::turn = 1;
 
 //default constructor
 GameEngine::GameEngine() {
-    commandProcessor = new CommandProcessor();
     currentState = new startupState();
     map = nullptr;
+    commandProcessor = nullptr;
 }
 
 GameEngine::GameEngine(int numPlayers) {
@@ -96,10 +96,22 @@ void GameEngine::nextState(State *nextState) {
     this->setCurrentState(nextState);
 }
 
-void GameEngine::startupPhase() {
-    do { // loop while not in assign reinforcement phase
+void GameEngine::startupPhase(CommandProcessor* c) {
+
+    this->commandProcessor = c;
+
+    Command *command;
+
+    do { // loop while not in assign reinforcement phase or until eof reached from command file
         bool go_to_next_state = true;
-        Command *command = this->commandProcessor->getCommand(this);
+
+        command = this->commandProcessor->getCommand(this);
+
+        if(command == nullptr){
+            cout << "Invalid command file was provided. Aborting game." << endl;
+            return;
+        }
+
         // since get_command takes care of verifying the validity of the command in the given state of the game
         // we can use is statements to execute the command and save the appropriate effect
         string typed_command = command->get_typed_command();
@@ -267,7 +279,9 @@ void GameEngine::startupPhase() {
             cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
+
     mainGameLoop();
+
 }
 
 void GameEngine::reinforcementPhase() {
