@@ -90,6 +90,11 @@ vector<Player*> GameEngine::getPlayers() {
     return players;
 }
 
+// game deck getter
+Deck* GameEngine::getDeck() {
+    return deck;
+}
+
 //method to move to next state. Taking care of memory leak.
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
@@ -360,12 +365,23 @@ void GameEngine::mainGameLoop() {
 void GameEngine::issueOrderPhase() {
     cout << "Starting Issuing Orders Phase" << endl;
     int playersDoneIssuingOrders = 0;
-
+    for (Player *p : this->players){
+        p->setIssuableReinforcementPool(p->getReinforcementPool());
+        p->setAdvanceAttackOrdersIssued(0);
+        p->setAdvanceDefendOrdersIssued(0);
+        p->setIsDoneIssuingOrders(false);
+    }
+    for (auto &[id, territory] : map->get_territories()) {
+        territory->set_issued_army_units(0);
+    }
     while (playersDoneIssuingOrders != players.size()) {
         playersDoneIssuingOrders = 0;
         for (Player *p: players) {
-            if (!p->issueOrder(this->deck)) {
+            if (p->getIsDoneIssuingOrders()) {
                 playersDoneIssuingOrders++;
+            }
+            else {
+                p->issueOrder(deck);
             }
         }
     }

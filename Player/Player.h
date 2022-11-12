@@ -38,11 +38,17 @@ public:
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
     void setReinforcementPool(int armies);
+    void setIssuableReinforcementPool(int armies);
+    void setAdvanceAttackOrdersIssued(int numOrders);
+    void setAdvanceDefendOrdersIssued(int numOrders);
+    void setIsDoneIssuingOrders(bool b);
+    bool getIsDoneIssuingOrders();
     void addOrder(Order *o);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
-    bool issueOrder(Deck *d); //creates order object and adds to list of orders
+    Territory* strongestOwnedNeighbor(Territory* territory);
+    void issueOrder(Deck *d); //creates order object and adds to list of orders
     void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
@@ -66,6 +72,10 @@ private:
     OrdersList* order_list; //list of current orders
     int playerID; //unique player ID
     int reinforcementPool;
+    int issuableReinforcementPool; // # of armies that can be used to issue a deploy order
+    int advanceAttackOrdersIssued; // # of advance attack orders issued
+    int advanceDefendOrdersIssued; // # of advance attack orders issued
+    bool isDoneIssuingOrders;
     vector<int> _friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
 };
