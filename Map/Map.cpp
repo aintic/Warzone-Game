@@ -18,6 +18,7 @@ using namespace std;
 //*****************************************************************
 // Territory: Represents the territory of a map (node of the graph)
 
+
 /**
  * @brief Constructor: Construct a new Territory:: Territory object
  * 
@@ -36,6 +37,7 @@ Territory::Territory(int id, string name, string continent_name, int x, int y, v
 	this->y = y;
     this->continent_name = continent_name;
     this->neighbours_strings = neighbours_strings;
+    this->issuedArmyUnits = 0; // number of army units that are waiting to be executed
 }
 
 /**
@@ -47,6 +49,7 @@ Territory::Territory(const Territory &t){
     owner = t.owner;
     id = t.id;
 	army_units = t.army_units;
+    issuedArmyUnits = t.issuedArmyUnits;
 	name = t.name;
 	x = t.x;
 	y = t.y;
@@ -82,6 +85,7 @@ Territory& Territory::operator=(const Territory& t){
     owner = t.owner;
     id = t.id;
 	army_units = t.army_units;
+    issuedArmyUnits = t.issuedArmyUnits;
 	name = t.name;
 	x = t.x;
 	y = t.y;
@@ -115,11 +119,20 @@ void Territory::set_id(int id)
     this->id = id;
 }
 
-int Territory::get_army_units()
+int Territory::get_army_units() const
 {
     return this->army_units;
 }
 void Territory::set_army_units(int army_units)
+{
+    this->army_units = army_units;
+}
+
+int Territory::get_issued_army_units() const
+{
+    return this->issuedArmyUnits;
+}
+void Territory::set_issued_army_units(int army_units)
 {
     this->army_units = army_units;
 }
@@ -472,10 +485,10 @@ void Map::validate(){
     bool map_is_connected_graph = seen_territories.size() == this->territories.size();
 
     if(map_is_connected_graph){
-        std:: cout<< "(1) Map is a connected graph.✅" << endl;
+        std:: cout<< "(1) Map is a connected graph :)" << endl;
     }
     else{
-        std:: cout<< "(1) Map is not a connected graph.❌" << endl;
+        std:: cout<< "(1) Map is not a connected graph :(" << endl;
     }
     
 
@@ -523,10 +536,10 @@ void Map::validate(){
     }
 
     if(continents_are_connected_graphs){
-        std:: cout<< "(2) Continents are connected subgraphs.✅" << endl;
+        std:: cout<< "(2) Continents are connected subgraphs :)" << endl;
     }
     else{
-        std:: cout<< "(2) Continents aren not connected subgraphs.❌" << endl;
+        std:: cout<< "(2) Continents aren not connected subgraphs :(" << endl;
     }
 
 
@@ -556,20 +569,20 @@ void Map::validate(){
     }
 
     if(territory_belong_to_one_continent){
-        std:: cout<< "(3) Each territory belongs to one and only one continent.✅" << endl;
+        std:: cout<< "(3) Each territory belongs to one and only one continent :)" << endl;
     }
     else{
-        std:: cout<< "(3) Not each of the territory belongs to one and only one continent.❌" << endl;
+        std:: cout<< "(3) Not each of the territory belongs to one and only one continent :(" << endl;
     }
 
     bool valid = territory_belong_to_one_continent && map_is_connected_graph && continents_are_connected_graphs;
 
     if (valid){
-        std::cout << endl << this->get_name() << " is VALID ✅✅✅"<< endl <<endl;
+        std::cout << endl << this->get_name() << " is VALID :)"<< endl <<endl;
         this->valid = true;
     }
     else{
-        std::cout << endl << this->get_name() << " is INVALID ❌❌❌"<< endl <<endl;
+        std::cout << endl << this->get_name() << " is INVALID :("<< endl <<endl;
         this->valid = false;
     }
 }

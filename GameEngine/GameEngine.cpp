@@ -33,9 +33,9 @@ int GameEngine::turn = 1;
 
 //default constructor
 GameEngine::GameEngine() {
-    commandProcessor = new CommandProcessor();
     currentState = new startupState();
     map = nullptr;
+    commandProcessor = nullptr;
 }
 
 GameEngine::GameEngine(int numPlayers) {
@@ -90,16 +90,33 @@ vector<Player*> GameEngine::getPlayers() {
     return players;
 }
 
+// game deck getter
+Deck* GameEngine::getDeck() {
+    return deck;
+}
+
 //method to move to next state. Taking care of memory leak.
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
 }
 
-void GameEngine::startupPhase() {
-    do { // loop while not in assign reinforcement phase
+void GameEngine::startupPhase(CommandProcessor* c) {
+
+    this->commandProcessor = c;
+
+    Command *command;
+
+    do { // loop while not in assign reinforcement phase or until eof reached from command file
         bool go_to_next_state = true;
-        Command *command = this->commandProcessor->getCommand(this);
+
+        command = this->commandProcessor->getCommand(this);
+
+        if(command == nullptr){
+            cout << "Invalid command file was provided. Aborting game." << endl;
+            return;
+        }
+
         // since get_command takes care of verifying the validity of the command in the given state of the game
         // we can use is statements to execute the command and save the appropriate effect
         string typed_command = command->get_typed_command();
@@ -113,7 +130,7 @@ void GameEngine::startupPhase() {
         if(token_command == "loadmap"){
 
             string map_string = typed_command.substr(token_command.length() + delimiter.length());
-            cout << "loading the map "<< map_string << endl;
+            cout << "\n<<Loading the map "<< map_string << ">>" << endl;
 
             // delete previous map if any
             delete this->map;
@@ -135,7 +152,7 @@ void GameEngine::startupPhase() {
         }
         // MAP VALIDATING
         else if(typed_command == "validatemap"){
-            cout << "validating the map"<< endl;
+            cout << "\n<< validating the map>>"<< endl;
 
             //validate the map
             this->map->validate();
@@ -170,7 +187,7 @@ void GameEngine::startupPhase() {
                 command->saveEffect(message);
             }
             else{
-                cout << "Adding the player "<< player_name << endl;
+                cout << "\n<<Adding the player "<< player_name << ">>" << endl;
 
                 // Add the player
                 this->players.push_back(new Player(player_name));
@@ -195,7 +212,7 @@ void GameEngine::startupPhase() {
                 command->saveEffect(message);
             }
             else{
-                cout << "Starting the game\n" << endl;
+                cout << "\n<<Starting the game>>\n" << endl;
 
                 // start the game
 
@@ -267,7 +284,9 @@ void GameEngine::startupPhase() {
             cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
+
     mainGameLoop();
+
 }
 
 void GameEngine::reinforcementPhase() {
@@ -336,8 +355,6 @@ void GameEngine::executeOrdersPhase() {
 }
 
 void GameEngine::mainGameLoop() {
-
-    cout << "Turn #" << turn << endl;
     do{
         reinforcementPhase();
 
@@ -348,12 +365,23 @@ void GameEngine::mainGameLoop() {
 void GameEngine::issueOrderPhase() {
     cout << "Starting Issuing Orders Phase" << endl;
     int playersDoneIssuingOrders = 0;
-
+    for (Player *p : this->players){
+        p->setIssuableReinforcementPool(p->getReinforcementPool());
+        p->setAdvanceAttackOrdersIssued(0);
+        p->setAdvanceDefendOrdersIssued(0);
+        p->setIsDoneIssuingOrders(false);
+    }
+    for (auto &[id, territory] : map->get_territories()) {
+        territory->set_issued_army_units(0);
+    }
     while (playersDoneIssuingOrders != players.size()) {
         playersDoneIssuingOrders = 0;
         for (Player *p: players) {
-            if (!p->issueOrder(this->deck)) {
+            if (p->getIsDoneIssuingOrders()) {
                 playersDoneIssuingOrders++;
+            }
+            else {
+                p->issueOrder(deck);
             }
         }
     }
@@ -491,16 +519,16 @@ string startupState::getWrongCommandError() {//method to get wrong command error
     string error_string = "Something went wrong...";
     switch (step) {
         case 0:
-            error_string = "Invalid command for the 'Start' state...";
+            error_string = "Invalid command for the 'Start' state...\n";
             break;
         case 1:
-            error_string = "Invalid command for the 'Map Loaded' state...";
+            error_string = "Invalid command for the 'Map Loaded' state...\n";
             break;
         case 2:
-            error_string = "Invalid command for the 'Map Validated' state...";
+            error_string = "Invalid command for the 'Map Validated' state...\n";
             break;
         case 3:
-            error_string = "Invalid command for the 'Players Added' state...";
+            error_string = "Invalid command for the 'Players Added' state...\n";
             break;
     }
     return error_string;
@@ -595,6 +623,7 @@ void startupState::transition(GameEngine *gameEngine, string command) {
 //default constructor
 reinforcementState::reinforcementState() {
     setStateName(stateName);
+    cout << "\nTurn #" << GameEngine::turn << "\n";
 }
 
 //default destructor

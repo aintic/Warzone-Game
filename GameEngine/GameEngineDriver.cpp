@@ -3,10 +3,17 @@
 #include "GameEngine.h"
 #include "../Map/Map.h"
 #include "../Player/Player.h"
+#include "../CommandProcessing/CommandProcessingDriver.h"
 
 using std::cout;
 using std::cin;
 using std::string;
+
+// Part 2:
+// Tests the startup phase
+void testStartupPhase(){
+    testCommandProcessor();
+}
 
 //testGameStates creates a console-driven interface that allows the user to navigate
 //to different states of the game based on user input. Invalid commands are taken into
@@ -32,4 +39,5 @@ void testMainGameLoop(){
 
     g.issueOrderPhase();
 }
+
 
