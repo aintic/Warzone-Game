@@ -1133,10 +1133,10 @@ vector<Order *> OrdersList::getOrderList() {
 
 string Order::stringToLog()
 {
-    return "Order: " + getOrderType();
+    return "Order executed: " + getOrderType();
 }
 string OrdersList::stringToLog() {
     string lastOrder = _ordersList.back()->getOrderType();
 
-    return "Order Issued: " + lastOrder;
+    return "Order added: " + lastOrder;
 }

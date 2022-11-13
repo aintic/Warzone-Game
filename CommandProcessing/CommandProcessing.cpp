@@ -291,7 +291,7 @@ string Command::stringToLog()
 }
 string CommandProcessor::stringToLog()
 {
-    string output = "Inserted command: ";
+    string output = "The collection of commands: \n";
     vector<Command*> temp = get_commands();
     for(Command* x : temp){
         output += x->get_typed_command() + "\n";
