@@ -12,7 +12,7 @@
 #include <fstream>
 
 
-int main(){
+void testLoggingObserver(){
 
 
 
@@ -40,11 +40,9 @@ int main(){
         }
         file.close();
     }
-    game->startupPhase(processor);
 
 
-
-    Player* p1 = new Player("Player22", game);
+    Player* p1 = new Player("Player1", game);
     OrdersList* ol = new OrdersList(game);
     Order* testDeploy = new Deploy(game);
     Order* testAdvance = new Advance(game);
@@ -61,11 +59,12 @@ int main(){
     p1->getPlayerOrderList()->add(testNegotiate);
 
 
+    game->players.push_back(p1);
 
     string valid_map1 = "../Map/Maps/AnnysPiratenwelt.map";
     Map *map = MapLoader::loadMap(valid_map1);
-    Player *p2 = new Player("Player 1", game);
-    Player *p3 = new Player("Player 2", game);
+    Player *p2 = new Player("Player 2", game);
+    Player *p3 = new Player("Player 3", game);
     game->map = map;
     game->players.push_back(p2);
     game->players.push_back(p3);
@@ -86,16 +85,21 @@ int main(){
         cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
     }
 
-    Order *d1 = new Deploy (game->map->get_territories().begin()->second, p2, 0, game);
-
+    Order *d1 = new Deploy (p2->getTerritories()[1], p2, 0, game);
     d1->execute();
-    Order *b1 = new Bomb (game->map->get_territories().begin()->second, p2, game);
+    Order *b1 = new Bomb (p1->getTerritories()[0], p2, game);
 
     b1->execute();
+    p2->getPlayerOrderList()->add(d1);
+    p2->getPlayerOrderList()->add(b1);
 
-    Order *a3 = new Airlift (game->map->get_territories().begin()->second,game->map->get_territories().begin()->second, p3, 20, game);
-
+    Order *a3 = new Airlift (p3->getTerritories()[0],p3->getTerritories()[1], p3, 20, game);
+    p3->getPlayerOrderList()->add(a3);
     a3->execute();
+
+
+
+
 
     //Game engine transition part
     State* map_loaded = new startupState(1);
@@ -106,45 +110,25 @@ int main(){
     game->nextState(map_validated);
     game->nextState(players_added);
 
+
+
+
     //Clear
     delete game;
     delete p1;
     delete p2;
     delete p3;
-    delete d1;
-    delete b1;
-    delete a3;
+
 
     p1, p2, p3, d1, b1, a3, game = nullptr;
     delete _observers;
     _observers = nullptr;
 
     delete ol;
-    delete testDeploy;
-    delete testAdvance;
-    delete testBomb;
-    delete testBlockade;
-    delete testAirlift;
-    delete testNegotiate;
     delete processor;
 
-    delete map_loaded;
-    delete map_validated;
-    delete players_added;
-
-    map_loaded = nullptr;
-    map_validated = nullptr;
-    players_added = nullptr;
-
-    testDeploy = nullptr;
-    testAdvance = nullptr;
-    testBomb = nullptr;
-    testBlockade = nullptr;
-    testAirlift = nullptr;
-    testNegotiate = nullptr;
     ol = nullptr;
     processor = nullptr;
-
 
 
     }

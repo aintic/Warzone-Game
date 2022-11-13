@@ -4,13 +4,14 @@
 #include "Player/PlayerDriver.h"
 #include "GameEngine/GameEngineDriver.h"
 #include "CommandProcessing/CommandProcessingDriver.h"
+#include "LoggingObserver/LoggingObserverDriver.h"
 
 
 
 using namespace std;
-//
-//int main()
-//{
+
+int main()
+{
 
     //Assignment 1:
 
@@ -41,5 +42,8 @@ using namespace std;
     //Part 4
     //testOrdersExecution();
 
-//}
+    //Part 5
+    testLoggingObserver();
+
+}
 

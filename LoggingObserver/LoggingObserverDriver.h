@@ -7,3 +7,6 @@
 #define COMP_345_START_LOGGINGOBSERVERDRIVER_H
 
 #endif //COMP_345_START_LOGGINGOBSERVERDRIVER_H
+
+
+void testLoggingObserver();

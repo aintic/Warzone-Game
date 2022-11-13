@@ -581,7 +581,7 @@ void Bomb::execute() {
  */
 Blockade::Blockade() : Order() {
     this->targetTer = nullptr;
-
+    this->Detach();
 }
 
 
