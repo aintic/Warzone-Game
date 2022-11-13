@@ -66,7 +66,7 @@ public:
     void set_owner(Player* player);
 
 private:
-    Player* owner;
+    Player* owner = nullptr;
     int id;
     int army_units{};
     string name;
