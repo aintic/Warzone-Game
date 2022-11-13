@@ -1,10 +1,14 @@
 #include "Player.h"
-#include "GameEngine.h"
+#include "../GameEngine/GameEngine.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
 #include "algorithm"
-#include <vector>
 using std::find_if;
+#include <vector>
+#include <random>
+using std::random_device;
+using std::uniform_int_distribution;
+
 
 
 int Player::uniqueID = 0;
@@ -139,37 +143,6 @@ vector<Territory*> Player:: toAttack(){
     return toAttackTerritories;
 }
 
-//Territory* Player::strongestOwnedNeighbor(Territory* territory) {
-//    vector<Territory*> ownedNeighbors;
-//
-//    for (Territory *t : this->getTerritories()) {
-//
-//
-//
-//
-//        if (t->get_owner() == this) {
-//            ownedNeighbors.push_back(t);
-//        }
-//    }
-//
-//    for (Territory *t : territory->get_neighbours()) {
-//        if (t->get_owner() == this) {
-//            ownedNeighbors.push_back(t);
-//        }
-//    }
-//
-//    cout << ownedNeighbors.size() << endl;
-//
-//    //cout << "here" << endl;
-//    //cout << *ownedNeighbors[0] << endl;
-//
-//    //if(ownedNeighbors.size() != 0){
-//        return *max_element(ownedNeighbors.begin(), ownedNeighbors.end(), [](Territory* a, Territory* b){
-//            return a->get_army_units() < b->get_army_units();
-//        });
-//    //}
-//    //else return
-//}
 
 Territory* Player::strongestOwnedNeighbor(Territory* territory) {
     vector<Territory*> ownedNeighbors;
@@ -195,10 +168,9 @@ void Player::issueOrder() {
         vector<Territory*> toDefendTerritories = this->toDefend();
         int armiesToDeploy = issuableReinforcementPool;
         if (toDefendTerritories.size() != 1) {
-            int weakestTerritoryArmies = toDefendTerritories.at(0)->get_army_units() + toDefendTerritories.at(0)->get_issued_army_units();
-            int nextWeakestTerritoryArmies = toDefendTerritories.at(1) ->get_army_units() + toDefendTerritories.at(1)->get_issued_army_units();
-            int armyDifference =  nextWeakestTerritoryArmies - weakestTerritoryArmies;
-            armiesToDeploy = ((1 + armyDifference) > issuableReinforcementPool) ? issuableReinforcementPool : armyDifference +1;
+            random_device rd;
+            uniform_int_distribution<int> dist(1, issuableReinforcementPool);
+            armiesToDeploy = dist(rd);
         }
 
         Territory *targetTerr = this->toDefend().front(); // owned territory with the lowest number of army units (actual + issued)
