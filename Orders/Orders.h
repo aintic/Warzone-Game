@@ -9,13 +9,19 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
+#include "../LoggingObserver/LoggingObserver.h"
 
 class Territory;
 class Player;
 class GameEngine;
+
+
+
 using namespace std;
 
-class Order {
+//class GameEngine;
+
+class Order : public ILoggable, public Subject{
 public:
     // constructor
     Order();
@@ -40,6 +46,8 @@ public:
     virtual Order* clone() const = 0;
 
     friend class OrdersList;
+    string stringToLog();
+
 
 protected:
     Player *currentPl;
@@ -50,6 +58,8 @@ class Deploy : public Order {
 public:
     // constructor
     Deploy();
+
+    Deploy(GameEngine* game);
     // parametized constructor
     Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
@@ -79,6 +89,9 @@ class Advance : public Order {
 public:
     // constructor
     Advance();
+
+    Advance(GameEngine* game);
+
     // parametized constructor
     Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
@@ -109,6 +122,8 @@ class Bomb : public Order {
 public:
     //constructor
     Bomb();
+
+    Bomb(GameEngine* game);
     // parametized constructor
     Bomb(Territory *targetTer, Player *currentPl, GameEngine *game);
     // destructor
@@ -137,6 +152,8 @@ class Blockade : public Order {
 public:
     // constructor
     Blockade();
+
+    Blockade(GameEngine* game);
     // parametized constructor
     Blockade(Territory *targetTer, Player *currentPl, GameEngine *game);
     // destructor
@@ -165,6 +182,8 @@ class Airlift : public Order {
 public:
     // constructor
     Airlift();
+
+    Airlift(GameEngine* game);
     // parametized constructor
     Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
@@ -195,6 +214,8 @@ class Negotiate : public Order {
 public:
     //constructor
     Negotiate();
+
+    Negotiate(GameEngine* game);
     // parametized constructor
     Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game);
     // destructor
@@ -219,10 +240,12 @@ private:
     Player *enemyPl;
 };
 
-class OrdersList {
+class OrdersList : public ILoggable, public Subject{
 public:
     // constructor
     OrdersList();
+
+    OrdersList(GameEngine* game);
     // copy constructor
     OrdersList(const OrdersList &ol);
     // destructor
@@ -244,6 +267,7 @@ public:
     void executeOrder();
     Order* getTopOrder();
     vector<Order*> getOrderList();
+    string stringToLog();
 
         private:
     vector<Order*> _ordersList;

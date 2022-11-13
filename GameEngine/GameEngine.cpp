@@ -39,6 +39,17 @@ GameEngine::GameEngine() {
     commandProcessor = nullptr;
 }
 
+GameEngine::GameEngine(Observer* _obs) {
+    commandProcessor = new CommandProcessor(_obs);
+    command = new Command(_obs);
+    currentState = new startupState();
+    map = nullptr;
+    _observers = _obs;
+    this->Attach(_obs);
+}
+
+
+
 GameEngine::GameEngine(int numPlayers) {
     deck = new Deck();
     for (int i = 0; i < numPlayers; i++){
@@ -54,6 +65,7 @@ GameEngine::~GameEngine() {
     commandProcessor = nullptr;
     delete map;
     map = nullptr;
+    this->Detach();
 }
 
 //parametrized constructor
@@ -104,11 +116,14 @@ Deck* GameEngine::getDeck() {
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
+    Notify(this);
+
 }
 
 void GameEngine::startupPhase(CommandProcessor* c) {
 
     this->commandProcessor = c;
+    bool quit_game = false;
 
     Command *command;
 
@@ -195,6 +210,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 cout << "\n<<Adding the player "<< player_name << ">>" << endl;
 
                 // Add the player
+
                 this->players.push_back(new Player(player_name, this));
 
                 string effect = "Added player <" + player_name + ">";
@@ -274,6 +290,26 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 command->saveEffect("a) fairly distributing all the territories to the players\nb) determining randomly the order of play of the players in the game\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool\nd) players draw 2 initial cards from the deck using the deck’s draw() method\ne) switch the game to the play phase");
             }
         }
+        // REPLAY OR QUIT
+        else if(token_command == "replay"){
+
+            for(Player* player: players){
+                delete player;
+                player = nullptr;
+            }
+            delete map;
+            map = nullptr;
+
+            delete deck;
+            deck = new Deck();
+
+            cout << "Replaying game." << endl;
+        }else if(token_command == "quit"){
+
+            cout << "quitting the game" << endl;
+            command->saveEffect("Quitting the game. Bye-bye cuties... ;)");
+            quit_game = true;
+        }
 
         // NEVER REACH THIS POINT
         else {
@@ -288,9 +324,11 @@ void GameEngine::startupPhase(CommandProcessor* c) {
         else{
             cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
-    }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 
-    mainGameLoop();
+        if(this->getCurrentState()->getStateName() == "Assign reinforcement"){
+            mainGameLoop();
+        }
+    }while(!quit_game);
 }
 
 void GameEngine::reinforcementPhase() {
@@ -860,7 +898,13 @@ void endState::transition(GameEngine *gameEngine, string command) {
         //<method for end game statistics and exit here>
         gameEngine->getCurrentState()->setStateName("End");
         cout << *gameEngine->getCurrentState();
-        delete gameEngine;
-        exit(0);
     } else cout << "\nYou have entered an invalid command for the 'Win' state...\n";
+}
+
+Observer *GameEngine::getObserver() {
+    return _observers;
+}
+
+string GameEngine::stringToLog() {
+    return "Currently in " + this->getCurrentState()->getStateName() + " state";
 }

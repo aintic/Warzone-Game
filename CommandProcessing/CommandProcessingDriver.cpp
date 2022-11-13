@@ -20,6 +20,10 @@ void testCommandProcessor(){
     CommandProcessor * processor;
     string file_name;
 
+    Observer* _observers = new LogObserver();
+
+
+    GameEngine* game = new GameEngine(_observers);
 
     while(!valid_initial_command){
 
@@ -34,7 +38,7 @@ void testCommandProcessor(){
 
         if(user_input == CONSOLE_STRING){
             cout << "[[Reading from console]]" << endl;
-            processor = new CommandProcessor();
+            processor = new CommandProcessor(_observers);
             valid_initial_command = true;
         }
         else if(first_word == FILE_STRING && user_input.length() > FILE_STRING.length() + delimiter.length()){
@@ -49,7 +53,7 @@ void testCommandProcessor(){
             else{
                 valid_initial_command = true;
                 cout << "[[Reading from file]]" << endl;
-                processor = new FileCommandProcessorAdapter(file_name);
+                processor = new FileCommandProcessorAdapter(file_name, _observers);
             }
             file.close();
         }
@@ -60,8 +64,6 @@ void testCommandProcessor(){
 
 
 
-    GameEngine* game;
-    game = new GameEngine();
 
 //    (1) commands can be read from the console using the CommandProcessor class
 //    (2) commands can be read from a saved text file using the FileCommandProcessorAdapter
