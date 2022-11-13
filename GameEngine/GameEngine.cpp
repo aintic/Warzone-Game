@@ -358,13 +358,13 @@ bool GameEngine::executeOrdersPhase() {
             return false;
         }
     } while (!allOrdersDone);
-
     for (Player *p : players) {
-            p->resetFriendlyList();
-            if (p->getConquerer()) {
-                deck->draw(*p);
-                p->resetConquerer();
-            }
+        p->resetFriendlyList();
+        if (p->getConquerer()) {
+            Card *bonusCard = deck->draw(*p);
+            cout << "Player " << p->getName() << " win a " << *bonusCard << " from conquering a territory this turn!" << endl;
+            p->resetConquerer();
+        }
     }
     GameEngine::turn++;
     this->nextState(new reinforcementState());

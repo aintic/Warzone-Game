@@ -40,7 +40,7 @@ void testOrdersExecution() {
     }
 
     for(Player* player : game->players){
-        player->setReinforcementPool(50);
+        player->setReinforcementPool(5);
         cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
     }
 
@@ -48,50 +48,23 @@ void testOrdersExecution() {
         cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
     }
 
+    p1->addOrder(new Deploy (p1->getTerritories()[4], p1, 0, game));
+    p1->addOrder(new Deploy (p1->getTerritories()[5], p1, 5, game));
+    p2->addOrder(new Deploy(p1->getTerritories()[20], p2, 5, game));
+    p2->addOrder(new Deploy(p2->getTerritories()[20], p2, 5, game));
+    p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game));
+    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5], p1, 0, game));
+    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[2], p1, 2, game));
+    p1->addOrder(new Advance(p1->getTerritories()[5], p2->getTerritories()[1], p1, 2, game));
+    p1->addOrder(new Blockade(p1->getTerritories()[12], p1, game));
+    p2->addOrder(new Blockade(p1->getTerritories()[11], p2, game));
+    p2->addOrder(new Negotiate(p1, p2, game));
+    p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game));
+    p2->addOrder(new Airlift(p1->getTerritories()[20], p2->getTerritories()[1], p2, 1, game));
+    p2->addOrder(new Airlift(p2->getTerritories()[20], p2->getTerritories()[1], p2, 1, game));
 
-    Order *d1 = new Deploy (p1->getTerritories()[4], p1, 0, game);
-
-    d1->execute();
-
-    Order *d2 = new Deploy (p1->getTerritories()[5], p1, 15, game);
-
-    d2->execute();
-
-    Order *d3 = new Deploy (p1->getTerritories()[20], p2, 15, game);
-
-    d3->execute();
-
-    Order *b1 = new Bomb(p1->getTerritories()[5], p2, game);
-
-    b1->execute();
-
-    Order *a1 = new Advance(p1->getTerritories()[5], p1->getTerritories()[5], p1, 0, game);
-
-    a1->execute();
-
-    Order *a2 = new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[2], p1, 4, game);
-
-    a2->execute();
-
-    Order *a3 = new Advance(p1->getTerritories()[5], p2->getTerritories()[1], p1, 4, game);
-
-    a3->execute();
-
-    Order *bl1 = new Blockade(p1->getTerritories()[12], p1, game);
-
-    bl1->execute();
-
-    Order *n1 = new Negotiate(p1, p2, game);
-
-    n1->execute();
-
-    Order *b2 = new Bomb(p1->getTerritories()[5], p2, game);
-
-    b2->execute();
-
-    for(Player *player : game->players){
-        cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
-    }
+    //game->issueOrderPhase();
+    game->executeOrdersPhase();
 
 
 //    // create new orders' list and one order of each kind

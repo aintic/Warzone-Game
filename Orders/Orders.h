@@ -244,7 +244,6 @@ public:
     void executeOrder();
     Order* getTopOrder();
     vector<Order*> getOrderList();
-    Order* getOrder(int pos) const;
 
         private:
     vector<Order*> _ordersList;

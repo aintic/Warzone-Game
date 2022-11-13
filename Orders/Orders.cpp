@@ -152,7 +152,7 @@ string Deploy::getOrderType() const {
  * @return boolean
  */
 bool Deploy::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if the target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "You cannot deploy to territories you don't own." << endl;
@@ -181,12 +181,12 @@ bool Deploy::validate() const {
 void Deploy::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order. \n" << endl;
+        cout << "Executing " << *this << " order." << endl;
         // take army units from reinforcement pool
         currentPl->setReinforcementPool(currentPl->getReinforcementPool() - army_units);
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
-        cout << *this << " order executed. \n" << endl;
+        cout << *this << " order executed.\n" << endl;
     }
     // if order is invalid, display message
     else {
@@ -279,7 +279,7 @@ string Advance::getOrderType() const {
  * @return boolean
  */
 bool Advance::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if source territory doesn't belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "You must advance from a territory you own." << endl;
@@ -326,7 +326,7 @@ bool Advance::validate() const {
 void Advance::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order. \n";
+        cout << "Executing " << *this << " order." << endl;
         // if both source and target territories belong to the current player (checked source territory in validate())
         if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
             // take army units from source territory
@@ -338,7 +338,7 @@ void Advance::execute() {
         else if (targetTer->get_army_units() == 0) {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
-            cout << "You have conquered this territory!\n" << endl;
+            cout << "You have conquered this territory!" << endl;
             // current player gains target territory, enemy player loses it
             // army units get added to target territory
             currentPl->conquerTerritory(targetTer);
@@ -380,7 +380,7 @@ void Advance::execute() {
 
             // if current player conquers the territory
             if (survivingAttackers > 0 && survivingDefenders == 0) {
-                cout << "You have conquered this territory!\n" << endl;
+                cout << "You have conquered this territory!" << endl;
                 // current player gains target territory, enemy player loses it
                 // surviving army units get added to target territory
                 currentPl->conquerTerritory(targetTer);
@@ -388,7 +388,7 @@ void Advance::execute() {
             }
             // if current player cannot conquer territory
             else {
-                cout << "You could not conquer this territory.\n" << endl;
+                cout << "You could not conquer this territory!" << endl;
                 // move surviving army units back to source territory
                 // reduce army units in target territory to surviving defenders
                 sourceTer->set_army_units(sourceTer->get_army_units() + survivingAttackers);
@@ -478,7 +478,7 @@ string Bomb::getOrderType() const {
  * @return boolean
  */
 bool Bomb::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if the target territory belongs to current player
     if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
         cout << "You cannot bomb your own territory." << endl;
@@ -519,7 +519,7 @@ bool Bomb::validate() const {
 void Bomb::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order. \n" << endl;
+        cout << "Executing " << *this << " order." << endl;
         // halve the army units in target territory
         targetTer->set_army_units(targetTer->get_army_units() / 2);
         cout << *this << " order executed. \n" << endl;
@@ -604,7 +604,7 @@ string Blockade::getOrderType() const {
  * @return boolean
  */
 bool Blockade::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "Cannot blockade territories you don't own." << endl;
@@ -623,7 +623,7 @@ bool Blockade::validate() const {
 void Blockade::execute() {
     // if order is valid
     if (validate()) {
-        cout << "Executing " << *this << " order. \n";
+        cout << "Executing " << *this << " order." << endl;
         // double the army units in target territory
         targetTer->set_army_units(targetTer->get_army_units() * 2);
 
@@ -640,7 +640,7 @@ void Blockade::execute() {
             }
         }
         // create player called Neutral if there isn't one, add to players list
-        // assign target territory to Neutral player
+        // assign target territory to Neutral player, set reinforcement pool to 50
         // remove target territory from current player
         Player *neutral = new Player("Neutral", game);
         neutral->neutralConquerTerritory(targetTer);
@@ -648,6 +648,10 @@ void Blockade::execute() {
 //        currentPl->removeTerritory(targetTer);
         game->setPlayers(neutral);
         cout << *this << " order executed. \n" << endl;
+    }
+    // if order is invalid, display message
+    else {
+        cout << "Invalid order. Order will not be executed.\n" << endl;
     }
 }
 
@@ -736,7 +740,7 @@ string Airlift::getOrderType() const {
  * @return boolean
  */
 bool Airlift::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if either the source or target territory do not belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID() || targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID() ) {
         cout << "You can only airlift between territories you own." << endl;
@@ -770,7 +774,7 @@ bool Airlift::validate() const {
 void Airlift::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order. \n";
+        cout << "Executing " << *this << " order." << endl;
         // take army units from source territory
         sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
         // move army units to target territory
@@ -858,7 +862,7 @@ string Negotiate::getOrderType() const {
  * @return boolean
  */
 bool Negotiate::validate() const {
-    cout << "Validating " << *this << " order. \n";
+    cout << "Validating " << *this << " order." << endl;
     // return false, if the enemy player is also the current player
     if (enemyPl->getPlayerID() == currentPl->getPlayerID()) {
         cout << "You cannot negotiate with yourself." << endl;
@@ -882,7 +886,7 @@ bool Negotiate::validate() const {
 void Negotiate::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order. \n";
+        cout << "Executing " << *this << " order." << endl;
         // add each player to the other player's friendly list
         currentPl->addFriendly(enemyPl->getPlayerID());
         enemyPl->addFriendly(currentPl->getPlayerID());
@@ -914,10 +918,6 @@ OrdersList::~OrdersList(){
     }
     _ordersList.clear();
 };
-
-Order* OrdersList::getOrder(int pos) const {
-    return this->_ordersList[pos];
-}
 
 /**
  * Copy constructor for OrdersList - makes deep copy
@@ -1067,6 +1067,7 @@ Order* OrdersList::getTopOrder() {
 //    }
 }
 
+// getter for vector of orders
 vector<Order *> OrdersList::getOrderList() {
     return _ordersList;
 }
