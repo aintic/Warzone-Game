@@ -350,7 +350,8 @@ void GameEngine::executeOrdersPhase() {
     for (Player *p : players) {
         p->resetFriendlyList();
         if (p->getConquerer()) {
-            deck->draw(*p);
+            Card *bonusCard = deck->draw(*p);
+            cout << "Player " << p->getName() << " win a " << *bonusCard << " from conquering a territory this turn!" << endl;
             p->resetConquerer();
         }
     }
