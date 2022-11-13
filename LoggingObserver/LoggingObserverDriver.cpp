@@ -126,7 +126,7 @@ void testLoggingObserver(){
 
 
 
-    //Clear
+    //Clear pointers
     delete game;
     delete p1;
     delete p2;
