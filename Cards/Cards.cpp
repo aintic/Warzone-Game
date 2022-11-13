@@ -4,6 +4,7 @@
 #include <random>
 #include "../Orders/Orders.h"
 #include "../Player/Player.h"
+#include "GameEngine.h"
 using namespace std;
 
 // Set constant Card Type members
@@ -96,7 +97,7 @@ Card* BombCard::clone() {
  * BombCard Class play method
  */
 void BombCard::play(Player *player){
-    player->addOrder(new Bomb(player->toAttack().back(), player));
+    player->addOrder(new Bomb(player->toAttack().back(), player, player->getGame()));
     cout << "Player " << player->getPlayerID() << " played a Bomb card" << endl;
 }
 /**
@@ -196,7 +197,7 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-    player->addOrder(new Blockade(player->toDefend().back(), player));
+    player->addOrder(new Blockade(player->toDefend().back(), player, player->getGame()));
     cout << "Player " << player->getPlayerID() << " played a Blockade card" << endl;
 }
 
@@ -250,7 +251,7 @@ Card* AirliftCard::clone() {
 void AirliftCard::play(Player *player) {
     vector<Territory*> toDefendTerritories = player->toDefend();
     // send half the armies of the most populated territory to the least populated
-    player->addOrder(new Airlift(toDefendTerritories.back(), toDefendTerritories.front(), player, toDefendTerritories.back()->get_army_units() / 2));
+    player->addOrder(new Airlift(toDefendTerritories.back(), toDefendTerritories.front(), player, toDefendTerritories.back()->get_army_units() / 2, player->getGame()));
     cout << "Player " << player->getPlayerID() << " played an Airlift card" << endl;
 }
 
@@ -303,7 +304,7 @@ Card* DiplomacyCard::clone(){
  * @return corresponding order instance
  */
 void DiplomacyCard::play(Player *player) {
-    player->addOrder(new Negotiate(player, player->toAttack().back()->get_owner()));
+    player->addOrder(new Negotiate(player, player->toAttack().back()->get_owner(), player->getGame()));
     cout << "Player " << player->getPlayerID() << " played a Diplomacy card" << endl;
 }
 
@@ -371,7 +372,7 @@ void Hand::addCard(Card *c){
  * Creates corresponding Order based on the played Card's type
  * @return Order created by playing card
  */
-void Hand::play(Deck& d, Player* player, int index){
+void Hand::play(Deck &d, Player* player, int index){
         if(index >= 0 && index < this->cards.size()){
             this->cards.at(index)->play(player);
             d.getCards().push_back(this->cards.at(index));

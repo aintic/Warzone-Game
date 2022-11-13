@@ -90,6 +90,10 @@ vector<Player*> GameEngine::getPlayers() {
     return players;
 }
 
+void GameEngine::setPlayers(Player *p) {
+    players.push_back(p);
+}
+
 // game deck getter
 Deck* GameEngine::getDeck() {
     return deck;
@@ -357,6 +361,7 @@ void GameEngine::executeOrdersPhase() {
 void GameEngine::mainGameLoop() {
     do{
         reinforcementPhase();
+        issueOrderPhase();
 
         executeOrdersPhase();
     }while(players.size() > 1);
@@ -381,10 +386,11 @@ void GameEngine::issueOrderPhase() {
                 playersDoneIssuingOrders++;
             }
             else {
-                p->issueOrder(deck);
+                p->issueOrder();
             }
         }
     }
+    this->nextState(new executeOrdersState());
 }
 //
 //ABSTRACT STATE CLASS
