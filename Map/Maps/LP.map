@@ -1,0 +1,21 @@
+[Map]
+image=LP.bmp
+wrap=no
+scroll=none
+author=Ashley
+warn=yes
+
+[Continents]
+Linkin=3
+Park=3
+Right Side=2
+
+[Territories]
+1L,95,142,Linkin,2L,4P,6RS
+2L,169,218,Linkin,1L,3P,5RS
+
+3P,184,111,Park,2L,4P,1L,5RS
+4P,260,131,Park,3P,5RS,6RS,1L
+
+5RS,353,64,Right Side,6RS,4P,1L
+6RS,349,221,Right Side,5RS,4P,1L
