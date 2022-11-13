@@ -2,10 +2,10 @@
 // Created by Alice on 2022-09-26.
 //
 #include "Orders.h"
-#include "Map.h"
-#include "GameEngine.h"
-#include "Player.h"
-#include "Cards.h"
+#include "../Map/Map.h"
+#include "../GameEngine/GameEngine.h"
+#include "../Player/Player.h"
+#include "../Cards/Cards.h"
 
 /**
  * Free function to test Order and OrdersList
