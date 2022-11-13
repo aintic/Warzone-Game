@@ -180,7 +180,7 @@ public:
     // Adds passed Card to Hand
     void addCard(Card *c);
     // Removes card at index from Hand and adds it to the Deck
-    void play(Deck& d, Player *player, int index);
+    void play(Deck &d, Player *player, int index);
     // Getter
     vector<Card *> &getCards();
     // Checks if Hand is empty

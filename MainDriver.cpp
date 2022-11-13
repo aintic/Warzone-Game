@@ -33,10 +33,13 @@ int main()
     //Assignment 2:
 
     //Part 1
-    //testCommandProcessor();
+    testCommandProcessor();
 
     //Part 2
     //testStartupPhase();
+
+    //Part 4
+    //testOrdersExecution();
 
 }
 

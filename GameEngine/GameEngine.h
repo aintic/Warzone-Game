@@ -44,6 +44,7 @@ public:
     GameEngine& operator =(const GameEngine& g); //assignment operator
     State* getCurrentState(); //currentState getter
     vector<Player*> getPlayers();// players list getter
+    void setPlayers(Player *p);
     Deck* getDeck(); // game deck getter
     void setCurrentState(State* state); //currentState setter
     void nextState(State* nextState); //method to change state
