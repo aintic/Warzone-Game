@@ -56,6 +56,9 @@ int main(){
     p1->setPlayerOrderList(ol);
     p1->getPlayerOrderList()->add(testDeploy);
     p1->getPlayerOrderList()->add(testBomb);
+    p1->getPlayerOrderList()->add(testBlockade);
+    p1->getPlayerOrderList()->add(testAirlift);
+    p1->getPlayerOrderList()->add(testNegotiate);
 
 
 
