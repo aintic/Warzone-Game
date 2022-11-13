@@ -16,7 +16,6 @@ class Player;
 class GameEngine;
 
 
-using namespace std;
 
 using namespace std;
 
@@ -269,10 +268,7 @@ public:
     Order* getTopOrder();
     vector<Order*> getOrderList();
     string stringToLog();
-    Order* getOrder(int pos) const;
 
-private:
-    // list of orders
         private:
     vector<Order*> _ordersList;
 };

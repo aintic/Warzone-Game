@@ -31,7 +31,7 @@ class GameEngine : public ILoggable, public Subject{
 
 private:
     class State* currentState;
-    Deck* deck;
+    class Deck* deck;
     CommandProcessor* commandProcessor;
     Command* command;
 
@@ -56,9 +56,11 @@ public:
     Map* map;
     void startupPhase(CommandProcessor* c);
     void reinforcementPhase();
-    void executeOrdersPhase();
+    bool executeOrdersPhase();
     void mainGameLoop();
     void issueOrderPhase();
+
+    bool hasNeutral = false;
 
     GameEngine(Observer* _obs);
     string stringToLog();
