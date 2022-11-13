@@ -632,8 +632,9 @@ void Blockade::execute() {
             // if there's already a player called Neutral, assign the target territory to them
             // remove target territory from current player and exit
             if (p->getName().compare("Neutral") == 0) {
-                p->addTerritory(targetTer);
-                currentPl->removeTerritory(targetTer);
+                p->neutralConquerTerritory(targetTer);
+//                p->addTerritory(targetTer);
+//                currentPl->removeTerritory(targetTer);
                 cout << *this << " order executed. \n" << endl;
                 return;
             }
@@ -641,9 +642,10 @@ void Blockade::execute() {
         // create player called Neutral if there isn't one, add to players list
         // assign target territory to Neutral player, set reinforcement pool to 50
         // remove target territory from current player
-        Player *neutral = new Player("Neutral");
-        neutral->addTerritory(targetTer);
-        currentPl->removeTerritory(targetTer);
+        Player *neutral = new Player("Neutral", game);
+        neutral->neutralConquerTerritory(targetTer);
+//        neutral->addTerritory(targetTer);
+//        currentPl->removeTerritory(targetTer);
         game->setPlayers(neutral);
         cout << *this << " order executed. \n" << endl;
     }

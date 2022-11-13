@@ -15,8 +15,8 @@ void testOrdersExecution() {
     GameEngine *game = new GameEngine();
     string valid_map1 = "../Map/Maps/AnnysPiratenwelt.map";
     Map *map = MapLoader::loadMap(valid_map1);
-    Player *p1 = new Player("Player 1");
-    Player *p2 = new Player("Player 2");
+    Player *p1 = new Player("Player 1", game);
+    Player *p2 = new Player("Player 2", game);
     game->map = map;
     game->players.push_back(p1);
     game->players.push_back(p2);
