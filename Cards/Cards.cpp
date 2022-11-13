@@ -4,7 +4,7 @@
 #include <random>
 #include "../Orders/Orders.h"
 #include "../Player/Player.h"
-#include "GameEngine.h"
+#include "../GameEngine/GameEngine.h"
 using namespace std;
 
 // Set constant Card Type members
@@ -97,8 +97,9 @@ Card* BombCard::clone() {
  * BombCard Class play method
  */
 void BombCard::play(Player *player){
-    player->addOrder(new Bomb(player->toAttack().back(), player, player->getGame()));
-    cout << "Player " << player->getPlayerID() << " played a Bomb card" << endl;
+    Territory* targetTerr = player->toAttack().back();
+    player->addOrder(new Bomb(targetTerr, player, player->getGame()));
+    cout << *player << " played a Bomb card on " << targetTerr->get_name() << endl;
 }
 /**
  * BombCard Class getter
@@ -122,7 +123,8 @@ ostream& operator<<(ostream& os, BombCard& c){
  * ReinforcementCard Class default constructor
  * Calls Card Default constructor to initialize id member
  */
-ReinforcementCard::ReinforcementCard() : Card(){}
+ReinforcementCard::ReinforcementCard() : Card(){
+}
 
 /**
  * ReinforcementCard Class copy constructor
@@ -147,7 +149,10 @@ Card* ReinforcementCard::clone() {
  * ReinforcementCard Class play method
  * @return corresponding order instance
  */
-void ReinforcementCard::play(Player *player){}
+void ReinforcementCard::play(Player *player){
+    player->setReinforcementPool(player->getReinforcementPool() + 5);
+    cout << *player << " played a Reinforcement card and gained 5 additional army units" << endl;
+}
 /**
  * ReinforcementCard Class getter
  */
@@ -197,8 +202,10 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-    player->addOrder(new Blockade(player->toDefend().back(), player, player->getGame()));
-    cout << "Player " << player->getPlayerID() << " played a Blockade card" << endl;
+
+    Territory *targetTerr = player->toDefend().back();
+    player->addOrder(new Blockade(targetTerr, player, player->getGame()));
+    cout << *player << " played a Blockade card on " << targetTerr->get_name() << endl;
 }
 
 /**
@@ -250,9 +257,11 @@ Card* AirliftCard::clone() {
  */
 void AirliftCard::play(Player *player) {
     vector<Territory*> toDefendTerritories = player->toDefend();
+    Territory *targetTerr = toDefendTerritories.front();
+    Territory *sourceTerr = toDefendTerritories.back();
     // send half the armies of the most populated territory to the least populated
-    player->addOrder(new Airlift(toDefendTerritories.back(), toDefendTerritories.front(), player, toDefendTerritories.back()->get_army_units() / 2, player->getGame()));
-    cout << "Player " << player->getPlayerID() << " played an Airlift card" << endl;
+    player->addOrder(new Airlift(sourceTerr, targetTerr, player, toDefendTerritories.back()->get_army_units() / 2, player->getGame()));
+    cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
 }
 
 /**
@@ -304,8 +313,9 @@ Card* DiplomacyCard::clone(){
  * @return corresponding order instance
  */
 void DiplomacyCard::play(Player *player) {
-    player->addOrder(new Negotiate(player, player->toAttack().back()->get_owner(), player->getGame()));
-    cout << "Player " << player->getPlayerID() << " played a Diplomacy card" << endl;
+    Player* enemyPlayer = player->toAttack().back()->get_owner();
+    player->addOrder(new Negotiate(player, enemyPlayer, player->getGame()));
+    cout << *player << " played a Diplomacy card on " << *enemyPlayer << endl;
 }
 
 /**
