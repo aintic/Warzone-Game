@@ -14,7 +14,7 @@
 
 void testLoggingObserver(){
 
-
+    cout << "testLoggingObserver executed" << endl;
 
     Observer* _observers = new LogObserver();
 
@@ -40,7 +40,7 @@ void testLoggingObserver(){
         }
         file.close();
     }
-
+    game->startupPhase(processor);
 
     Player* p1 = new Player("Player1", game);
     OrdersList* ol = new OrdersList(game);
@@ -88,14 +88,18 @@ void testLoggingObserver(){
     Order *d1 = new Deploy (p2->getTerritories()[1], p2, 0, game);
     d1->execute();
     Order *b1 = new Bomb (p1->getTerritories()[0], p2, game);
-
     b1->execute();
+
     p2->getPlayerOrderList()->add(d1);
     p2->getPlayerOrderList()->add(b1);
 
     Order *a3 = new Airlift (p3->getTerritories()[0],p3->getTerritories()[1], p3, 20, game);
     p3->getPlayerOrderList()->add(a3);
     a3->execute();
+    Order *b2 = new Blockade(p3->getTerritories()[0], p3, game);
+    b2->execute();
+    Order *n1 = new Negotiate(p2, p3, game);
+    n1->execute();
 
 
 
@@ -105,10 +109,16 @@ void testLoggingObserver(){
     State* map_loaded = new startupState(1);
     State* map_validated = new startupState(2);
     State* players_added = new startupState(3);
+    State* assignReinforcement = new reinforcementState();
+    State* executeOrder = new executeOrdersState();
+    State* win = new endState();
 
     game->nextState(map_loaded);
     game->nextState(map_validated);
     game->nextState(players_added);
+    game->nextState(assignReinforcement);
+    game->nextState(executeOrder);
+    game->nextState(win);
 
 
 

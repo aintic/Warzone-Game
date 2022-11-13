@@ -126,7 +126,6 @@ Observer& Observer::operator=(const Observer& s) {
 void LogObserver::Update(ILoggable* _loggable_object)
 {
 
-    cout << _loggable_object->stringToLog() << endl;
     // opening output file stream
     ofstream logfile;
     logfile.open("../gamelog.txt", ofstream::app); // append setting. If gamelog.txt is not found, it will create it.
