@@ -390,11 +390,15 @@ FileLineReader::~FileLineReader() {
 // FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
 // get, read, save and validate commands from a file.
 // Default constructor
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name){
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name, Observer* _obs){
 
     this->fileLineReader = new FileLineReader();
     this->file_name = file_name;
+    this->Attach(_obs);
+    logger = _obs;
 }
+
+
 
 // Copy constructor
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& f) : CommandProcessor(f){
@@ -430,7 +434,7 @@ Command* FileCommandProcessorAdapter::readCommand() {
         return nullptr;
     }
 
-    return new Command(line_from_file);
+    return new Command(line_from_file, logger);
 }
 
 /**

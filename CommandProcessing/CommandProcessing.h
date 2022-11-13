@@ -252,7 +252,7 @@ private:
 // get, read, save and validate commands from a file.
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
-    FileCommandProcessorAdapter(string file_name);
+    FileCommandProcessorAdapter(string file_name, Observer* _obs);
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
     FileCommandProcessorAdapter& operator= (const FileCommandProcessorAdapter&);
     ~FileCommandProcessorAdapter();
@@ -263,4 +263,6 @@ public:
 private:
     FileLineReader* fileLineReader;
     string file_name;
+    Observer* logger;
+
 };

@@ -1,0 +1,4 @@
+loadmap digdug
+validatemap
+addplayer Daria
+addplayer Linus

@@ -6,7 +6,7 @@
 #include "../Player/Player.h"
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
-//#include "../CommandProcessing/CommandProcessing.h"
+#include "../CommandProcessing/CommandProcessing.h"
 
 using std::cout;
 using std::cin;
