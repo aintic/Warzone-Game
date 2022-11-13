@@ -467,7 +467,9 @@ Command* FileCommandProcessorAdapter::getCommand(GameEngine* game){
     bool valid = this->validate(command, game);
 
     //save the command
-    this->saveCommand(command);
+    if(command!= nullptr){
+        this->saveCommand(command);
+    }
 
     // while not valid, show the error, and ask for another command
     while (!valid){
