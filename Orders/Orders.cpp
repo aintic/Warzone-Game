@@ -4,18 +4,17 @@
 
 #include "Orders.h"
 #include "../Player/Player.h"
-#include "../Map/Map.h"
 #include "../GameEngine/GameEngine.h"
 
 using namespace std;
 
 // set constant members for subclasses
-const string Deploy::_orderType = "Deploy";
-const string Advance::_orderType = "Advance";
-const string Bomb::_orderType = "Bomb";
-const string Blockade::_orderType = "Blockade";
-const string Airlift::_orderType = "Airlift";
-const string Negotiate::_orderType = "Negotiate";
+const string Deploy::orderType = "Deploy";
+const string Advance::orderType = "Advance";
+const string Bomb::orderType = "Bomb";
+const string Blockade::orderType = "Blockade";
+const string Airlift::orderType = "Airlift";
+const string Negotiate::orderType = "Negotiate";
 
 // *****************************************************************************************************************
 // ORDER
@@ -26,14 +25,16 @@ const string Negotiate::_orderType = "Negotiate";
  */
 Order::Order() {
     this->currentPl = nullptr;
+    this->game = nullptr;
 };
 
 /**
  * Parametized constructor for Order
  * @param currentPl - player issuing order
  */
- Order::Order(Player *currentPl) {
+ Order::Order(Player *currentPl, GameEngine *game) {
     this->currentPl = currentPl;
+    this->game = game;
 }
 
 /**
@@ -89,7 +90,7 @@ Deploy::Deploy() : Order() {
  * @param targetTer - target territory
  * @param army_units - army units to deploy
  */
-Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine *game) : Order(currentPl, game) {
     this->targetTer = targetTer;
     this->army_units = army_units;
 }
@@ -143,7 +144,7 @@ ostream& operator << (ostream& out,  const Deploy& o) {
  * @return constant string for type of order
  */
 string Deploy::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -213,7 +214,7 @@ Advance::Advance() : Order() {
  * @param targetTer - target territory
  * @param army_units - army units to advance
  */
-Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game) : Order(currentPl, game) {
     this->sourceTer = sourceTer;
     this->targetTer = targetTer;
     this->army_units = army_units;
@@ -270,7 +271,7 @@ ostream& operator << (ostream& out,  const Advance& o) {
  * @return constant string for type of order
  */
 string Advance::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -278,10 +279,15 @@ string Advance::getOrderType() const {
  * @return boolean
  */
 bool Advance::validate() const {
-    cout << "Validating order. \n";
+    cout << "Validating " << *this << " order. \n";
     // return false, if source territory doesn't belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "You must advance from a territory you own." << endl;
+        return false;
+    }
+    // return false, if the source and target territory are the same
+    else if (sourceTer->get_id() == targetTer->get_id()) {
+        cout << "The source territory must differ from target territory." << endl;
         return false;
     }
     // return false, if # army units to advance > # available in source territory
@@ -413,7 +419,7 @@ Bomb::Bomb() : Order() {
  * @param currentPl - player issuing order
  * @param targetTer - target territory
  */
-Bomb::Bomb(Territory *targetTer, Player *currentPl) : Order(currentPl) {
+Bomb::Bomb(Territory *targetTer, Player *currentPl, GameEngine *game) : Order(currentPl, game) {
     this->targetTer = targetTer;
 }
 
@@ -464,7 +470,7 @@ ostream& operator << (ostream& out,  const Bomb& o) {
  * @return constant string for type of order
  */
 string Bomb::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -540,7 +546,7 @@ Blockade::Blockade() : Order() {
  * @param currentPl - player issuing order
  * @param targetTer - target territory
  */
-Blockade::Blockade(Territory *targetTer, Player *currentPl) : Order(currentPl) {
+Blockade::Blockade(Territory *targetTer, Player *currentPl, GameEngine *game) : Order(currentPl, game) {
     this->targetTer = targetTer;
 }
 /**
@@ -590,7 +596,7 @@ ostream& operator << (ostream& out,  const Blockade& o) {
  * @return constant string for type of order
  */
 string Blockade::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -598,7 +604,7 @@ string Blockade::getOrderType() const {
  * @return boolean
  */
 bool Blockade::validate() const {
-    cout << "Validating order. \n";
+    cout << "Validating " << *this << " order. \n";
     // return false, if target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "Cannot blockade territories you don't own." << endl;
@@ -622,8 +628,7 @@ void Blockade::execute() {
         targetTer->set_army_units(targetTer->get_army_units() * 2);
 
         // get the list of players from the game engine
-        vector<Player*> players = game->getPlayers();
-        for (Player *p : players) {
+        for (Player *p : game->getPlayers()) {
             // if there's already a player called Neutral, assign the target territory to them
             // remove target territory from current player and exit
             if (p->getName().compare("Neutral") == 0) {
@@ -639,7 +644,7 @@ void Blockade::execute() {
         Player *neutral = new Player("Neutral");
         neutral->addTerritory(targetTer);
         currentPl->removeTerritory(targetTer);
-        players.push_back(neutral);
+        game->setPlayers(neutral);
         cout << *this << " order executed. \n" << endl;
     }
 }
@@ -664,7 +669,7 @@ Airlift::Airlift() : Order() {
  * @param targetTer - target territory
  * @param army_units - army units to airlift
  */
-Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units) : Order(currentPl) {
+Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game) : Order(currentPl, game) {
     this->sourceTer = sourceTer;
     this->targetTer = targetTer;
     this->army_units = army_units;
@@ -721,7 +726,7 @@ ostream& operator << (ostream& out,  const Airlift& o) {
  * @return constant string for type of order
  */
 string Airlift::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -729,10 +734,15 @@ string Airlift::getOrderType() const {
  * @return boolean
  */
 bool Airlift::validate() const {
-    cout << "Validating order. \n";
+    cout << "Validating " << *this << " order. \n";
     // return false, if either the source or target territory do not belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID() || targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID() ) {
         cout << "You can only airlift between territories you own." << endl;
+        return false;
+    }
+    // return false, if the source and target territory are the same
+    else if (sourceTer->get_id() == targetTer->get_id()) {
+        cout << "The source territory must differ from target territory." << endl;
         return false;
     }
     // return false if # army units requested for airlift > # army units in source territory
@@ -787,7 +797,7 @@ Negotiate::Negotiate() : Order() {
  * @param currentPl - player issuing order
  * @param enemyPl - enemy player to negotiate with
  */
-Negotiate::Negotiate(Player *currentPl, Player *enemyPl) : Order(currentPl) {
+Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Order(currentPl, game) {
     this->enemyPl = enemyPl;
 }
 
@@ -838,7 +848,7 @@ ostream& operator << (ostream& out,  const Negotiate& o) {
  * @return constant string for type of order
  */
 string Negotiate::getOrderType() const {
-    return _orderType;
+    return orderType;
 }
 
 /**
@@ -846,7 +856,7 @@ string Negotiate::getOrderType() const {
  * @return boolean
  */
 bool Negotiate::validate() const {
-    cout << "Validating order. \n";
+    cout << "Validating " << *this << " order. \n";
     // return false, if the enemy player is also the current player
     if (enemyPl->getPlayerID() == currentPl->getPlayerID()) {
         cout << "You cannot negotiate with yourself." << endl;

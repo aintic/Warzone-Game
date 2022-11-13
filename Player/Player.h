@@ -9,6 +9,7 @@ using namespace std;
 
 class Hand;
 class Deck;
+class GameEngine;
 
 //
 //PLAYER CLASS
@@ -23,7 +24,7 @@ protected:
 public:
     Player(); //default constructor
     Player(string name); //player constructor
-    Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders); //parametrized constructor
+    Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders, GameEngine *game); //parametrized constructor
     Player(const Player& p); //copy constructor
     ~Player(); //destructor
     Player& operator = (const Player& p); //assignment operator
@@ -32,6 +33,7 @@ public:
     OrdersList* getPlayerOrderList();
     Hand* getHand();
     string getName();
+    GameEngine* getGame();
     vector<Territory*> getTerritories();
     int getNumTerritories();
     int getReinforcementPool();
@@ -48,8 +50,8 @@ public:
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
     Territory* strongestOwnedNeighbor(Territory* territory);
-    void issueOrder(Deck *d); //creates order object and adds to list of orders
-    void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
+    void issueOrder(); //creates order object and adds to list of orders
+    //void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
     void removeTerritory(Territory* territory);
@@ -76,6 +78,7 @@ private:
     int advanceAttackOrdersIssued; // # of advance attack orders issued
     int advanceDefendOrdersIssued; // # of advance attack orders issued
     bool isDoneIssuingOrders;
-    vector<int> _friendlyList; // list of IDs of friendly players
+    vector<int> friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
+    GameEngine *game;
 };

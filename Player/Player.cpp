@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "GameEngine.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
 #include "algorithm"
@@ -20,8 +21,9 @@ Player::Player() {
     this->advanceAttackOrdersIssued = 0;
     this->advanceDefendOrdersIssued = 0;
     vector<int> f;
-    this->_friendlyList = f;
+    this->friendlyList = f;
     this->conquerer = false;
+    this->game = nullptr;
 }
 
 //Constructor with name only
@@ -32,23 +34,33 @@ Player::Player(string name) {
     this->territories = t;
     this->hand = new Hand();
     this->order_list = new OrdersList();
+    this->reinforcementPool = 5;
+    this->issuableReinforcementPool = 0;
+    this->advanceAttackOrdersIssued = 0;
+    this->advanceDefendOrdersIssued = 0;
     vector<int> f;
-    this->_friendlyList = f;
+    this->friendlyList = f;
     this->conquerer = false;
+    this->game = nullptr;
 }
 
 
 //Constructor with player id, territories, hand and orders
 //So, the player owns territories, owns hand cards, list of orders and list of friendly players negotiated with
-Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders) {
+Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders, GameEngine *game) {
     this->playerID = ++uniqueID;
     this->name = name;
     this->territories = territories;
     this->hand = hand;
     this->order_list = orders;
+    this->reinforcementPool = 5;
+    this->issuableReinforcementPool = 0;
+    this->advanceAttackOrdersIssued = 0;
+    this->advanceDefendOrdersIssued = 0;
     vector<int> f;
-    this->_friendlyList = f;
+    this->friendlyList = f;
     this->conquerer = false;
+    this->game = game;
 }
 
 //copy constructor
@@ -58,8 +70,9 @@ Player::Player(const Player& p){
     this->territories = p.territories;
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
-    this->_friendlyList = p._friendlyList;
+    this->friendlyList = p.friendlyList;
     this->conquerer = p.conquerer;
+    this->game = p.game;
 }
 
 //destructor
@@ -68,7 +81,7 @@ Player::~Player()
     delete hand;
     delete order_list;
     territories.clear();
-    _friendlyList.clear();
+    friendlyList.clear();
 }
 
 //assignment operator
@@ -78,8 +91,9 @@ Player& Player::operator=(const Player& p){
     this->territories = p.territories;
     this->hand = new Hand(*(p.hand));
     this->order_list = new OrdersList(*(p.order_list));
-    this->_friendlyList = p._friendlyList;
+    this->friendlyList = p.friendlyList;
     this->conquerer = p.conquerer;
+    this->game = p.game;
     return *this;
 }
 
@@ -132,7 +146,7 @@ void Player::addOrder(Order *o){
 }
 
 //creates an order object and adds it to the list of orders
-void Player::issueOrder(Deck *deck) {
+void Player::issueOrder() {
     if(issuableReinforcementPool != 0) {
         vector<Territory*> toDefendTerritories = this->toDefend();
         int armiesToDeploy = issuableReinforcementPool;
@@ -140,24 +154,24 @@ void Player::issueOrder(Deck *deck) {
             int weakestTerritoryArmies = toDefendTerritories.at(0)->get_army_units() + toDefendTerritories.at(0)->get_issued_army_units();
             int nextWeakestTerritoryArmies = toDefendTerritories.at(1) ->get_army_units() + toDefendTerritories.at(1)->get_issued_army_units();
             int armyDifference =  nextWeakestTerritoryArmies - weakestTerritoryArmies;
-            armiesToDeploy = ((1 + armyDifference) > issuableReinforcementPool) ? issuableReinforcementPool : armyDifference;
+            armiesToDeploy = ((1 + armyDifference) > issuableReinforcementPool) ? issuableReinforcementPool : armyDifference +1;
         }
 
         Territory *targetTerr = this->toDefend().front(); // owned territory with the lowest number of army units (actual + issued)
-        order_list->add(new Deploy(targetTerr, this, armiesToDeploy)); // deploy armies to the weakest territory
+        order_list->add(new Deploy(targetTerr, this, armiesToDeploy, game)); // deploy armies to the weakest territory
         issuableReinforcementPool -= armiesToDeploy; // decrement player's reinforcement pool
         targetTerr->set_issued_army_units(targetTerr->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
 
         cout << *this << " issued a new deploy order of " << armiesToDeploy << " armies to " << targetTerr->get_name() << endl;
     }
     else if (!this->hand->getCards().empty()) {
-        hand->play(*deck, this, 0); // play every card in player's hand
+        hand->play(*game->getDeck(), this, 0); // play every card in player's hand
     }
     else if (advanceAttackOrdersIssued < 2 && advanceAttackOrdersIssued < toAttack().size()){ // issue at most 2 advance attack orders
         Territory *targetTerr = toAttack().at(advanceAttackOrdersIssued);
         Territory *sourceTerr = strongestOwnedNeighbor(targetTerr);
         // send all source territory army units except 1
-        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1, game));
 
         advanceAttackOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
@@ -166,7 +180,7 @@ void Player::issueOrder(Deck *deck) {
         Territory *targetTerr = toDefend().front(); // weakest owned territory
         Territory *sourceTerr = toDefend().back(); // strongest owned territory
         // send half source territory army units
-        order_list->add(new Advance(sourceTerr, targetTerr, this, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2 ));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2 , game));
 
         advanceDefendOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
@@ -198,20 +212,20 @@ void Player::conquerTerritory(Territory* t) {
 
 // add a friendly player when executing Negotiate order
 void Player::addFriendly(int playerID) {
-    _friendlyList.push_back(playerID);
+    friendlyList.push_back(playerID);
 }
 
 // reset player's friendly list (at the end of every turn)
 void Player::resetFriendlyList() {
-    _friendlyList.clear();
+    friendlyList.clear();
 }
 
 // check if a player is friendly to current player
 bool Player::isFriendly(int playerID) {
-    int size = _friendlyList.size();
+    int size = friendlyList.size();
 
     for (int i = 0; i < size; i++) {
-        if (_friendlyList[i] == playerID) {
+        if (friendlyList[i] == playerID) {
             return true;
         }
     }
@@ -230,6 +244,10 @@ int Player::getPlayerID(){
 
 string Player:: getName(){
     return name;
+}
+
+GameEngine* Player::getGame() {
+    return game;
 }
 
 Hand* Player::getHand(){
