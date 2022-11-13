@@ -3,6 +3,7 @@
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
 #include "algorithm"
+#include <vector>
 using std::find_if;
 
 
@@ -16,7 +17,7 @@ Player::Player() {
     this->territories = t;
     this->hand = new Hand;
     this->order_list = new OrdersList();
-    this->reinforcementPool = 5;
+    this->reinforcementPool = 0;
     this->issuableReinforcementPool = 0;
     this->advanceAttackOrdersIssued = 0;
     this->advanceDefendOrdersIssued = 0;
@@ -24,24 +25,26 @@ Player::Player() {
     this->friendlyList = f;
     this->conquerer = false;
     this->game = nullptr;
+    this->toDelete = false;
 }
 
 //Constructor with name only
-Player::Player(string name) {
+Player::Player(string name, GameEngine* game) {
     this->playerID = ++uniqueID;
     this->name = name;
     vector<Territory*> t;
     this->territories = t;
     this->hand = new Hand();
     this->order_list = new OrdersList();
-    this->reinforcementPool = 5;
+    this->reinforcementPool = 0;
     this->issuableReinforcementPool = 0;
     this->advanceAttackOrdersIssued = 0;
     this->advanceDefendOrdersIssued = 0;
     vector<int> f;
     this->friendlyList = f;
     this->conquerer = false;
-    this->game = nullptr;
+    this->game = game;
+    this->toDelete = false;
 }
 
 
@@ -53,7 +56,7 @@ Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersL
     this->territories = territories;
     this->hand = hand;
     this->order_list = orders;
-    this->reinforcementPool = 5;
+    this->reinforcementPool = 0;
     this->issuableReinforcementPool = 0;
     this->advanceAttackOrdersIssued = 0;
     this->advanceDefendOrdersIssued = 0;
@@ -61,6 +64,7 @@ Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersL
     this->friendlyList = f;
     this->conquerer = false;
     this->game = game;
+    this->toDelete = false;
 }
 
 //copy constructor
@@ -78,6 +82,12 @@ Player::Player(const Player& p){
 //destructor
 Player::~Player()
 {
+    for (int i = 0; i < game->players.size(); i++){
+        if(game->players.at(i) == this) {
+            game->players.erase(game->players.begin() + i);
+            break;
+        }
+    }
     delete hand;
     delete order_list;
     territories.clear();
@@ -129,11 +139,45 @@ vector<Territory*> Player:: toAttack(){
     return toAttackTerritories;
 }
 
+//Territory* Player::strongestOwnedNeighbor(Territory* territory) {
+//    vector<Territory*> ownedNeighbors;
+//
+//    for (Territory *t : this->getTerritories()) {
+//
+//
+//
+//
+//        if (t->get_owner() == this) {
+//            ownedNeighbors.push_back(t);
+//        }
+//    }
+//
+//    for (Territory *t : territory->get_neighbours()) {
+//        if (t->get_owner() == this) {
+//            ownedNeighbors.push_back(t);
+//        }
+//    }
+//
+//    cout << ownedNeighbors.size() << endl;
+//
+//    //cout << "here" << endl;
+//    //cout << *ownedNeighbors[0] << endl;
+//
+//    //if(ownedNeighbors.size() != 0){
+//        return *max_element(ownedNeighbors.begin(), ownedNeighbors.end(), [](Territory* a, Territory* b){
+//            return a->get_army_units() < b->get_army_units();
+//        });
+//    //}
+//    //else return
+//}
+
 Territory* Player::strongestOwnedNeighbor(Territory* territory) {
     vector<Territory*> ownedNeighbors;
-    for (Territory *t : territory->get_neighbours()) {
-        if (t->get_owner() == this) {
-            ownedNeighbors.push_back(t);
+    for (Territory *terr : territories) {
+        for (Territory *neighborTerr : terr->get_neighbours()){
+            if (neighborTerr == territory){
+                ownedNeighbors.push_back(terr);
+            }
         }
     }
     return *max_element(ownedNeighbors.begin(), ownedNeighbors.end(), [](Territory* a, Territory* b){
@@ -171,7 +215,7 @@ void Player::issueOrder() {
         Territory *targetTerr = toAttack().at(advanceAttackOrdersIssued);
         Territory *sourceTerr = strongestOwnedNeighbor(targetTerr);
         // send all source territory army units except 1
-        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1, game));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), game));
 
         advanceAttackOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
@@ -208,6 +252,12 @@ void Player::conquerTerritory(Territory* t) {
     loser->removeTerritory(t);
     this->addTerritory(t);
     this->conquerer = true;
+}
+
+void Player::neutralConquerTerritory(Territory* t) {
+    Player* loser = t->get_owner();
+    loser->removeTerritory(t);
+    this->addTerritory(t);
 }
 
 // add a friendly player when executing Negotiate order
@@ -274,6 +324,18 @@ bool Player::getConquerer() {
 }
 
 //setters
+void Player::setToDelete(bool value) {
+    toDelete = value;
+}
+
+bool Player::getToDelete() {
+    return toDelete;
+}
+
+void Player::setGame(GameEngine* game) {
+    this->game = game;
+}
+
 void Player::setPlayerOrderList(OrdersList* orders){
     this->order_list = orders;
 }
@@ -305,6 +367,15 @@ void Player::setIsDoneIssuingOrders(bool b){
 bool Player::getIsDoneIssuingOrders() {
     return this->isDoneIssuingOrders;
 };
+
+bool Player::getAddedDuringExecution() {
+    return addedDuringExecution;
+}
+
+void Player::setAddedDuringExecution(bool value) {
+    this->addedDuringExecution = value;
+}
+
 
 
 

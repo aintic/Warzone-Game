@@ -23,7 +23,7 @@ protected:
     static int uniqueID;
 public:
     Player(); //default constructor
-    Player(string name); //player constructor
+    Player(string name, GameEngine* game); //player constructor
     Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders, GameEngine *game); //parametrized constructor
     Player(const Player& p); //copy constructor
     ~Player(); //destructor
@@ -37,6 +37,7 @@ public:
     vector<Territory*> getTerritories();
     int getNumTerritories();
     int getReinforcementPool();
+    void setGame(GameEngine* game);
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
     void setReinforcementPool(int armies);
@@ -46,6 +47,10 @@ public:
     void setIsDoneIssuingOrders(bool b);
     bool getIsDoneIssuingOrders();
     void addOrder(Order *o);
+    bool getToDelete();
+    void setToDelete(bool value);
+    bool getAddedDuringExecution();
+    void setAddedDuringExecution(bool value);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
@@ -53,6 +58,7 @@ public:
     void issueOrder(); //creates order object and adds to list of orders
     //void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
+    void neutralConquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
     void removeTerritory(Territory* territory);
     friend ostream& operator << (ostream& os, Player& p); //stream insertion operator
@@ -68,6 +74,8 @@ public:
     void resetConquerer();
 
 private:
+    bool addedDuringExecution;
+    bool toDelete;
     string name;
     Hand* hand;
     vector<Territory*> territories; //list of owned territories

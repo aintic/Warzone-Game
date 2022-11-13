@@ -1,8 +1,5 @@
-loadmap digdug
+loadmap LP
 validatemap
 addplayer Daria
 addplayer Linus
-addplayer Alice
-addplayer Hongsuk
-addplayer Mike
 gamestart
