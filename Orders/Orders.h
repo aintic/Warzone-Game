@@ -25,7 +25,7 @@ public:
     // constructor
     Order();
     // parametized constructor
-    Order(Player *currentPl);
+    Order(Player *currentPl, GameEngine *game);
     // destructor
     virtual ~Order() = 0;
     // copy constructor
@@ -60,7 +60,7 @@ public:
 
     Deploy(GameEngine* game);
     // parametized constructor
-    Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
+    Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
     ~Deploy() override;
     // copy constructor
@@ -79,8 +79,7 @@ public:
     Order *clone() const override;
 
 private:
-    // string for type of order
-    const static string _orderType;
+    const static string orderType;
     Territory *targetTer;
     int army_units;
 };
@@ -93,7 +92,7 @@ public:
     Advance(GameEngine* game);
 
     // parametized constructor
-    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
+    Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
     ~Advance() override;
     // copy constructor
@@ -112,7 +111,7 @@ public:
     Order* clone() const override;
 
 private:
-    const static string _orderType;
+    const static string orderType;
     Territory *targetTer;
     Territory *sourceTer;
     int army_units;
@@ -125,7 +124,7 @@ public:
 
     Bomb(GameEngine* game);
     // parametized constructor
-    Bomb(Territory *targetTer, Player *currentPl, GameEngine* game);
+    Bomb(Territory *targetTer, Player *currentPl, GameEngine *game);
     // destructor
     ~Bomb() override;
     // copy constructor
@@ -144,7 +143,7 @@ public:
     Order* clone() const override;
 
 private:
-    const static string _orderType;
+    const static string orderType;
     Territory *targetTer;
 };
 
@@ -155,7 +154,7 @@ public:
 
     Blockade(GameEngine* game);
     // parametized constructor
-    Blockade(Territory *targetTer, Player *currentPl, GameEngine* game);
+    Blockade(Territory *targetTer, Player *currentPl, GameEngine *game);
     // destructor
     ~Blockade() override;
     // copy constructor
@@ -174,7 +173,7 @@ public:
     Order* clone() const override;
 
 private:
-    const static string _orderType;
+    const static string orderType;
     Territory *targetTer;
 };
 
@@ -185,7 +184,7 @@ public:
 
     Airlift(GameEngine* game);
     // parametized constructor
-    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine* game);
+    Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, int army_units, GameEngine *game);
     // destructor
     ~Airlift() override;
     // copy constructor
@@ -204,7 +203,7 @@ public:
     Order* clone() const override;
 
 private:
-    const static string _orderType;
+    const static string orderType;
     Territory *targetTer;
     Territory *sourceTer;
     int army_units;
@@ -217,9 +216,7 @@ public:
 
     Negotiate(GameEngine* game);
     // parametized constructor
-    Negotiate(Player *currentPl, Player *enemyPl, GameEngine* game);
-
-
+    Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game);
     // destructor
     ~Negotiate() override;
     // copy constructor
@@ -238,8 +235,7 @@ public:
     Order* clone() const override;
 
 private:
-    // string for type of order
-    const static string _orderType;
+    const static string orderType;
     Player *enemyPl;
 };
 

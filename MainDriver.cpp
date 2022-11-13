@@ -8,9 +8,9 @@
 
 
 using namespace std;
-
-//int main()
-//{
+//
+int main()
+{
 
     //Assignment 1:
 
@@ -38,5 +38,8 @@ using namespace std;
     //Part 2
     //testStartupPhase();
 
-//}
+    //Part 4
+    //testOrdersExecution();
+
+}
 
