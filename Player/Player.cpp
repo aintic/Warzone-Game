@@ -25,7 +25,7 @@ Player::Player() {
 }
 
 //Constructor with name only
-Player::Player(string name) {
+Player::Player(string name, GameEngine* game) {
     this->playerID = ++uniqueID;
     this->name = name;
     vector<Territory*> t;
@@ -35,6 +35,7 @@ Player::Player(string name) {
     vector<int> f;
     this->_friendlyList = f;
     this->conquerer = false;
+    setGameEngine(game);
 }
 
 
@@ -144,7 +145,7 @@ void Player::issueOrder(Deck *deck) {
         }
 
         Territory *targetTerr = this->toDefend().front(); // owned territory with the lowest number of army units (actual + issued)
-        order_list->add(new Deploy(targetTerr, this, armiesToDeploy)); // deploy armies to the weakest territory
+        order_list->add(new Deploy(targetTerr, this, armiesToDeploy, game)); // deploy armies to the weakest territory
         issuableReinforcementPool -= armiesToDeploy; // decrement player's reinforcement pool
         targetTerr->set_issued_army_units(targetTerr->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
 
@@ -157,7 +158,7 @@ void Player::issueOrder(Deck *deck) {
         Territory *targetTerr = toAttack().at(advanceAttackOrdersIssued);
         Territory *sourceTerr = strongestOwnedNeighbor(targetTerr);
         // send all source territory army units except 1
-        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1, game));
 
         advanceAttackOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
@@ -166,7 +167,7 @@ void Player::issueOrder(Deck *deck) {
         Territory *targetTerr = toDefend().front(); // weakest owned territory
         Territory *sourceTerr = toDefend().back(); // strongest owned territory
         // send half source territory army units
-        order_list->add(new Advance(sourceTerr, targetTerr, this, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2 ));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, game));
 
         advanceDefendOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
@@ -288,7 +289,13 @@ bool Player::getIsDoneIssuingOrders() {
     return this->isDoneIssuingOrders;
 };
 
+GameEngine* Player::setGameEngine(GameEngine* game){
+    this->game = game;
+}
 
+GameEngine* Player::getGameEngine(){
+    return this->game;
+}
 
 
 

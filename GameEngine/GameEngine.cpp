@@ -203,7 +203,8 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 cout << "\n<<Adding the player "<< player_name << ">>" << endl;
 
                 // Add the player
-                this->players.push_back(new Player(player_name));
+
+                this->players.push_back(new Player(player_name, this));
 
                 string effect = "Added player <" + player_name + ">";
                 command->saveEffect(effect);

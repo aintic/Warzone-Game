@@ -679,7 +679,7 @@ void Blockade::execute() {
         // create player called Neutral if there isn't one, add to players list
         // assign target territory to Neutral player
         // remove target territory from current player
-        Player *neutral = new Player("Neutral");
+        Player *neutral = new Player("Neutral", game);
         neutral->addTerritory(targetTer);
         currentPl->removeTerritory(targetTer);
         players.push_back(neutral);
@@ -688,6 +688,7 @@ void Blockade::execute() {
     Notify(this);
 
 }
+
 
 // *****************************************************************************************************************
 // AIRLIFT ORDER

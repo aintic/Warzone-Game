@@ -21,37 +21,30 @@ int main(){
     GameEngine* game = new GameEngine(_observers);
 
 
-    /*
     bool valid_initial_command = false;
     CommandProcessor * processor;
     string file_name = "../CommandProcessing/Commands/part5_text.txt";
     while(!valid_initial_command){
         valid_initial_command = true;
 
-            ifstream file;
+        ifstream file;
 
-            file.open(file_name);
-            if(file.fail()){
-                cout << "File failed to open. please enter a valid file name:" << endl;
-            }
-            else{
-                valid_initial_command = true;
-                cout << "[[Reading from file]]" << endl;
-                processor = new FileCommandProcessorAdapter(file_name, _observers);
-            }
-            file.close();
+        file.open(file_name);
+        if(file.fail()){
+            cout << "File failed to open. please enter a valid file name:" << endl;
         }
+        else{
+            valid_initial_command = true;
+            cout << "[[Reading from file]]" << endl;
+            processor = new FileCommandProcessorAdapter(file_name, _observers);
+        }
+        file.close();
+    }
     game->startupPhase(processor);
 
-    cout<< "\nCommand processor list of saved commands :\n" << *processor<< endl;
 
-    delete game;
 
-    cout<< "See you next time!" << endl;
-    */
-
-    Player* p1 = new Player();
-
+    Player* p1 = new Player("Player22", game);
     OrdersList* ol = new OrdersList(game);
     Order* testDeploy = new Deploy(game);
     Order* testAdvance = new Advance(game);
@@ -65,10 +58,11 @@ int main(){
     p1->getPlayerOrderList()->add(testBomb);
 
 
+
     string valid_map1 = "../Map/Maps/AnnysPiratenwelt.map";
     Map *map = MapLoader::loadMap(valid_map1);
-    Player *p2 = new Player("Player 1");
-    Player *p3 = new Player("Player 2");
+    Player *p2 = new Player("Player 1", game);
+    Player *p3 = new Player("Player 2", game);
     game->map = map;
     game->players.push_back(p2);
     game->players.push_back(p3);
@@ -100,14 +94,7 @@ int main(){
 
     a3->execute();
 
-    }
-
-
-
-
-
-/*
-    //game transition part
+    //Game engine transition part
     State* map_loaded = new startupState(1);
     State* map_validated = new startupState(2);
     State* players_added = new startupState(3);
@@ -116,15 +103,12 @@ int main(){
     game->nextState(map_validated);
     game->nextState(players_added);
 
-    //Orderlist part
 
-    Player* p1 = new Player();
 
-    OrdersList* ol = new OrdersList(game);
-    Order* testDeploy = new Deploy(game);
 
-    p1->setPlayerOrderList(ol);
-    p1->getPlayerOrderList()->add(testDeploy);
+
+
+    }
 
 
 
@@ -134,5 +118,13 @@ int main(){
 
 
 
-}
-*/
+
+
+
+
+
+
+
+
+
+

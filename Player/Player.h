@@ -22,7 +22,7 @@ protected:
     static int uniqueID;
 public:
     Player(); //default constructor
-    Player(string name); //player constructor
+    Player(string name, GameEngine* game); //player constructor
     Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders); //parametrized constructor
     Player(const Player& p); //copy constructor
     ~Player(); //destructor
@@ -65,6 +65,10 @@ public:
     bool getConquerer();
     void resetConquerer();
 
+    GameEngine* setGameEngine(GameEngine* game);
+    GameEngine* getGameEngine();
+
+
 private:
     string name;
     Hand* hand;
@@ -78,4 +82,5 @@ private:
     bool isDoneIssuingOrders;
     vector<int> _friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
+    GameEngine* game;
 };
