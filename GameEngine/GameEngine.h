@@ -31,7 +31,7 @@ class GameEngine {
 
 private:
     class State* currentState;
-    Deck* deck;
+    class Deck* deck;
     CommandProcessor* commandProcessor;
 //    vector<Player*> players;
 //    Map* map;
@@ -54,9 +54,11 @@ public:
     Map* map;
     void startupPhase(CommandProcessor* c);
     void reinforcementPhase();
-    void executeOrdersPhase();
+    bool executeOrdersPhase();
     void mainGameLoop();
     void issueOrderPhase();
+
+    bool hasNeutral = false;
 
     friend class Orders;
 };
