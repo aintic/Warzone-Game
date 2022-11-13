@@ -120,7 +120,7 @@ void testLoggingObserver(){
     delete p3;
 
 
-    p1, p2, p3, d1, b1, a3, game = nullptr;
+    p1, p2, p3, game = nullptr;
     delete _observers;
     _observers = nullptr;
 
