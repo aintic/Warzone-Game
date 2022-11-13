@@ -389,6 +389,10 @@ FileLineReader::~FileLineReader() {
 //*****************************************************************
 // FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
 // get, read, save and validate commands from a file.
+/**
+ *  Default constructor
+ * @param file_name
+ */
 // Default constructor
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name, Observer* _obs){
 
@@ -400,14 +404,21 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name, Obser
 
 
 
-// Copy constructor
+/**
+ * Copy constructor
+ * @param f
+ */
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& f) : CommandProcessor(f){
 
     this->fileLineReader = f.fileLineReader;
     this->file_name = f.file_name;
 }
 
-// Overloading the assignment operator
+/**
+ * Assignment operator
+ * @param f
+ * @return
+ */
 FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator= (const FileCommandProcessorAdapter& f) {
 
     CommandProcessor::operator=(f);
@@ -416,13 +427,18 @@ FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator= (const FileC
     return *this;
 }
 
-// Destructor
+/**
+ * Destructor
+ */
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
     delete this->fileLineReader;
 }
 
 
-// readCommand method adapter
+/**
+ * read command from file
+ * @return
+ */
 Command* FileCommandProcessorAdapter::readCommand() {
 
     cout << "[[Starting readCommand() of the adapter]]" << endl;

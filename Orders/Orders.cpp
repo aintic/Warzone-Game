@@ -3,9 +3,9 @@
 //
 
 #include "Orders.h"
-#include "Player.h"
-#include "Map.h"
-#include "GameEngine.h"
+#include "../Player/Player.h"
+#include "../Map/Map.h"
+#include "../GameEngine/GameEngine.h"
 
 using namespace std;
 

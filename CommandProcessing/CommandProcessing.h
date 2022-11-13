@@ -152,10 +152,7 @@ public:
     bool validate(Command* command, GameEngine* game);
 
 
-private:
-    // Private methods and command list
-    vector<Command*> commands;
-    Observer* logger;
+
     /**
      * @brief Checks if the command is valid in the current game state. If the command is not valid,
      * a corresponding error message is saved in the effect of the command.
@@ -174,7 +171,10 @@ protected:
      */
     void saveCommand(Command*);
 
-
+private:
+    // Private methods and command list
+    vector<Command*> commands;
+    Observer* logger;
 };
 
 //*****************************************************************
@@ -250,18 +250,62 @@ private:
 //*****************************************************************
 // FileCommandProcessorAdapter: Represents the file command processor adapter that gets called by the game engine to
 // get, read, save and validate commands from a file.
+
+/**
+ * FileCommandProcessorAdapter adapts the file reader to act as a command processor
+ */
 class FileCommandProcessorAdapter : public CommandProcessor {
 public:
+    /**
+     * Default constructor
+     * @param file_name
+     */
     FileCommandProcessorAdapter(string file_name, Observer* _obs);
+    /**
+     * Copy constructor
+     */
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter&);
+
+    /**
+     * Assignment operator
+     * @return
+     */
     FileCommandProcessorAdapter& operator= (const FileCommandProcessorAdapter&);
+
+    /**
+     * Destructor
+     */
     ~FileCommandProcessorAdapter();
+
+    /**
+     * Read command from file
+     * @return
+     */
     Command* readCommand();
+
+    /**
+     * stream insertion operator
+     * @return
+     */
     friend ostream& operator<< (ostream&, const vector<string>);
+
+    /**
+     * Get Command
+     * @param game
+     * @return
+     */
     Command* getCommand(GameEngine* game) override;
 
 private:
+
+    /**
+     * File line reader pointer
+     */
     FileLineReader* fileLineReader;
+
+    /**
+     * File name
+     */
     string file_name;
     Observer* logger;
 
