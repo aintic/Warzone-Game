@@ -3,3 +3,4 @@ validatemap
 addplayer Daria
 addplayer Linus
 gamestart
+quit
