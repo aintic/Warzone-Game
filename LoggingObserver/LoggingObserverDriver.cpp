@@ -111,6 +111,7 @@ void testLoggingObserver(){
     State* players_added = new startupState(3);
     State* assignReinforcement = new reinforcementState();
     State* executeOrder = new executeOrdersState();
+    State* issueOrder = new issueOrdersState();
     State* win = new endState();
 
     game->nextState(map_loaded);
@@ -118,6 +119,7 @@ void testLoggingObserver(){
     game->nextState(players_added);
     game->nextState(assignReinforcement);
     game->nextState(executeOrder);
+    game->nextState(issueOrder);
     game->nextState(win);
 
 
