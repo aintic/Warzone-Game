@@ -104,7 +104,43 @@ int main(){
     game->nextState(players_added);
 
 
+    delete game;
+    delete p1;
+    delete p2;
+    delete p3;
+    delete d1;
+    delete b1;
+    delete a3;
 
+    p1, p2, p3, d1, b1, a3, game = nullptr;
+    delete _observers;
+    _observers = nullptr;
+
+    delete ol;
+    delete testDeploy;
+    delete testAdvance;
+    delete testBomb;
+    delete testBlockade;
+    delete testAirlift;
+    delete testNegotiate;
+    delete processor;
+
+    delete map_loaded;
+    delete map_validated;
+    delete players_added;
+
+    map_loaded = nullptr;
+    map_validated = nullptr;
+    players_added = nullptr;
+
+    testDeploy = nullptr;
+    testAdvance = nullptr;
+    testBomb = nullptr;
+    testBlockade = nullptr;
+    testAirlift = nullptr;
+    testNegotiate = nullptr;
+    ol = nullptr;
+    processor = nullptr;
 
 
 
