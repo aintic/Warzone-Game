@@ -310,9 +310,6 @@ GameEngine* Player::setGameEngine(GameEngine* game){
     this->game = game;
 }
 
-GameEngine* Player::getGameEngine(){
-    return this->game;
-}
 
 
 

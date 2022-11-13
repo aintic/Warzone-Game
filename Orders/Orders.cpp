@@ -23,7 +23,7 @@ const string Negotiate::orderType = "Negotiate";
 /**
  *  Constructor for Order
  */
-Order::Order() {
+Order::Order(){
     this->currentPl = nullptr;
     this->game = nullptr;
 };
@@ -45,7 +45,7 @@ Order::~Order() = default;
 /**
  *  Copy constructor for Order
  */
-Order::Order(const Order &o) {
+Order::Order(const Order &o){
     this->currentPl = o.currentPl;
     this->game = o.game;
 }
@@ -132,6 +132,7 @@ Order* Deploy::clone() const {
  * @return deploy order
  */
 Deploy& Deploy::operator = (const Deploy& o) {
+
     Order::operator = (o);
     targetTer = o.targetTer;
     army_units = o.army_units;
@@ -860,37 +861,38 @@ Negotiate::Negotiate(GameEngine* game) : Order() {
 Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Order(currentPl, game) {
     this->enemyPl = enemyPl;
     this->Attach(game->_observers);
-
+}
 /**
  * Default destructor for Negotiate
  */
-Negotiate::~Negotiate() = default;
+    Negotiate::~Negotiate() =
+    default;
 
 /**
  *  Copy constructor for Negotiate
  */
-Negotiate::Negotiate(const Negotiate &o) : Order(o) {
-    this->enemyPl = o.enemyPl;
-}
-
+    Negotiate::Negotiate(
+    const Negotiate &o){
+        this->enemyPl = o.enemyPl;
+    }
 /**
  * Clone method - invokes copy constructor
  * @return Negotiate - cloned order
  */
-Order* Negotiate::clone() const {
-    return new Negotiate(*this);
-}
+    Order *Negotiate::clone() const {
+        return new Negotiate(*this);
+    }
 
 /**
  * Assignment operator for Negotiate
  * @param o - Negotiate order
  * @return Negotiate order
  */
-Negotiate& Negotiate::operator = (const Negotiate& o) {
-    Order::operator = (o);
-    enemyPl = o.enemyPl;
-    return *this;
-}
+    Negotiate &Negotiate::operator=(const Negotiate &o) {
+        Order::operator=(o);
+        enemyPl = o.enemyPl;
+        return *this;
+    }
 
 /**
  * Stream insertion operator for Negotiate
@@ -898,61 +900,61 @@ Negotiate& Negotiate::operator = (const Negotiate& o) {
  * @param out - ostream object
  * @return ostream object
  */
-ostream& operator << (ostream& out,  const Negotiate& o) {
-    out << o.getOrderType();
-    return out;
-}
+    ostream &operator<<(ostream &out, const Negotiate &o) {
+        out << o.getOrderType();
+        return out;
+    }
 
 /**
  * Getter for order type
  * @return constant string for type of order
  */
-string Negotiate::getOrderType() const {
-    return orderType;
-}
+    string Negotiate::getOrderType() const {
+        return orderType;
+    }
 
 /**
  * Validate Negotiate
  * @return boolean
  */
-bool Negotiate::validate() const {
-    cout << "Validating " << *this << " order. \n";
-    // return false, if the enemy player is also the current player
-    if (enemyPl->getPlayerID() == currentPl->getPlayerID()) {
-        cout << "You cannot negotiate with yourself." << endl;
-        return false;
+    bool Negotiate::validate() const {
+        cout << "Validating " << *this << " order. \n";
+        // return false, if the enemy player is also the current player
+        if (enemyPl->getPlayerID() == currentPl->getPlayerID()) {
+            cout << "You cannot negotiate with yourself." << endl;
+            return false;
+        }
+            // return false, if the enemy player is already a friendly player
+        else if (currentPl->isFriendly(enemyPl->getPlayerID())) {
+            cout << "You already negotiated with this player." << endl;
+            return false;
+        }
+            // return true for valid order
+        else {
+            cout << "Order validated." << endl;
+            return true;
+        }
     }
-    // return false, if the enemy player is already a friendly player
-    else if (currentPl->isFriendly(enemyPl->getPlayerID())) {
-        cout << "You already negotiated with this player." << endl;
-        return false;
-    }
-    // return true for valid order
-    else {
-        cout << "Order validated." << endl;
-        return true;
-    }
-}
 
 /**
  * Execute Negotiate
  */
-void Negotiate::execute() {
-    // if order is valid,
-    if (validate()) {
-        cout << "Executing " << *this << " order. \n";
-        // add each player to the other player's friendly list
-        currentPl->addFriendly(enemyPl->getPlayerID());
-        enemyPl->addFriendly(currentPl->getPlayerID());
-        cout << *this << " order executed. \n" << endl;
-    }
-    // if order is invalid, display message
-    else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
-    }
-    Notify(this);
+    void Negotiate::execute() {
+        // if order is valid,
+        if (validate()) {
+            cout << "Executing " << *this << " order. \n";
+            // add each player to the other player's friendly list
+            currentPl->addFriendly(enemyPl->getPlayerID());
+            enemyPl->addFriendly(currentPl->getPlayerID());
+            cout << *this << " order executed. \n" << endl;
+        }
+            // if order is invalid, display message
+        else {
+            cout << "Invalid order. Order will not be executed.\n" << endl;
+        }
+        Notify(this);
 
-}
+    }
 
 // *****************************************************************************************************************
 // ORDERSLIST
@@ -961,39 +963,41 @@ void Negotiate::execute() {
 /**
  * Constructor for OrdersList
  */
-OrdersList::OrdersList() = default;
+    OrdersList::OrdersList() = default;
 
-OrdersList::OrdersList(GameEngine* game){
-    this->Attach(game->_observers);
-}
+    OrdersList::OrdersList(GameEngine* game)
+    {
+        this->Attach(game->_observers);
+    }
 /**
  * Destructor for OrdersList
  */
-OrdersList::~OrdersList(){
-    int size = _ordersList.size();
+    OrdersList::~OrdersList()
+    {
+        int size = _ordersList.size();
 
-    for (int i = 0; i < size; i++) {
-        delete _ordersList[i];
+        for (int i = 0; i < size; i++) {
+            delete _ordersList[i];
+        }
+        _ordersList.clear();
+    };
+
+    Order *OrdersList::getOrder(int pos) const {
+        return this->_ordersList[pos];
     }
-    _ordersList.clear();
-};
-
-Order* OrdersList::getOrder(int pos) const {
-    return this->_ordersList[pos];
-}
 
 /**
  * Copy constructor for OrdersList - makes deep copy
  * @param ol - OrdersList object
  */
-OrdersList::OrdersList(const OrdersList& ol) {
-    int size = ol._ordersList.size();
+    OrdersList::OrdersList(const OrdersList &ol) {
+        int size = ol._ordersList.size();
 
-    _ordersList = vector<Order*>(size);
-    for (int i = 0; i < size; i++) {
-        _ordersList[i] = ol._ordersList[i]->clone();
+        _ordersList = vector<Order *>(size);
+        for (int i = 0; i < size; i++) {
+            _ordersList[i] = ol._ordersList[i]->clone();
+        }
     }
-}
 
 /**
  * Stream insertion operator for OrdersList
@@ -1001,147 +1005,147 @@ OrdersList::OrdersList(const OrdersList& ol) {
  * @param out - ostream object
  * @return ostream object
  */
-ostream& operator << (ostream& out, const OrdersList& ol) {
-    int size = ol._ordersList.size();
-    for (int i = 0; i < size; i++) {
-        out << "[ " << *ol._ordersList[i] << " ] \n";
+    ostream &operator<<(ostream &out, const OrdersList &ol) {
+        int size = ol._ordersList.size();
+        for (int i = 0; i < size; i++) {
+            out << "[ " << *ol._ordersList[i] << " ] \n";
+        }
+        return out;
     }
-    return out;
-}
 
 /**
  * Assignment operator for OrdersList
  * @param ol - OrdersList object
  * @return OrdersList object
  */
-OrdersList& OrdersList::operator=(const OrdersList& ol) {
-    // check self-assignment
-    if (this == &ol)
+    OrdersList &OrdersList::operator=(const OrdersList &ol) {
+        // check self-assignment
+        if (this == &ol)
+            return *this;
+
+        // free memory of original orders list
+        for (int i = 0; i < _ordersList.size(); i++) {
+            delete _ordersList[i];
+        }
+
+        int size = ol._ordersList.size();
+        // set list size equal to target orders list
+        _ordersList = vector<Order *>(size);
+        // clone deep copy of target orders list
+        for (int i = 0; i < size; i++) {
+            _ordersList[i] = ol._ordersList[i]->clone();
+        }
+
         return *this;
-
-    // free memory of original orders list
-    for (int i = 0; i < _ordersList.size(); i++) {
-        delete _ordersList[i];
     }
-
-    int size = ol._ordersList.size();
-    // set list size equal to target orders list
-    _ordersList = vector<Order*>(size);
-    // clone deep copy of target orders list
-    for (int i = 0; i < size; i++) {
-        _ordersList[i] = ol._ordersList[i]->clone();
-    }
-
-    return *this;
-}
 
 /**
  * Method to add an order to the player's orders' list
  * @param o - order object
  */
-void OrdersList::add(Order* o) {
-    // add new order to vector
-    _ordersList.push_back(o);
-    Notify(this);
+    void OrdersList::add(Order *o) {
+        // add new order to vector
+        _ordersList.push_back(o);
+        Notify(this);
 
-}
+    }
 
 /**
  * Method to remove an order from the player's orders' list
  * @param pos - an int for the position of the order to be removed
  */
-void OrdersList::remove(int pos) {
-    int size = _ordersList.size();
+    void OrdersList::remove(int pos) {
+        int size = _ordersList.size();
 
-    if (size == 0)
-        cout << "No order in list." << endl;
-    else if (pos < 1 || pos > size)
-        cout << "Invalid order position." << endl;
-    else {
-        // delete object
-        delete _ordersList[pos-1];
-        // resize vector
-        _ordersList.erase(_ordersList.begin()+pos-1);
+        if (size == 0)
+            cout << "No order in list." << endl;
+        else if (pos < 1 || pos > size)
+            cout << "Invalid order position." << endl;
+        else {
+            // delete object
+            delete _ordersList[pos - 1];
+            // resize vector
+            _ordersList.erase(_ordersList.begin() + pos - 1);
+        }
     }
-}
 
 /**
  * Method to move an order from one position to another in the player's orders' list
  * @param currentPos - an int for current position of the order
  * @param newPos - an int for the new position of the order
  */
-void OrdersList::move(int currentPos, int newPos) {
-    int size = _ordersList.size();
+    void OrdersList::move(int currentPos, int newPos) {
+        int size = _ordersList.size();
 
-    if (size == 0)
-        cout << "No order to move." << endl;
-    else if (size == 1)
-        cout << "Cannot swap with 1 order in list." << endl;
-    else if (currentPos < 1 || newPos < 1 || currentPos > size || newPos > size)
-        cout << "Invalid order position." << endl;
-    else {
-        // temp pointer to order at current position
-        Order* temp = _ordersList[currentPos-1];
-        // move the order at target position to current position
-        _ordersList[currentPos-1] = _ordersList[newPos-1];
-        // move the order at current position to target position
-        _ordersList[newPos-1] = temp;
+        if (size == 0)
+            cout << "No order to move." << endl;
+        else if (size == 1)
+            cout << "Cannot swap with 1 order in list." << endl;
+        else if (currentPos < 1 || newPos < 1 || currentPos > size || newPos > size)
+            cout << "Invalid order position." << endl;
+        else {
+            // temp pointer to order at current position
+            Order *temp = _ordersList[currentPos - 1];
+            // move the order at target position to current position
+            _ordersList[currentPos - 1] = _ordersList[newPos - 1];
+            // move the order at current position to target position
+            _ordersList[newPos - 1] = temp;
+        }
     }
-}
 
 /**
  * Method to execute then remove orders sequentially from player's orders' list
  */
-void OrdersList::executeList() {
-    int size = _ordersList.size();
+    void OrdersList::executeList() {
+        int size = _ordersList.size();
 
-    if (size == 0)
-        cout << "No order to execute." << endl;
-    else {
-        // execute each order in vector then delete order
-        for (int i = 0; i < size; i++) {
-            _ordersList[i]->execute();
-            delete _ordersList[i];
+        if (size == 0)
+            cout << "No order to execute." << endl;
+        else {
+            // execute each order in vector then delete order
+            for (int i = 0; i < size; i++) {
+                _ordersList[i]->execute();
+                delete _ordersList[i];
+            }
+            // empty vector of all entries (delete the pointers)
+            _ordersList.clear();
+            // print end of execution
+            cout << "\nExecuted all orders. List is now empty." << endl;
         }
-        // empty vector of all entries (delete the pointers)
-        _ordersList.clear();
-        // print end of execution
-        cout << "\nExecuted all orders. List is now empty." << endl;
     }
-}
 
 //Method to execute a single order
 //maybe make it boolean? so if any more orders to execute it returns true
-void OrdersList::executeOrder() {
-    int size = _ordersList.size();
+    void OrdersList::executeOrder() {
+        int size = _ordersList.size();
 
-    _ordersList.front()->execute();
-    delete _ordersList.front();
-    _ordersList.erase(_ordersList.begin());
-    cout << "New size of orderlist : " << size << " -> " << _ordersList.size() << endl;
-}
+        _ordersList.front()->execute();
+        delete _ordersList.front();
+        _ordersList.erase(_ordersList.begin());
+        cout << "New size of orderlist : " << size << " -> " << _ordersList.size() << endl;
+    }
 
 
 //Make sure that it's never called on empty orderList
-Order* OrdersList::getTopOrder() {
+    Order *OrdersList::getTopOrder() {
 //    if(!_ordersList.empty()){
         cout << "Top order : ";
-        Order* o = _ordersList.front();
+        Order *o = _ordersList.front();
         cout << *o << endl;
         return o;
 //    }
-}
+    }
 
-vector<Order *> OrdersList::getOrderList() {
-    return _ordersList;
-}
+    vector<Order *> OrdersList::getOrderList() {
+        return _ordersList;
+    }
 
-string Order::stringToLog()
-{
-    return "Order executed: " + getOrderType();
-}
-string OrdersList::stringToLog() {
-    string lastOrder = _ordersList.back()->getOrderType();
+    string Order::stringToLog() {
+        return "Order executed: " + getOrderType();
+    }
+    string OrdersList::stringToLog() {
+        string lastOrder = _ordersList.back()->getOrderType();
 
-    return "Order added: " + lastOrder;
-}
+        return "Order added: " + lastOrder;
+    }
+

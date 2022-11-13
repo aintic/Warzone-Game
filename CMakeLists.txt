@@ -3,12 +3,12 @@ project(COMP_345_A2_Main)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(../COMP-345-A2-Main/Cards)
-include_directories(../COMP-345-A2-Main/CommandProcessing)
-include_directories(../COMP-345-A2-Main/GameEngine)
-include_directories(../COMP-345-A2-Main/Map)
-include_directories(../COMP-345-A2-Main/Orders)
-include_directories(../COMP-345-A2-Main/Player)
+include_directories(../COMP-345-START/Cards)
+include_directories(../COMP-345-START/CommandProcessing)
+include_directories(../COMP-345-START/GameEngine)
+include_directories(../COMP-345-START/Map)
+include_directories(../COMP-345-START/Orders)
+include_directories(../COMP-345-START/Player)
 
 add_executable(COMP_345_A2_Main
         ../COMP-345-START/Cards/Cards.cpp

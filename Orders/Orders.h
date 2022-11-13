@@ -7,13 +7,15 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include "../LoggingObserver/LoggingObserver.h"
 #include <stdlib.h>
 #include <time.h>
+#include "../LoggingObserver/LoggingObserver.h"
 
 class Territory;
 class Player;
 class GameEngine;
+
+
 using namespace std;
 
 using namespace std;

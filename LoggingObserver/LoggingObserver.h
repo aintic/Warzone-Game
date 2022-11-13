@@ -6,11 +6,6 @@
 #include <vector>
 #include <list>
 
-#ifndef COMP_345NEW_LOGGINGOBSERVER_H
-#define COMP_345NEW_LOGGINGOBSERVER_H
-
-#endif //COMP_345NEW_LOGGINGOBSERVER_H
-
 
 
 using namespace std;
