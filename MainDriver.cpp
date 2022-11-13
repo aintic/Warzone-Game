@@ -43,7 +43,7 @@ int main()
     //testOrdersExecution();
 
     //Part 5
-    testLoggingObserver();
+    //testLoggingObserver();
 
 }
 

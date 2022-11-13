@@ -168,7 +168,7 @@ bool Deploy::validate() const {
     cout << "Validating " << *this << " order." << endl;
     // return false, if the target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
-        cout << "You cannot deploy to territories you don't own." << endl;
+        cout << "Cannot deploy to territories you don't own." << endl;
         return false;
     }
     // return false, if # army units to deploy > # army units available in reinforcement pool
@@ -183,7 +183,7 @@ bool Deploy::validate() const {
     }
     // return true for valid order
     else {
-        cout << "Order validated." << endl;
+        cout << *this << " order validated." << endl;
         return true;
     }
 }
@@ -194,16 +194,17 @@ bool Deploy::validate() const {
 void Deploy::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
+        cout << "Army units in " << targetTer->get_name() << " increased from " << targetTer->get_army_units();
         // take army units from reinforcement pool
         currentPl->setReinforcementPool(currentPl->getReinforcementPool() - army_units);
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
-        cout << *this << " order executed.\n" << endl;
+         cout << " to " << targetTer->get_army_units() << "." << endl;
+         cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
@@ -309,12 +310,12 @@ bool Advance::validate() const {
     cout << "Validating " << *this << " order." << endl;
     // return false, if source territory doesn't belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
-        cout << "You must advance from a territory you own." << endl;
+        cout << "Must advance from a territory you own." << endl;
         return false;
     }
     // return false, if the source and target territory are the same
     else if (sourceTer->get_id() == targetTer->get_id()) {
-        cout << "The source territory must differ from target territory." << endl;
+        cout << "Source and target territories cannot be the same." << endl;
         return false;
     }
     // return false, if # army units to advance > # available in source territory
@@ -338,11 +339,12 @@ bool Advance::validate() const {
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
                     // return true, target territory IS adjacent
-                    cout << "Order validated." << endl;
+                    cout << *this << " order validated." << endl;
                     return true;
                 }
             }
         // return false, target territory IS NOT adjacent
+        cout << "Cannot attack a non-adjacent territory." << endl;
         return false;
     }
 }
@@ -353,9 +355,9 @@ bool Advance::validate() const {
 void Advance::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
         // if both source and target territories belong to the current player (checked source territory in validate())
         if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
+            cout << "Moved " << army_units << " army units from " << sourceTer->get_name() << " to " << targetTer->get_name() << "." << endl;
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             // move army units to target territory
@@ -365,10 +367,13 @@ void Advance::execute() {
         else if (targetTer->get_army_units() == 0) {
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
-            cout << "You have conquered this territory!" << endl;
+            cout << "You have conquered " << targetTer->get_name() << "!" << endl;
+            cout << targetTer->get_name() << " now has " << army_units << " army units." << endl;
+            cout << targetTer->get_name() << " was owned by " << targetTer->get_owner()->getName() << " and is now owned by ";
             // current player gains target territory, enemy player loses it
             // army units get added to target territory
             currentPl->conquerTerritory(targetTer);
+            cout << targetTer->get_owner()->getName() << "." << endl;
             targetTer->set_army_units(army_units);
         }
         // if target territory belongs to enemy player and has >0 army units
@@ -410,23 +415,29 @@ void Advance::execute() {
                 cout << "You have conquered this territory!" << endl;
                 // current player gains target territory, enemy player loses it
                 // surviving army units get added to target territory
+                cout << "You have conquered " << targetTer->get_name() << "!" << endl;
+                cout << targetTer->get_name() << " now has " << survivingAttackers << " army units." << endl;
+                cout << targetTer->get_name() << " was owned by " << targetTer->get_owner()->getName() << " and is now owned by ";
                 currentPl->conquerTerritory(targetTer);
+                cout << targetTer->get_owner()->getName() << "." << endl;
                 targetTer->set_army_units(survivingAttackers);
             }
             // if current player cannot conquer territory
             else {
-                cout << "You could not conquer this territory!" << endl;
                 // move surviving army units back to source territory
                 // reduce army units in target territory to surviving defenders
+                cout << "You could not conquer " << targetTer->get_name() << "!" << endl;
+                cout << survivingAttackers << " army units retreated to " << sourceTer->get_name() << "." << endl;
+                cout << targetTer->get_name() << " now has " << survivingDefenders << " army units." << endl;
                 sourceTer->set_army_units(sourceTer->get_army_units() + survivingAttackers);
                 targetTer->set_army_units(survivingDefenders);
             }
         }
-        cout << *this << " order executed. \n" << endl;
+        cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
@@ -521,12 +532,12 @@ bool Bomb::validate() const {
     cout << "Validating " << *this << " order." << endl;
     // return false, if the target territory belongs to current player
     if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
-        cout << "You cannot bomb your own territory." << endl;
+        cout << "Cannot bomb your own territory." << endl;
         return false;
     }
     // return false, if the target territory belongs to a friendly player
     else if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
-        cout << "You cannot attack this player until next turn." << endl;
+        cout << "Cannot attack this player until next turn." << endl;
         return false;
     }
     // return false, if the target territory has no army unit
@@ -543,12 +554,13 @@ bool Bomb::validate() const {
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
                     // return true, target territory IS adjacent
-                    cout << "Order validated." << endl;
+                    cout << *this << " order validated." << endl;
                     return true;
                 }
             }
         }
         // return false, target territory IS NOT adjacent
+        cout << "Target territory must be adjacent to one of your own territories." << endl;
         return false;
     }
 }
@@ -559,14 +571,14 @@ bool Bomb::validate() const {
 void Bomb::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
         // halve the army units in target territory
         targetTer->set_army_units(targetTer->get_army_units() / 2);
-        cout << *this << " order executed. \n" << endl;
+        cout << targetTer->get_name() << " was bombed! " << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units." << endl;
+        cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
@@ -666,7 +678,7 @@ bool Blockade::validate() const {
     }
     // return true if order is valid
     else {
-        cout << "Order validated." << endl;
+        cout << *this << " order validated." << endl;
         return true;
     }
 }
@@ -677,7 +689,7 @@ bool Blockade::validate() const {
 void Blockade::execute() {
     // if order is valid
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
+        cout << targetTer->get_name() << " has " << targetTer->get_army_units() << " army units." << endl;
         // double the army units in target territory
         targetTer->set_army_units(targetTer->get_army_units() * 2);
 
@@ -687,9 +699,8 @@ void Blockade::execute() {
             // remove target territory from current player and exit
             if (p->getName().compare("Neutral") == 0) {
                 p->neutralConquerTerritory(targetTer);
-//                p->addTerritory(targetTer);
-//                currentPl->removeTerritory(targetTer);
-                cout << *this << " order executed. \n" << endl;
+                cout << *this << " order executed." << endl;
+                cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
                 return;
             }
         }
@@ -698,14 +709,14 @@ void Blockade::execute() {
         // remove target territory from current player
         Player *neutral = new Player("Neutral", game);
         neutral->neutralConquerTerritory(targetTer);
-//        neutral->addTerritory(targetTer);
-//        currentPl->removeTerritory(targetTer);
         game->setPlayers(neutral);
-        cout << *this << " order executed. \n" << endl;
+        cout << *this << " order executed." << endl;
+        cout << "Player Neutral created." << endl;
+        cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
@@ -817,7 +828,7 @@ bool Airlift::validate() const {
     }
     // return false, if the source and target territory are the same
     else if (sourceTer->get_id() == targetTer->get_id()) {
-        cout << "The source territory must differ from target territory." << endl;
+        cout << "Source and target territories cannot be the same." << endl;
         return false;
     }
     // return false if # army units requested for airlift > # army units in source territory
@@ -832,7 +843,7 @@ bool Airlift::validate() const {
     }
     // return true for valid order
     else {
-        cout << "Order validated." << endl;
+        cout << *this << " order validated." << endl;
         return true;
     }
 }
@@ -843,16 +854,16 @@ bool Airlift::validate() const {
 void Airlift::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
         // take army units from source territory
         sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
-        cout << *this << " order executed. \n" << endl;
+        cout << "Moved " << army_units << " army units from " << sourceTer->get_name() << " to " << targetTer->get_name() << "." << endl;
+        cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
@@ -956,7 +967,7 @@ bool Negotiate::validate() const {
     }
     // return true for valid order
     else {
-        cout << "Order validated." << endl;
+        cout << *this << " order validated." << endl;
         return true;
     }
 }
@@ -967,15 +978,15 @@ bool Negotiate::validate() const {
 void Negotiate::execute() {
     // if order is valid,
     if (validate()) {
-        cout << "Executing " << *this << " order." << endl;
         // add each player to the other player's friendly list
         currentPl->addFriendly(enemyPl->getPlayerID());
         enemyPl->addFriendly(currentPl->getPlayerID());
-        cout << *this << " order executed. \n" << endl;
+        cout << "Player" << currentPl->getName() << " is now friendly with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
+        cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
-        cout << "Invalid order. Order will not be executed.\n" << endl;
+        cout << "Invalid order. Order will not be executed." << endl;
     }
     Notify(this);
 
