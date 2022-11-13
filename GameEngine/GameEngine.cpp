@@ -291,7 +291,6 @@ void GameEngine::startupPhase(CommandProcessor* c) {
     }while(this->getCurrentState()->getStateName() != "Assign reinforcement");
 
     mainGameLoop();
-
 }
 
 void GameEngine::reinforcementPhase() {
@@ -302,9 +301,8 @@ void GameEngine::reinforcementPhase() {
             int continentBonus = map->allContinentsBonus(p);
             cout << "continent bonus : " << continentBonus << endl;
             int reinforcementPool = max(armyUnits + map->allContinentsBonus(p), 3) + p->getReinforcementPool();
-            cout << "reinforcement : " << reinforcementPool << endl;
-            p->setReinforcementPool(max(armyUnits + map->allContinentsBonus(p), 3));
-            cout << "Player: " << p->getPlayerID() << " got " << p->getReinforcementPool() <<
+            p->setReinforcementPool(reinforcementPool);
+            cout << "Player: " << p->getName() << " got " << p->getReinforcementPool() <<
                  " armies during the reinforcement phase!\n" << endl;
     }
     this->nextState(new issueOrdersState());
@@ -334,73 +332,24 @@ bool GameEngine::executeOrdersPhase() {
     do {
         allOrdersDone = true;
         for(int i = 0; i < players.size(); i++){
-            if(!p->getToDelete()){
-                cout << "start reaches here" << endl;
-                cout << "player id:" << p->getPlayerID() << endl;
-                if (!p->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
-                    cout << "Checking next order of player " << p->getPlayerID() << endl;
-                    p->getPlayerOrderList()->executeOrder(); //executes deploy order
+                cout << "player id:" << players[i]->getPlayerID() << endl;
+                if (!players[i]->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
+                    cout << "Checking next order of player " << players[i]->getPlayerID() << " called " << players[i]->getName() << endl;
+                    players[i]->getPlayerOrderList()->executeOrder(); //executes deploy order
                     allOrdersDone = false;
-                    cout << "Executed order of player " << p->getPlayerID() << "\n\n";
+                    cout << "Executed order of player " << players[i]->getPlayerID() << "\n\n";
                 }
-                cout << "reaches here" << endl;
                 //checks if player left with no territories
-                for(Player *p2 : players){
-                    //if(p2->getName() != "Neutral"){
-                    if(p2->getNumTerritories() == 0){
-                        cout << "PLayer to be deleted " << *p2 << endl;
-                        p2->setToDelete(true);
-                        //delete p2;
-                    }
-                    //int size = (this->hasNeutral ? 2 : 1);
-//                        if(players.size() == 1){
-//                            cout << "Only one player standing" << endl;
-//                            this->nextState(new endState());
-//                            return false;
-//                        }
-                    //}
+            for(int j = 0; j < players.size(); j++){
+                if(players[j]->getNumTerritories() == 0){
+                    cout << "PLayer to be deleted " << *players[j] << endl;
+                    delete players[j];
                 }
-                cout << "or reaches here" << endl;
-                //}
-            }
-
-        }
-//        for (Player *p: players) {
-//            if(!p->getToDelete()){
-//            cout << "start reaches here" << endl;
-//            cout << "player id:" << p->getPlayerID() << endl;
-//                if (!p->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
-//                    cout << "Checking next order of player " << p->getPlayerID() << endl;
-//                    p->getPlayerOrderList()->executeOrder(); //executes deploy order
-//                    allOrdersDone = false;
-//                    cout << "Executed order of player " << p->getPlayerID() << "\n\n";
-//                }
-//                cout << "reaches here" << endl;
-//                //checks if player left with no territories
-//                for(Player *p2 : players){
-//                    //if(p2->getName() != "Neutral"){
-//                        if(p2->getNumTerritories() == 0){
-//                            cout << "PLayer to be deleted " << *p2 << endl;
-//                            p2->setToDelete(true);
-//                            //delete p2;
-//                        }
-//                        //int size = (this->hasNeutral ? 2 : 1);
-////                        if(players.size() == 1){
-////                            cout << "Only one player standing" << endl;
-////                            this->nextState(new endState());
-////                            return false;
-////                        }
-//                   //}
-//                }
-//                cout << "or reaches here" << endl;
-//            //}
-//            }
-//        cout << "and reaches here" << endl;
-//        }
-        for(Player *p : players){
-            cout << "Player being deleted" << endl;
-            if(p->getToDelete()){
-                delete p;
+                if(players.size() == 1){
+                    cout << "Only one player standing" << endl;
+                    this->nextState(new endState());
+                    return false;
+                }
             }
         }
         if(players.size() == 1){
@@ -411,13 +360,11 @@ bool GameEngine::executeOrdersPhase() {
     } while (!allOrdersDone);
 
     for (Player *p : players) {
-        //if(p->getName() != "Neutral"){
             p->resetFriendlyList();
             if (p->getConquerer()) {
                 deck->draw(*p);
                 p->resetConquerer();
             }
-        //}
     }
     GameEngine::turn++;
     this->nextState(new reinforcementState());

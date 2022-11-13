@@ -13,7 +13,7 @@ void testPlayers() {
     GameEngine* game = new GameEngine;
     Player *p1 = new Player("player1", game);
     cout << p1->getPlayerID() << endl;
-    Player *p2 = new Player("player1", game);
+    Player *p2 = new Player("player2", game);
     cout << p2->getPlayerID() << endl;
 
     //Player *p1 = new Player("Player1", vector<Territory*>& territories, Hand* hand, OrdersList* orders, GameEngine *game);

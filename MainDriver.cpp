@@ -18,7 +18,7 @@ int main()
 	  //testLoadMaps();
 
     // Player
-    testPlayers();
+    //testPlayers();
 
     //Orders list
     //testOrdersList();
@@ -33,7 +33,7 @@ int main()
     //Assignment 2:
 
     //Part 1
-    //testCommandProcessor();
+    testCommandProcessor();
 
     //Part 2
     //testStartupPhase();

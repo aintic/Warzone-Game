@@ -215,7 +215,7 @@ void Player::issueOrder() {
         Territory *targetTerr = toAttack().at(advanceAttackOrdersIssued);
         Territory *sourceTerr = strongestOwnedNeighbor(targetTerr);
         // send all source territory army units except 1
-        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units() - 1, game));
+        order_list->add(new Advance(sourceTerr, targetTerr, this, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), game));
 
         advanceAttackOrdersIssued++; // increment orders issued
         cout << *this << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
