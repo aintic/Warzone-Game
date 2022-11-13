@@ -16,8 +16,8 @@ void testLoggingObserver(){
 
     cout << "testLoggingObserver executed" << endl;
 
-    Observer* _observers = new LogObserver();
-
+    Observer* _observers = new LogObserver(); //creating _observer
+    //Command and CommandProcessor test
     GameEngine* game = new GameEngine(_observers);
 
 
@@ -42,6 +42,7 @@ void testLoggingObserver(){
     }
     game->startupPhase(processor);
 
+    //Order and Order list test
     Player* p1 = new Player("Player1", game);
     OrdersList* ol = new OrdersList(game);
     Order* testDeploy = new Deploy(game);
