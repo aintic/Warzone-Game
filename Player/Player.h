@@ -23,8 +23,8 @@ protected:
     static int uniqueID;
 public:
     Player(); //default constructor
-    Player(string name, GameEngine* game); //player constructor
     Player(string name, vector<Territory*>& territories, Hand* hand, OrdersList* orders, GameEngine *game); //parametrized constructor
+    Player(string name, GameEngine* game); //player constructor
     Player(const Player& p); //copy constructor
     ~Player(); //destructor
     Player& operator = (const Player& p); //assignment operator
@@ -72,6 +72,7 @@ public:
     // method to check whether a player have conquered a territory during this turn
     bool getConquerer();
     void resetConquerer();
+
 
 private:
     bool addedDuringExecution;

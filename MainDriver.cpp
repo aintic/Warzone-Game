@@ -4,11 +4,12 @@
 #include "Player/PlayerDriver.h"
 #include "GameEngine/GameEngineDriver.h"
 #include "CommandProcessing/CommandProcessingDriver.h"
+#include "LoggingObserver/LoggingObserverDriver.h"
 
 
 
 using namespace std;
-//
+
 int main()
 {
 
@@ -40,6 +41,9 @@ int main()
 
     //Part 4
     //testOrdersExecution();
+
+    //Part 5
+    testLoggingObserver();
 
 }
 

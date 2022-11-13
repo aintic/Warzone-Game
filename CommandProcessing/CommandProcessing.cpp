@@ -14,13 +14,23 @@ Command::Command() {
     this->typed_command = "";
 }
 
+Command::Command(Observer* _obs) {
+    this->typed_command = "";
+    this->Attach(_obs);
+    logger = _obs;
+}
+
+
 /**
  * @brief Constructor: Construct a new Command:: Command object
  *
  * @param typed_command
  */
-Command::Command(string typed_command) {
+Command::Command(string typed_command, Observer* _obs) {
     this->typed_command = typed_command;
+    this->Attach(_obs);
+    logger = _obs;
+
 }
 
 /**
@@ -90,6 +100,7 @@ void Command::set_typed_command(std::string typed_command)
 void Command::saveEffect(std::string command_effect) {
     this->set_command_effect(command_effect);
     cout<< "\n[[Saving command effect]]\n" << *this<< endl;
+    Notify(this);
 }
 
 //*****************************************************************
@@ -103,6 +114,10 @@ void Command::saveEffect(std::string command_effect) {
 CommandProcessor::CommandProcessor() {
 }
 
+CommandProcessor::CommandProcessor(Observer* _obs) {
+    this->Attach(_obs);
+    logger = _obs;
+}
 /**
  * @brief Copy constructor: CommandProcessor a new CommandProcessor:: CommandProcessor object
  *
@@ -146,6 +161,8 @@ CommandProcessor::~CommandProcessor() {
         delete command;
         command = nullptr;
     }
+    this->Detach();
+    logger = nullptr;
 }
 
 // Getters and Setters
@@ -199,7 +216,7 @@ Command* CommandProcessor::readCommand(){
     string string_command;
     cout << "\n\tPlease enter command to move to the next state:  ";
     std::getline(std::cin, string_command);
-    return new Command(string_command);
+    return new Command(string_command, logger);
 }
 
 /**
@@ -209,6 +226,7 @@ void CommandProcessor::saveCommand(Command* c){
     cout << "\n[[Starting saveCommand()]]" << endl;
     this->commands.push_back(c);
     cout << "Saving command in the command processor." << endl;
+    Notify(this);
 }
 
 /**
@@ -266,7 +284,22 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     }
 }
 
+string Command::stringToLog()
+{
 
+    string command = "Commands:  " + get_typed_command();
+    string command_effect = "\nCommand effect: " + get_command_effect();
+    return command + command_effect;
+}
+string CommandProcessor::stringToLog()
+{
+    string output = "The collection of commands: \n";
+    vector<Command*> temp = get_commands();
+    for(Command* x : temp){
+        output += x->get_typed_command() + "\n";
+    }
+    return output;
+}
 
 //*****************************************************************
 // FileLineReader: Represents the reader of the file of commands
@@ -362,11 +395,16 @@ FileLineReader::~FileLineReader() {
  *  Default constructor
  * @param file_name
  */
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name){
+// Default constructor
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string file_name, Observer* _obs){
 
     this->fileLineReader = new FileLineReader();
     this->file_name = file_name;
+    this->Attach(_obs);
+    logger = _obs;
 }
+
+
 
 /**
  * Copy constructor
@@ -414,7 +452,7 @@ Command* FileCommandProcessorAdapter::readCommand() {
         return nullptr;
     }
 
-    return new Command(line_from_file);
+    return new Command(line_from_file, logger);
 }
 
 /**

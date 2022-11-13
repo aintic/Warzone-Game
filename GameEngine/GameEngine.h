@@ -27,12 +27,14 @@ class CommandProcessor;
 //         of the game. With the currentState object, the game engine is able to transition to valid states from
 //         appropriate user input.
 //
-class GameEngine {
+class GameEngine : public ILoggable, public Subject{
 
 private:
     class State* currentState;
     class Deck* deck;
     CommandProcessor* commandProcessor;
+    Command* command;
+
 //    vector<Player*> players;
 //    Map* map;
 public:
@@ -59,6 +61,12 @@ public:
     void issueOrderPhase();
 
     bool hasNeutral = false;
+
+    GameEngine(Observer* _obs);
+    string stringToLog();
+    Observer* _observers = nullptr;
+    Observer* getObserver();
+
 
     friend class Orders;
 };

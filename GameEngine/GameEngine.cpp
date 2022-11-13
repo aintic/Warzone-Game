@@ -39,6 +39,17 @@ GameEngine::GameEngine() {
     commandProcessor = nullptr;
 }
 
+GameEngine::GameEngine(Observer* _obs) {
+    commandProcessor = new CommandProcessor(_obs);
+    command = new Command(_obs);
+    currentState = new startupState();
+    map = nullptr;
+    _observers = _obs;
+    this->Attach(_obs);
+}
+
+
+
 GameEngine::GameEngine(int numPlayers) {
     deck = new Deck();
     for (int i = 0; i < numPlayers; i++){
@@ -54,6 +65,7 @@ GameEngine::~GameEngine() {
     commandProcessor = nullptr;
     delete map;
     map = nullptr;
+    this->Detach();
 }
 
 //parametrized constructor
@@ -104,6 +116,8 @@ Deck* GameEngine::getDeck() {
 void GameEngine::nextState(State *nextState) {
     delete this->currentState;
     this->setCurrentState(nextState);
+    Notify(this);
+
 }
 
 void GameEngine::startupPhase(CommandProcessor* c) {
@@ -196,6 +210,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 cout << "\n<<Adding the player "<< player_name << ">>" << endl;
 
                 // Add the player
+
                 this->players.push_back(new Player(player_name, this));
 
                 string effect = "Added player <" + player_name + ">";
@@ -309,6 +324,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
         else{
             cout << "Still in " << currentState->getStateName() << " state." << endl;
         }
+
         if(this->getCurrentState()->getStateName() == "Assign reinforcement"){
             mainGameLoop();
         }
@@ -883,4 +899,12 @@ void endState::transition(GameEngine *gameEngine, string command) {
         gameEngine->getCurrentState()->setStateName("End");
         cout << *gameEngine->getCurrentState();
     } else cout << "\nYou have entered an invalid command for the 'Win' state...\n";
+}
+
+Observer *GameEngine::getObserver() {
+    return _observers;
+}
+
+string GameEngine::stringToLog() {
+    return "Currently in " + this->getCurrentState()->getStateName() + " state";
 }
