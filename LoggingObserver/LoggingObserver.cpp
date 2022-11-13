@@ -45,7 +45,8 @@ LogObserver::LogObserver(const LogObserver& s) {
  * @return
  */
 LogObserver& LogObserver::operator=(const LogObserver& s) {
-    return *this; }
+    return *this;
+}
 
 /**
  * Default constructor for Subject
@@ -86,7 +87,7 @@ void Subject::Attach(Observer* o){
  * Detach Observer
  * @param o
  */
-void Subject::Detach(Observer* o){
+void Subject::Detach(){
     if(_observers != nullptr){
         _observers = nullptr;
     }
@@ -144,3 +145,5 @@ ostream& operator<<(ostream& os, ILoggable& p){
 }ostream& operator<<(ostream& os, Subject& p){
     return os;
 }
+
+

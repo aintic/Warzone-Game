@@ -45,7 +45,7 @@ public:
     //Attach observer method
     virtual void Attach(Observer* o);
     //Detach observer method
-    virtual void Detach(Observer* o);
+    virtual void Detach();
     //Notify method
     virtual void Notify(ILoggable* _loggable_object);
     //Defautl constructor

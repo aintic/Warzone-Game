@@ -106,7 +106,7 @@ int main(){
     game->nextState(map_validated);
     game->nextState(players_added);
 
-
+    //Clear
     delete game;
     delete p1;
     delete p2;

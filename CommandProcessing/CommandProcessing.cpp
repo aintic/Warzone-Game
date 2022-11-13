@@ -161,6 +161,8 @@ CommandProcessor::~CommandProcessor() {
         delete command;
         command = nullptr;
     }
+    this->Detach();
+    logger = nullptr;
 }
 
 // Getters and Setters

@@ -108,7 +108,9 @@ Deploy::Deploy(Territory *targetTer, Player *currentPl, int army_units, GameEngi
 /**
  * Default destructor for Deploy
  */
-Deploy::~Deploy() = default;
+Deploy::~Deploy(){
+    this->Detach();
+}
 
 /**
  *  Copy constructor for Deploy
@@ -246,7 +248,9 @@ Advance::Advance(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 /**
  * Default destructor for Advance
  */
-Advance::~Advance() = default;
+Advance::~Advance(){
+    this->Detach();
+}
 
 /**
  *  Copy constructor for Advance
@@ -459,7 +463,10 @@ Bomb::Bomb(Territory *targetTer, Player *currentPl, GameEngine *game) : Order(cu
 /**
  * Default destructor for Bomb
  */
-Bomb::~Bomb() = default;
+Bomb::~Bomb() {
+    this->Detach();
+
+}
 
 /**
  *  Copy constructor for Bomb
@@ -572,7 +579,10 @@ void Bomb::execute() {
 /**
  * Default constructor for Blockade
  */
-Blockade::Blockade() = default;
+Blockade::Blockade() {
+    this->Detach();
+
+}
 
 
 Blockade::Blockade(GameEngine* game) : Order() {
@@ -593,7 +603,10 @@ Blockade::Blockade(Territory *targetTer, Player *currentPl, GameEngine *game) : 
 /**
  * Default destructor for Blockade
  */
-Blockade::~Blockade() = default;
+Blockade::~Blockade() {
+    this->Detach();
+
+}
 
 /**
  *  Copy constructor for Blockade
@@ -731,7 +744,10 @@ Airlift::Airlift(Territory *sourceTer, Territory *targetTer, Player *currentPl, 
 /**
  * Default destructor for Airlift
  */
-Airlift::~Airlift() = default;
+Airlift::~Airlift() {
+    this->Detach();
+
+}
 
 /**
  *  Copy constructor for Airlift
@@ -865,8 +881,10 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Ord
 /**
  * Default destructor for Negotiate
  */
-    Negotiate::~Negotiate() =
-    default;
+    Negotiate::~Negotiate(){
+    this->Detach();
+
+}
 
 /**
  *  Copy constructor for Negotiate
@@ -980,6 +998,8 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Ord
             delete _ordersList[i];
         }
         _ordersList.clear();
+        this->Detach();
+
     };
 
     Order *OrdersList::getOrder(int pos) const {

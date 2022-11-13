@@ -64,6 +64,7 @@ GameEngine::~GameEngine() {
     commandProcessor = nullptr;
     delete map;
     map = nullptr;
+    this->Detach();
 }
 
 //parametrized constructor
