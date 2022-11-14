@@ -27,7 +27,6 @@ Player::Player() {
     this->friendlyList = f;
     this->conquerer = false;
     this->game = nullptr;
-    this->toDelete = false;
 }
 
 //Constructor with name only
@@ -46,7 +45,6 @@ Player::Player(string name, GameEngine* game) {
     this->friendlyList = f;
     this->conquerer = false;
     this->game = game;
-    this->toDelete = false;
 }
 
 
@@ -66,7 +64,6 @@ Player::Player(string name, vector<Territory*>& territories, Hand* hand, OrdersL
     this->friendlyList = f;
     this->conquerer = false;
     this->game = game;
-    this->toDelete = false;
 }
 
 //copy constructor

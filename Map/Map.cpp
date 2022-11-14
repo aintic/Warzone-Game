@@ -134,7 +134,7 @@ int Territory::get_issued_army_units() const
 }
 void Territory::set_issued_army_units(int army_units)
 {
-    this->army_units = army_units;
+    this->issuedArmyUnits = army_units;
 }
 
 string Territory::get_name()
