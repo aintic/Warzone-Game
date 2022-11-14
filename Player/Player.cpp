@@ -9,8 +9,6 @@ using std::find_if;
 using std::random_device;
 using std::uniform_int_distribution;
 
-
-
 int Player::uniqueID = 0;
 
 //Default constructor
@@ -143,7 +141,7 @@ vector<Territory*> Player:: toAttack(){
     return toAttackTerritories;
 }
 
-
+//returns the strongest owned neighbor
 Territory* Player::strongestOwnedNeighbor(Territory* territory) {
     vector<Territory*> ownedNeighbors;
     for (Territory *terr : territories) {
@@ -296,13 +294,6 @@ bool Player::getConquerer() {
 }
 
 //setters
-void Player::setToDelete(bool value) {
-    toDelete = value;
-}
-
-bool Player::getToDelete() {
-    return toDelete;
-}
 
 void Player::setGame(GameEngine* game) {
     this->game = game;
@@ -340,24 +331,6 @@ bool Player::getIsDoneIssuingOrders() {
     return this->isDoneIssuingOrders;
 };
 
-bool Player::getAddedDuringExecution() {
-    return addedDuringExecution;
-}
-
-void Player::setAddedDuringExecution(bool value) {
-    this->addedDuringExecution = value;
-}
-
-
-
-
-
-
 ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << ", ID: " << p.getPlayerID();
 }
-
-
-
-
-

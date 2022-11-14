@@ -124,21 +124,21 @@ void testLoggingObserver(){
 
 
     //Clear
-    delete game;
-    delete p1;
-    delete p2;
-    delete p3;
-
-
-    p1, p2, p3, game = nullptr;
-    delete _observers;
-    _observers = nullptr;
-
-    delete ol;
-    delete processor;
-
-    ol = nullptr;
-    processor = nullptr;
+//    delete game;
+//    delete p1;
+//    delete p2;
+//    delete p3;
+//
+//
+//    p1, p2, p3, game = nullptr;
+//    delete _observers;
+//    _observers = nullptr;
+//
+//    delete ol;
+//    delete processor;
+//
+//    ol = nullptr;
+//    processor = nullptr;
 
 
     }
