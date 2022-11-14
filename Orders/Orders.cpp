@@ -308,8 +308,13 @@ string Advance::getOrderType() const {
  */
 bool Advance::validate() const {
     cout << "Validating " << *this << " order." << endl;
+    // return false, if the target territory belongs to a friendly player
+    if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
+        cout << "You cannot attack this player until next turn." << endl;
+        return false;
+    }
     // return false, if source territory doesn't belong to current player
-    if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
+    else if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "Must advance from a territory you own." << endl;
         return false;
     }
@@ -326,11 +331,6 @@ bool Advance::validate() const {
     // return false, if the # of army units to advance is less than 1
     else if (army_units < 1) {
         cout << "Cannot advance less than 1 army unit." << endl;
-        return false;
-    }
-    // return false, if the target territory belongs to a friendly player
-    else if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
-        cout << "You cannot attack this player until next turn." << endl;
         return false;
     }
     else {
@@ -357,7 +357,7 @@ void Advance::execute() {
     if (validate()) {
         // if both source and target territories belong to the current player (checked source territory in validate())
         if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
-            cout << "Moved " << army_units << " army units from " << sourceTer->get_name() << " to " << targetTer->get_name() << "." << endl;
+            cout << "Moved " << army_units << " army units from " << currentPl->getName() << "'s " << sourceTer->get_name() << " to " << currentPl->getName() << "'s " << targetTer->get_name() << "." << endl;
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             // move army units to target territory
@@ -530,14 +530,14 @@ string Bomb::getOrderType() const {
  */
 bool Bomb::validate() const {
     cout << "Validating " << *this << " order." << endl;
-    // return false, if the target territory belongs to current player
-    if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
-        cout << "Cannot bomb your own territory." << endl;
+    // return false, if the target territory belongs to a friendly player
+    if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
+        cout << "Cannot attack this player until next turn." << endl;
         return false;
     }
-    // return false, if the target territory belongs to a friendly player
-    else if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
-        cout << "Cannot attack this player until next turn." << endl;
+    // return false, if the target territory belongs to current player
+    else if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
+        cout << "Cannot bomb your own territory." << endl;
         return false;
     }
     // return false, if the target territory has no army unit
@@ -823,7 +823,7 @@ bool Airlift::validate() const {
     cout << "Validating " << *this << " order." << endl;
     // return false, if either the source or target territory do not belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID() || targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID() ) {
-        cout << "You can only airlift between territories you own." << endl;
+        cout << "Can only airlift between territories you own." << endl;
         return false;
     }
     // return false, if the source and target territory are the same
@@ -858,7 +858,7 @@ void Airlift::execute() {
         sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
-        cout << "Moved " << army_units << " army units from " << sourceTer->get_name() << " to " << targetTer->get_name() << "." << endl;
+        cout << "Moved " << army_units << " army units from " << currentPl->getName() << "'s " << sourceTer->get_name() << " to " << currentPl->getName() << "'s " << targetTer->get_name() << "." << endl;
         cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
@@ -981,7 +981,7 @@ void Negotiate::execute() {
         // add each player to the other player's friendly list
         currentPl->addFriendly(enemyPl->getPlayerID());
         enemyPl->addFriendly(currentPl->getPlayerID());
-        cout << "Player" << currentPl->getName() << " is now friendly with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
+        cout << "Player " << currentPl->getName() << " is now friendly with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
         cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
