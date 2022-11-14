@@ -3,5 +3,7 @@
 // Part 2:
 void testStartupPhase();
 
-void testGameStates();
+// Part 3:
 void testMainGameLoop();
+
+void testGameStates();

@@ -16,7 +16,7 @@ int main()
     //Assignment 1:
 
     // Map
-	  //testLoadMaps();
+    //testLoadMaps();
 
     // Player
     //testPlayers();
@@ -38,6 +38,9 @@ int main()
 
     //Part 2
     //testStartupPhase();
+
+    //Part 3
+    testMainGameLoop();
 
     //Part 4
     //testOrdersExecution();

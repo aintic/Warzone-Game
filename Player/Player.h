@@ -47,16 +47,11 @@ public:
     void setIsDoneIssuingOrders(bool b);
     bool getIsDoneIssuingOrders();
     void addOrder(Order *o);
-    bool getToDelete();
-    void setToDelete(bool value);
-    bool getAddedDuringExecution();
-    void setAddedDuringExecution(bool value);
 
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
     Territory* strongestOwnedNeighbor(Territory* territory);
     void issueOrder(); //creates order object and adds to list of orders
-    //void issueOrder(Order* o); //issueOrder for testing purposes with pre-made order
     void conquerTerritory(Territory* t);
     void neutralConquerTerritory(Territory* t);
     void addTerritory(Territory* territory); //adds player's territories ?
@@ -73,10 +68,7 @@ public:
     bool getConquerer();
     void resetConquerer();
 
-
 private:
-    bool addedDuringExecution;
-    bool toDelete;
     string name;
     Hand* hand;
     vector<Territory*> territories; //list of owned territories

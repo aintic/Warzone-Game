@@ -291,7 +291,11 @@ void GameEngine::startupPhase(CommandProcessor* c) {
                 cout << "\ne) switching the game to the play phase: " << endl;
 
 
-                command->saveEffect("a) fairly distributing all the territories to the players\nb) determining randomly the order of play of the players in the game\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool\nd) players draw 2 initial cards from the deck using the deck’s draw() method\ne) switch the game to the play phase");
+                command->saveEffect("a) fairly distributing all the territories to the players"
+                                    "\n\t\t\t b) determining randomly the order of play of the players in the game"
+                                    "\n\t\t\t c) giving 50 initial army units to the players, placed in their respective reinforcement pool"
+                                    "\n\t\t\t d) players draw 2 initial cards from the deck using the deck's draw() method"
+                                    "\n\t\t\t e) switch the game to the play phase");
             }
         }
         // REPLAY OR QUIT
@@ -352,8 +356,9 @@ void GameEngine::reinforcementPhase() {
 
 bool GameEngine::executeOrdersPhase() {
 
-    bool allOrdersDone;
+    // bool variables to exit the do-while loops when orders done
     bool deployOrdersDone;
+    bool allOrdersDone;
     do {
         deployOrdersDone = true;
         for (Player *p: players) {
@@ -373,28 +378,27 @@ bool GameEngine::executeOrdersPhase() {
     do {
         allOrdersDone = true;
         for(int i = 0; i < players.size(); i++){
+                cout << *players[i] << endl;
                 if (!players[i]->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
                     cout << "\nChecking next order of Player " << players[i]->getPlayerID() << " called " << players[i]->getName() << endl;
                     players[i]->getPlayerOrderList()->executeOrder(); //executes deploy order
                     allOrdersDone = false;
                 }
-                //checks if player left with no territories
+                // checks if player left with no territories
             for(int j = 0; j < players.size(); j++){
                 if(players[j]->getNumTerritories() == 0){
-                    cout << "\nPLayer to be deleted: " << *players[j] << endl;
+                    //delete player that is left with no territories
+                    cout << "\nPLAYER ELIMINATED : " << *players[j] << endl;
                     delete players[j];
                 }
                 if(players.size() == 1){
+                    //Only one player standing - transition to endState
                     cout << "\nPlayer " << players[0]->getName() << " won the game!!" << endl;
                     this->nextState(new endState());
+                    cout << *this->currentState;
                     return false;
                 }
             }
-        }
-        if(players.size() == 1){
-            cout << "\nPlayer " << players[0]->getName() << " won the game!!" << endl;
-            this->nextState(new endState());
-            return false;
         }
     } while (!allOrdersDone);
     for (Player *p : players) {
@@ -405,11 +409,14 @@ bool GameEngine::executeOrdersPhase() {
             p->resetConquerer();
         }
     }
+    // incrementing gameEngine turn and switching to reinforcement state
     GameEngine::turn++;
     this->nextState(new reinforcementState());
     return true;
 }
 
+// Main game loop method that runs until stillPlaying boolean true
+// executeOrdersPhase return boolean false if only one player left
 void GameEngine::mainGameLoop() {
     bool stillPlaying;
     do{
@@ -419,18 +426,22 @@ void GameEngine::mainGameLoop() {
     }while(stillPlaying);
 }
 
+//method to issue orders in a round-robin fashion
 void GameEngine::issueOrderPhase() {
     cout << "Starting Issuing Orders Phase" << endl;
     int playersDoneIssuingOrders = 0;
+    //sets the player issue order members
     for (Player *p : this->players){
             p->setIssuableReinforcementPool(p->getReinforcementPool());
             p->setAdvanceAttackOrdersIssued(0);
             p->setAdvanceDefendOrdersIssued(0);
             p->setIsDoneIssuingOrders(false);
     }
+    //resets issued army units on each territory
     for (auto &[id, territory] : map->get_territories()) {
         territory->set_issued_army_units(0);
     }
+    //calls issueOrder for each player until no more orders to issue
     while (playersDoneIssuingOrders != players.size()) {
         playersDoneIssuingOrders = 0;
         for (Player *p: players) {
@@ -441,8 +452,10 @@ void GameEngine::issueOrderPhase() {
                 }
         }
     }
+    //transition to execute order state
     this->nextState(new executeOrdersState());
 }
+
 //
 //ABSTRACT STATE CLASS
 //
@@ -627,37 +640,31 @@ void startupState::transition(GameEngine *gameEngine, string command) {
         case 0:
             if (command == getValidCommand()[0]) {
                 gameEngine->nextState(new startupState(1));
-                cout << *gameEngine->getCurrentState(); //currently transitioning
-                //<method to load map here>
+                cout << *gameEngine->getCurrentState();
                 break;
             }
         case 1:
             if (command == getValidCommand()[0]) {
-                //<method to load map once again here>
                 gameEngine->nextState(new startupState(1));
                 cout << dynamic_cast<startupState &>(*gameEngine->getCurrentState());
                 break;
             } else if (command == getValidCommand()[1]) {
                 gameEngine->nextState(new startupState(2));
                 cout << *gameEngine->getCurrentState();
-                //<method to validate map here>
                 break;
             }
         case 2:
             if (command == getValidCommand()[2]) {
                 gameEngine->nextState(new startupState(3));
                 cout << *gameEngine->getCurrentState();
-                //<method to add player here>
                 break;
             }
         case 3:
             if (command == getValidCommand()[2]) {
-                //<method to add player again here>
                 gameEngine->nextState(new startupState(3));
                 cout << dynamic_cast<startupState &>(*gameEngine->getCurrentState());
                 break;
             } else if (command == getValidCommand()[3]) {
-                //<method to assign countries here>
                 gameEngine->nextState(new reinforcementState());
                 cout << *gameEngine->getCurrentState();
                 break;
@@ -778,8 +785,6 @@ vector<string> issueOrdersState::getSpecificValidCommands() { //method to get va
 
     return valid_commands;
 }
-
-
 
 
 //

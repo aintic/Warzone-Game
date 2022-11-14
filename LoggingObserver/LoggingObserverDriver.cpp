@@ -136,8 +136,6 @@ void testLoggingObserver(){
 
     delete ol;
     ol = nullptr;
-
-
     }
 
 

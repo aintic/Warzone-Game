@@ -34,9 +34,6 @@ private:
     class Deck* deck;
     CommandProcessor* commandProcessor;
     Command* command;
-
-//    vector<Player*> players;
-//    Map* map;
 public:
     GameEngine(); //default constructor
     GameEngine(int numPlayers);
@@ -60,13 +57,10 @@ public:
     void mainGameLoop();
     void issueOrderPhase();
 
-    bool hasNeutral = false;
-
     GameEngine(Observer* _obs);
     string stringToLog();
     Observer* _observers = nullptr;
     Observer* getObserver();
-
 
     friend class Orders;
 };
@@ -119,7 +113,7 @@ public:
     static vector<string> getValidCommand(); //method to get valid
     vector<string> getSpecificValidCommands() override; //method to get valid command given the specific state
     string getWrongCommandError() override; //method to get wrong command error message
-    int getStateStep() const; //method to get the
+    int getStateStep() const; //method to get the current state step
     void transition(GameEngine* gameEngine, string command) override; //method to transition to other state
     friend ostream& operator <<(ostream& stream, const startupState& s); //stream insertion operator
 private:
