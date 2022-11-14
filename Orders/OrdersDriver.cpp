@@ -6,123 +6,117 @@
 #include "../GameEngine/GameEngine.h"
 #include "../Player/Player.h"
 #include "../Cards/Cards.h"
+#include <iostream>
+#include <fstream>
+#include <string>
 
 /**
  * Free function to test Order and OrdersList
  */
 void testOrdersExecution() {
 
-    GameEngine *game = new GameEngine();
+    // setup game engine, players and some orders
+    cout << "\nSETUP GAME ENGINE, PLAYERS & ORDERS ======================" << endl;
+    GameEngine *game1 = new GameEngine();
     string valid_map1 = "../Map/Maps/AnnysPiratenwelt.map";
     Map *map = MapLoader::loadMap(valid_map1);
-    Player *p1 = new Player("Player 1", game);
-    Player *p2 = new Player("Player 2", game);
-    game->map = map;
-    game->players.push_back(p1);
-    game->players.push_back(p2);
-
-    Card *bomb = new BombCard();
-    Card *blockade = new BlockadeCard();
-    Card *airlift = new AirliftCard();
-    Card *negotiate = new DiplomacyCard();
-    p1->getHand()->addCard(bomb);
-    p1->getHand()->addCard(negotiate);
-    p2->getHand()->addCard(blockade);
-    p2->getHand()->addCard(airlift);
-
+    Player *p1 = new Player("Mario", game1);
+    Player *p2 = new Player("Luigi", game1);
+    game1->map = map;
+    game1->players.push_back(p1);
+    game1->players.push_back(p2);
     int counter = 0;
-    ::map<int, Territory *> territories = game->map->get_territories();
-
+    ::map<int, Territory *> territories = game1->map->get_territories();
     for(pair<int,Territory*> territory : territories){
-        int player_index = counter % game->players.size();
-        game->players[player_index]->addTerritory(territory.second);
+        int player_index = counter % game1->players.size();
+        game1->players[player_index]->addTerritory(territory.second);
         counter++;
     }
-
-    for(Player* player : game->players){
-        player->setReinforcementPool(5);
+    for(Player* player : game1->players){
+        player->setReinforcementPool(25);
         cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
     }
-
-    for(Player *player : game->players){
+    for(Player *player : game1->players){
         cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
     }
+    p1->addOrder(new Deploy (p1->getTerritories()[5], p1, 0, game1));
+    p1->addOrder(new Deploy (p2->getTerritories()[5], p1, 5, game1));
+    p1->addOrder(new Deploy (p1->getTerritories()[5], p1, 5, game1));
+    p1->addOrder(new Deploy (p1->getTerritories()[12], p1, 3, game1));
+    p2->addOrder(new Deploy(p2->getTerritories()[20], p2, 4, game1));
+    p2->addOrder(new Deploy(p2->getTerritories()[15], p2, 4, game1));
+    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[3], p1, 2, game1));
+    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[2], p1, 2, game1));
+    p2->addOrder(new Bomb(p1->getTerritories()[12], p2, game1));
+    p1->addOrder(new Blockade(p1->getTerritories()[12], p1, game1));
+    p2->addOrder(new Blockade(p1->getTerritories()[11], p2, game1));
+    p2->addOrder(new Negotiate(p1, p2, game1));
+    p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game1));
+    p2->addOrder(new Airlift(p1->getTerritories()[20], p2->getTerritories()[1], p2, 1, game1));
+    p2->addOrder(new Airlift(p2->getTerritories()[20], p2->getTerritories()[1], p2, 1, game1));
 
-    p1->addOrder(new Deploy (p1->getTerritories()[4], p1, 0, game));
-    p1->addOrder(new Deploy (p1->getTerritories()[5], p1, 5, game));
-    p2->addOrder(new Deploy(p1->getTerritories()[20], p2, 5, game));
-    p2->addOrder(new Deploy(p2->getTerritories()[20], p2, 5, game));
-    p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game));
-    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5], p1, 0, game));
-    p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[2], p1, 2, game));
-    p1->addOrder(new Advance(p1->getTerritories()[5], p2->getTerritories()[1], p1, 2, game));
-    p1->addOrder(new Blockade(p1->getTerritories()[12], p1, game));
-    p2->addOrder(new Blockade(p1->getTerritories()[11], p2, game));
-    p2->addOrder(new Negotiate(p1, p2, game));
-    p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game));
-    p2->addOrder(new Airlift(p1->getTerritories()[20], p2->getTerritories()[1], p2, 1, game));
-    p2->addOrder(new Airlift(p2->getTerritories()[20], p2->getTerritories()[1], p2, 1, game));
+    // demonstrate validation and execution of all kinds of orders that was hard coded above
+    cout << "\nTURN 1 : EXECUTE ORDER PHASE ======================================================" << endl;
+    cout << "\nDemonstrates:" << endl;
+    cout << "\n- Validation and execution of all orders" << endl;
+    cout << "\n- Ownership of a territory is transferred to the attacking player if a territory is conquered as a result of an advance order" << endl;
+    cout << "\n- One card is given to a player if they conquer at least one territory in a turn (not more than one card per turn)." << endl;
+    cout << "\n- Negotiate order prevents attack between the two players involved." << endl;
+    cout << "\n- Blockade order transfers ownership to the Neutral player\n" << endl;
 
-    //game->issueOrderPhase();
-    game->executeOrdersPhase();
+    game1->executeOrdersPhase();
 
+    cout << "\nTURN 2 : ISSUE ORDER PHASE ========================================================" << endl;
+    cout << "\nDemonstrates:" << endl;
+    cout << "\n- The player who conquered a territory last turn gets a card order and issues it in Issue Order Phase\n" << endl;
+    game1->issueOrderPhase();
 
-//    // create new orders' list and one order of each kind
-//    OrdersList* ol = new OrdersList;
-//    Order* testDeploy = new Deploy;
-//    Order* testAdvance = new Advance;
-//    Order* testBomb = new Bomb;
-//    Order* testBlockade = new Blockade;
-//    Order* testAirlift = new Airlift;
-//    Order* testNegotiate = new Negotiate;
-//
-//
-//
-//    // add orders
-//    cout << "\n============= Add orders =============\n" << endl;
-//    ol->add(testDeploy);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//    ol->add(testAdvance);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//    ol->add(testBomb);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//    ol->add(testBlockade);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//    ol->add(testAirlift);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//    ol->add(testNegotiate);
-//    cout << "Order added. Current list: \n" << *ol << endl;
-//
-//    // move orders
-//    cout << "\n============= Move orders 1 and 3 =============\n" << endl;
-//    ol->move(1, 3);
-//    cout << "Orders swapped. Current list: \n" << *ol << endl;
-//    cout << "\n============= Move orders 4 and 5 =============\n" << endl;
-//    ol->move(4, 5);
-//    cout << "Orders swapped. Current list: \n" << *ol << endl;
-//
-//    // delete orders
-//    cout << "\n============= Delete order 3 =============\n" << endl;
-//    ol->remove(3);
-//    cout << "Order deleted. Current list: \n" << *ol << endl;
-//    cout << "\n============= Delete order 2 =============\n" << endl;
-//    ol->remove(2);
-//    cout << "Order deleted. Current list: \n" << *ol << endl;
-//
-//    cout << "\n============= Copy list =============\n" << endl;
-//    OrdersList *newOl = new OrdersList(*ol);
-//    cout << "Copied list: \n" << *newOl << endl;
-//    newOl->executeList();
-//
-//
-//    // execute list - invokes validate() and execute() method on each order then delete order in list
-//    cout << "\n============= Execute list =============\n" << endl;
-//    ol->executeList();
-//    cout << "\n=========================================\n" << endl;
+    cout << "\nREGULAR GAMEPLAY ===================================================================" << endl;
+    cout << "\nDemonstrates:" << endl;
+    cout << "\n- All orders can be issued and executed by the Game Engine.\n" << endl;
 
-
+    const string CONSOLE_STRING = "-console";
+    const string FILE_STRING = "-file";
+    bool valid_initial_command = false;
+    CommandProcessor * processor;
+    string file_name;
+    Observer* _observers = new LogObserver();
+    GameEngine* game = new GameEngine(_observers);
+    while(!valid_initial_command){
+        cout << "Please enter (-console) to input commands from the console or (-file <filename>) to let the game read the commands from a file: " << endl;
+        string user_input;
+        getline(cin, user_input);
+        string delimiter = " ";
+        string first_word = user_input.substr(0, user_input.find(delimiter));
+        if(user_input == CONSOLE_STRING){
+            cout << "[[Reading from console]]" << endl;
+            processor = new CommandProcessor(_observers);
+            valid_initial_command = true;
+        }
+        else if(first_word == FILE_STRING && user_input.length() > FILE_STRING.length() + delimiter.length()){
+            file_name = "../CommandProcessing/Commands/" + user_input.substr(FILE_STRING.length() + delimiter.length()) + ".txt";
+            ifstream file;
+            file.open(file_name);
+            if(file.fail()){
+                cout << "File failed to open. please enter a valid file name:" << endl;
+            }
+            else{
+                valid_initial_command = true;
+                cout << "[[Reading from file]]" << endl;
+                processor = new FileCommandProcessorAdapter(file_name, _observers);
+            }
+            file.close();
+        }
+        else{
+            cout<< "Invalid command." << endl;
+        }
+    }
+    game->startupPhase(processor);
 
     // cleanup
-    // delete ol;
-    // ol = NULL;
+    delete game1;
+    delete game;
+    delete _observers;
+
+    cout << "\nEND OF ORDERS DRIVER ============================================\n" << endl;
 }

@@ -66,6 +66,10 @@ GameEngine::~GameEngine() {
     delete map;
     map = nullptr;
     this->Detach();
+    for (int i = 0; i < players.size(); i++){
+        delete players[i];
+    }
+    delete deck;
 }
 
 //parametrized constructor
@@ -358,12 +362,11 @@ bool GameEngine::executeOrdersPhase() {
     do {
         deployOrdersDone = true;
         for (Player *p: players) {
-                cout << "\nChecking deploy of player " << p->getPlayerID() << endl;
+                cout << "\nChecking deploy of player " << p->getName() << endl;
                 if (!p->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
                     if (p->getPlayerOrderList()->getTopOrder()->getOrderType() == "Deploy") {
                         p->getPlayerOrderList()->executeOrder(); //executes deploy order
                         deployOrdersDone = false;
-                        cout << "Executed deploy order of player " << p->getPlayerID() << "\n\n";
                     }
                     else{
                         cout << "No more deploy orders" << endl;
@@ -377,21 +380,20 @@ bool GameEngine::executeOrdersPhase() {
         for(int i = 0; i < players.size(); i++){
                 cout << *players[i] << endl;
                 if (!players[i]->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
-                    cout << "Checking next order of player " << players[i]->getPlayerID() << " called " << players[i]->getName() << endl;
+                    cout << "\nChecking next order of Player " << players[i]->getPlayerID() << " called " << players[i]->getName() << endl;
                     players[i]->getPlayerOrderList()->executeOrder(); //executes deploy order
                     allOrdersDone = false;
-                    cout << "Executed order of player " << players[i]->getPlayerID() << "\n\n";
                 }
                 // checks if player left with no territories
             for(int j = 0; j < players.size(); j++){
                 if(players[j]->getNumTerritories() == 0){
                     //delete player that is left with no territories
-                    cout << "PLAYER ELIMINATED : " << *players[j] << endl;
+                    cout << "\nPLAYER ELIMINATED : " << *players[j] << endl;
                     delete players[j];
                 }
                 if(players.size() == 1){
                     //Only one player standing - transition to endState
-                    cout << "Only one player standing!" << endl;
+                    cout << "\nPlayer " << players[0]->getName() << " won the game!!" << endl;
                     this->nextState(new endState());
                     cout << *this->currentState;
                     return false;
@@ -403,7 +405,7 @@ bool GameEngine::executeOrdersPhase() {
         p->resetFriendlyList();
         if (p->getConquerer()) {
             Card *bonusCard = deck->draw(*p);
-            cout << "Player " << p->getName() << " win a " << *bonusCard << " from conquering a territory this turn!" << endl;
+            cout << "\n" << p->getName() << " wins " << *bonusCard << " from conquering a territory this turn!" << endl;
             p->resetConquerer();
         }
     }
@@ -623,6 +625,7 @@ vector<string> startupState::getSpecificValidCommands() { //method to get valid 
             valid_commands.push_back(getValidCommand()[3]);
             break;
     }
+
     return valid_commands;
 }
 
