@@ -16,8 +16,8 @@ void testLoggingObserver(){
 
     cout << "testLoggingObserver executed" << endl;
 
-    Observer* _observers = new LogObserver();
-
+    Observer* _observers = new LogObserver(); //creating _observer
+    //Command and CommandProcessor test
     GameEngine* game = new GameEngine(_observers);
 
 
@@ -42,6 +42,7 @@ void testLoggingObserver(){
     }
     game->startupPhase(processor);
 
+    //Order and Order list test
     Player* p1 = new Player("Player1", game);
     OrdersList* ol = new OrdersList(game);
     Order* testDeploy = new Deploy(game);
@@ -111,6 +112,7 @@ void testLoggingObserver(){
     State* players_added = new startupState(3);
     State* assignReinforcement = new reinforcementState();
     State* executeOrder = new executeOrdersState();
+    State* issueOrder = new issueOrdersState();
     State* win = new endState();
 
     game->nextState(map_loaded);
@@ -118,27 +120,22 @@ void testLoggingObserver(){
     game->nextState(players_added);
     game->nextState(assignReinforcement);
     game->nextState(executeOrder);
+    game->nextState(issueOrder);
     game->nextState(win);
 
 
 
 
-    //Clear
-    delete game;
-    delete p1;
-    delete p2;
-    delete p3;
+    //Clear pointers
+    delete game; //game contains the processor and the players
 
 
-    p1, p2, p3, game = nullptr;
+    game = nullptr;
     delete _observers;
     _observers = nullptr;
 
     delete ol;
-    delete processor;
-
     ol = nullptr;
-    processor = nullptr;
 
 
     }
