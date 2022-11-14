@@ -47,6 +47,7 @@ void testOrdersExecution() {
     p2->addOrder(new Deploy(p2->getTerritories()[15], p2, 4, game1));
     p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[3], p1, 2, game1));
     p1->addOrder(new Advance(p1->getTerritories()[5], p1->getTerritories()[5]->get_neighbours()[2], p1, 2, game1));
+    p1->addOrder(new Advance(p2->getTerritories()[15], p2->getTerritories()[0], p2, 1, game1));
     p2->addOrder(new Bomb(p1->getTerritories()[12], p2, game1));
     p1->addOrder(new Blockade(p1->getTerritories()[12], p1, game1));
     p2->addOrder(new Blockade(p1->getTerritories()[11], p2, game1));
@@ -54,6 +55,7 @@ void testOrdersExecution() {
     p2->addOrder(new Bomb(p1->getTerritories()[5], p2, game1));
     p2->addOrder(new Airlift(p1->getTerritories()[20], p2->getTerritories()[1], p2, 1, game1));
     p2->addOrder(new Airlift(p2->getTerritories()[20], p2->getTerritories()[1], p2, 1, game1));
+    p2->addOrder(new Blockade(p2->getTerritories()[1], p2, game1));
 
     // demonstrate validation and execution of all kinds of orders that was hard coded above
     cout << "\nTURN 1 : EXECUTE ORDER PHASE ======================================================" << endl;
@@ -68,7 +70,7 @@ void testOrdersExecution() {
 
     cout << "\nTURN 2 : ISSUE ORDER PHASE ========================================================" << endl;
     cout << "\nDemonstrates:" << endl;
-    cout << "\n- The player who conquered a territory last turn gets a card order and issues it in Issue Order Phase\n" << endl;
+    cout << "\n- The player who got a card last turn issues a card order in Issue Order Phase\n" << endl;
     game1->issueOrderPhase();
 
     cout << "\nREGULAR GAMEPLAY ===================================================================" << endl;
