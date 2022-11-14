@@ -66,6 +66,10 @@ GameEngine::~GameEngine() {
     delete map;
     map = nullptr;
     this->Detach();
+    for (int i = 0; i < players.size(); i++){
+        delete players[i];
+    }
+    delete deck;
 }
 
 //parametrized constructor
@@ -381,14 +385,14 @@ bool GameEngine::executeOrdersPhase() {
                     delete players[j];
                 }
                 if(players.size() == 1){
-                    cout << "\nOnly one player standing" << endl;
+                    cout << "\nPlayer " << players[0]->getName() << " won the game!!" << endl;
                     this->nextState(new endState());
                     return false;
                 }
             }
         }
         if(players.size() == 1){
-            cout << "\nOnly one player standing" << endl;
+            cout << "\nPlayer " << players[0]->getName() << " won the game!!" << endl;
             this->nextState(new endState());
             return false;
         }
@@ -413,7 +417,6 @@ void GameEngine::mainGameLoop() {
         issueOrderPhase();
         stillPlaying = executeOrdersPhase();
     }while(stillPlaying);
-    cout << "exited" << endl;
 }
 
 void GameEngine::issueOrderPhase() {

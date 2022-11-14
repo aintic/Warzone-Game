@@ -113,9 +113,10 @@ void testOrdersExecution() {
     }
     game->startupPhase(processor);
 
+    // cleanup
     delete game1;
     delete game;
-
+    delete _observers;
 
     cout << "\nEND OF ORDERS DRIVER ============================================\n" << endl;
 }
