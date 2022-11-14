@@ -127,21 +127,15 @@ void testLoggingObserver(){
 
 
     //Clear pointers
-    delete game;
-    delete p1;
-    delete p2;
-    delete p3;
+    delete game; //game contains the processor and the players
 
 
-    p1, p2, p3, game = nullptr;
+    game = nullptr;
     delete _observers;
     _observers = nullptr;
 
     delete ol;
-    delete processor;
-
     ol = nullptr;
-    processor = nullptr;
 
 
     }
