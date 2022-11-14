@@ -127,32 +127,8 @@ void testLoggingObserver(){
 
 
     //Clear pointers
-    delete game; //game contains the processor and the players
-
-
-    game = nullptr;
-    delete _observers;
-    _observers = nullptr;
-
-    delete ol;
-    ol = nullptr;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      delete game; //game contains the processor and the players
+      game = nullptr;
+      delete _observers;
+      _observers = nullptr;
+}

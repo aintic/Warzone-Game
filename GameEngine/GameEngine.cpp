@@ -40,6 +40,7 @@ GameEngine::GameEngine() {
 }
 
 GameEngine::GameEngine(Observer* _obs) {
+    deck = new Deck();
     commandProcessor = new CommandProcessor(_obs);
     command = new Command(_obs);
     currentState = new startupState();

@@ -488,7 +488,7 @@ Deck::Deck(const Deck &d){
 * Clears deck of dangling pointers
 */
 Deck::~Deck() {
-    for(Card* c : this->cards){
+    for (Card *c : cards){
         delete c;
     }
     this->cards.clear();
