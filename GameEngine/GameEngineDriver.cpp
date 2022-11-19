@@ -48,10 +48,9 @@ void testMainGameLoop(){
     string map_path = "Maps/" + mapName + ".map";
     game->map = MapLoader::loadMap(map_path);
 
-    if(game->map == nullptr){
+    if (game->map == nullptr) {
         cout << "Could not load the map <" + mapName + ">";
-    }
-    else{
+    } else {
         cout << "Loaded map <" + mapName + ">";
     }
 
@@ -61,20 +60,20 @@ void testMainGameLoop(){
     //
     //Testing reinforcement phase
     //
-    Territory* t1 = game->map->get_territories()[0];
-    Territory* t2 = game->map->get_territories()[1];
-    Territory* t3 = game->map->get_territories()[2];
-    Territory* t4 = game->map->get_territories()[3];
-    Territory* t5 = game->map->get_territories()[4];
-    Territory* t6 = game->map->get_territories()[5];
-    Territory* t7 = game->map->get_territories()[6];
-    Territory* t8 = game->map->get_territories()[7];
-    Territory* t9 = game->map->get_territories()[8];
-    Territory* t10 = game->map->get_territories()[9];
-    Territory* t11 = game->map->get_territories()[10];
-    Territory* t12 = game->map->get_territories()[11];
-    Territory* t13 = game->map->get_territories()[12];
-    Territory* t14 = game->map->get_territories()[13];
+    Territory *t1 = game->map->get_territories()[0];
+    Territory *t2 = game->map->get_territories()[1];
+    Territory *t3 = game->map->get_territories()[2];
+    Territory *t4 = game->map->get_territories()[3];
+    Territory *t5 = game->map->get_territories()[4];
+    Territory *t6 = game->map->get_territories()[5];
+    Territory *t7 = game->map->get_territories()[6];
+    Territory *t8 = game->map->get_territories()[7];
+    Territory *t9 = game->map->get_territories()[8];
+    Territory *t10 = game->map->get_territories()[9];
+    Territory *t11 = game->map->get_territories()[10];
+    Territory *t12 = game->map->get_territories()[11];
+    Territory *t13 = game->map->get_territories()[12];
+    Territory *t14 = game->map->get_territories()[13];
 
 
     //p1 all territories in continent c2 (bonus 5)

@@ -389,7 +389,7 @@ bool GameEngine::executeOrdersPhase() {
             for(int j = 0; j < players.size(); j++){
                 if(players[j]->getNumTerritories() == 0){
                     //delete player that is left with no territories
-                    cout << "\nPLAYER ELIMINATED : " << *players[j] << endl;
+                    cout << "\nPLAYER ELIMINATED (no territories left) : " << *players[j] << endl;
                     delete players[j];
                 }
                 if(players.size() == 1){
