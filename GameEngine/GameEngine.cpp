@@ -378,7 +378,6 @@ bool GameEngine::executeOrdersPhase() {
     do {
         allOrdersDone = true;
         for(int i = 0; i < players.size(); i++){
-                cout << *players[i] << endl;
                 if (!players[i]->getPlayerOrderList()->getOrderList().empty()) { //checks that order list isn't empty
                     cout << "\nChecking next order of Player " << players[i]->getPlayerID() << " called " << players[i]->getName() << endl;
                     players[i]->getPlayerOrderList()->executeOrder(); //executes deploy order

@@ -40,10 +40,10 @@ int main()
     //testStartupPhase();
 
     //Part 3
-    testMainGameLoop();
+    //testMainGameLoop();
 
     //Part 4
-    //testOrdersExecution();
+    testOrdersExecution();
 
     //Part 5
     //testLoggingObserver();
