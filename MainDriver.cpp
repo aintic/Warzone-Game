@@ -44,7 +44,7 @@ int main()
     //testMainGameLoop();
 
     //Part 4
-    //testOrdersExecution();
+    testOrdersExecution();
 
     //Part 5
     //testLoggingObserver();

@@ -16,7 +16,7 @@
 void testOrdersExecution() {
 
     // setup game engine, players and some orders
-    cout << "\nSETUP GAME ENGINE, PLAYERS & ORDERS ======================" << endl;
+    cout << "\nSETUP GAME ENGINE, PLAYERS & ORDERS ===============================================" << endl;
     GameEngine *game1 = new GameEngine();
     string valid_map1 = "../Map/Maps/AnnysPiratenwelt.map";
     Map *map = MapLoader::loadMap(valid_map1);

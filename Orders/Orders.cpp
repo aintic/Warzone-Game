@@ -369,7 +369,7 @@ void Advance::execute() {
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
             cout << "You have conquered " << targetTer->get_name() << "!" << endl;
             cout << targetTer->get_name() << " now has " << army_units << " army units." << endl;
-            cout << targetTer->get_name() << " was owned by " << targetTer->get_owner()->getName() << " and is now owned by ";
+            cout << targetTer->get_name() << " belonged to " << targetTer->get_owner()->getName() << " and now belongs to ";
             // current player gains target territory, enemy player loses it
             // army units get added to target territory
             currentPl->conquerTerritory(targetTer);
@@ -412,12 +412,11 @@ void Advance::execute() {
 
             // if current player conquers the territory
             if (survivingAttackers > 0 && survivingDefenders == 0) {
-                cout << "You have conquered this territory!" << endl;
                 // current player gains target territory, enemy player loses it
                 // surviving army units get added to target territory
                 cout << "You have conquered " << targetTer->get_name() << "!" << endl;
                 cout << targetTer->get_name() << " now has " << survivingAttackers << " army units." << endl;
-                cout << targetTer->get_name() << " was owned by " << targetTer->get_owner()->getName() << " and is now owned by ";
+                cout << targetTer->get_name() << " belonged to " << targetTer->get_owner()->getName() << " and now belongs to ";
                 currentPl->conquerTerritory(targetTer);
                 cout << targetTer->get_owner()->getName() << "." << endl;
                 targetTer->set_army_units(survivingAttackers);
@@ -699,8 +698,8 @@ void Blockade::execute() {
             // remove target territory from current player and exit
             if (p->getName().compare("Neutral") == 0) {
                 p->neutralConquerTerritory(targetTer);
-                cout << *this << " order executed." << endl;
                 cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
+                cout << *this << " order executed." << endl;
                 return;
             }
         }
@@ -710,9 +709,9 @@ void Blockade::execute() {
         Player *neutral = new Player("Neutral", game);
         neutral->neutralConquerTerritory(targetTer);
         game->setPlayers(neutral);
-        cout << *this << " order executed." << endl;
         cout << "Player Neutral created." << endl;
         cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
+        cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -981,7 +980,7 @@ void Negotiate::execute() {
         // add each player to the other player's friendly list
         currentPl->addFriendly(enemyPl->getPlayerID());
         enemyPl->addFriendly(currentPl->getPlayerID());
-        cout << "Player " << currentPl->getName() << " is now friendly with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
+        cout << "Player " << currentPl->getName() << " negotiated with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
         cout << *this << " order executed." << endl;
     }
     // if order is invalid, display message
@@ -1174,9 +1173,10 @@ vector<Order *> OrdersList::getOrderList() {
 }
 
 
-    string Order::stringToLog() {
+string Order::stringToLog() {
         return "Order executed: " + getOrderType();
     }
+
     string OrdersList::stringToLog() {
         string lastOrder = _ordersList.back()->getOrderType();
 
