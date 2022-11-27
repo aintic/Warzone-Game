@@ -1162,12 +1162,10 @@ void Negotiate::execute() {
 
 //Make sure that it's never called on empty orderList
     Order *OrdersList::getTopOrder() {
-//    if(!_ordersList.empty()){
         cout << "Top order : ";
         Order *o = _ordersList.front();
         cout << *o << endl;
         return o;
-//    }
     }
 
 // getter for vector of orders
