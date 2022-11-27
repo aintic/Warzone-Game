@@ -5,6 +5,7 @@
 #include "GameEngine/GameEngineDriver.h"
 #include "CommandProcessing/CommandProcessingDriver.h"
 #include "LoggingObserver/LoggingObserverDriver.h"
+#include "Strategy/PlayerStrategiesDriver.h"
 
 
 
@@ -47,6 +48,11 @@ int main()
 
     //Part 5
     //testLoggingObserver();
+
+    //Assignment 3:
+
+    //Part 1
+    //testPlayerStrategies();
 
 }
 
