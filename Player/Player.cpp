@@ -2,6 +2,7 @@
 #include "../GameEngine/GameEngine.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
+#include "../Strategy/PlayerStrategies.h"
 #include "algorithm"
 using std::find_if;
 #include <vector>

@@ -10,6 +10,7 @@ using namespace std;
 class Hand;
 class Deck;
 class GameEngine;
+class PlayerStrategy;
 
 //
 //PLAYER CLASS
@@ -69,6 +70,7 @@ public:
     void resetConquerer();
 
 private:
+    PlayerStrategy* ps;
     string name;
     Hand* hand;
     vector<Territory*> territories; //list of owned territories
