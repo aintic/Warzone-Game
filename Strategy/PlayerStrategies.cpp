@@ -1,17 +1,25 @@
 #include "PlayerStrategies.h"
 
-
 //Neutral Player
+//defualt constructor
+NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
+    this->player = player;
+}
 void NeutralPlayerStrategy::issueOrder() {
 
 }
 
 vector<Territory *> NeutralPlayerStrategy::toAttach() {
+
     return vector<Territory *>();
 }
 
 vector<Territory *> NeutralPlayerStrategy::toDefend() {
-    return vector<Territory *>();
+    vector<Territory *> territories = player->getTerritories();
+
+    sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
+        return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
+    });
 }
 
 

@@ -69,6 +69,10 @@ public:
     bool getConquerer();
     void resetConquerer();
 
+    // methods to manipulate the player's strategy (getter and setter)
+    PlayerStrategy* getStrategy();
+    void setStrategy(PlayerStrategy* strategy);
+
 private:
     PlayerStrategy* ps;
     string name;
@@ -84,4 +88,6 @@ private:
     vector<int> friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
     GameEngine *game;
+    PlayerStrategy *strategy;
+
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include "Player.h"
 using std::vector;
 
 class Territory;
@@ -11,12 +11,16 @@ public:
     virtual void issueOrder() = 0;
     virtual vector<Territory*> toAttach() = 0;
     virtual vector<Territory*> toDefend() = 0;
+
+protected:
+    Player* player;
 };
 
 
 class NeutralPlayerStrategy : public PlayerStrategy{
 
 public:
+    NeutralPlayerStrategy(Player* player);
     void issueOrder() override;
     vector<Territory*> toAttach() override;
     vector<Territory*> toDefend() override;

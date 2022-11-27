@@ -332,3 +332,12 @@ bool Player::getIsDoneIssuingOrders() {
 ostream& operator<<(ostream& os, Player& p){
     return os << "Name: " << p.getName() << ", ID: " << p.getPlayerID();
 }
+//setter for strategy
+void Player::setStrategy(PlayerStrategy* newStrategy) {
+    delete this->strategy;
+    this->strategy = newStrategy;
+}
+//getter for strategy
+PlayerStrategy* Player::getStrategy() {
+    return this->strategy;
+}
