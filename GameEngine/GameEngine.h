@@ -55,6 +55,7 @@ public:
     void reinforcementPhase();
     bool executeOrdersPhase();
     void mainGameLoop();
+    void mainGameLoop(int turns);
     void issueOrderPhase();
 
     GameEngine(Observer* _obs);

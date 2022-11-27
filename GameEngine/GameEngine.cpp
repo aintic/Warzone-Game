@@ -427,6 +427,16 @@ void GameEngine::mainGameLoop() {
     }while(stillPlaying);
 }
 
+// Main game loop method for testing purposes that runs the indicated
+// number of turns
+void GameEngine::mainGameLoop(int turns) {
+    for(int i = 0; i < turns; i++){
+        reinforcementPhase();
+        issueOrderPhase();
+        executeOrdersPhase();
+    }
+}
+
 //method to issue orders in a round-robin fashion
 void GameEngine::issueOrderPhase() {
     cout << "Starting Issuing Orders Phase" << endl;
