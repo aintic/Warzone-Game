@@ -1,7 +1,7 @@
 #include "PlayerStrategies.h"
 
 //Neutral Player
-//defualt constructor
+//default constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
     this->player = player;
 }
@@ -9,7 +9,7 @@ void NeutralPlayerStrategy::issueOrder() {
 
 }
 
-vector<Territory *> NeutralPlayerStrategy::toAttach() {
+vector<Territory *> NeutralPlayerStrategy::toAttack() {
 
     return vector<Territory *>();
 }
@@ -28,7 +28,7 @@ void CheaterPlayerStrategy::issueOrder() {
 
 }
 
-vector<Territory *> CheaterPlayerStrategy::toAttach() {
+vector<Territory *> CheaterPlayerStrategy::toAttack() {
     return vector<Territory *>();
 }
 
@@ -42,7 +42,7 @@ void HumanPlayerStrategy::issueOrder() {
 
 }
 
-vector<Territory *> HumanPlayerStrategy::toAttach() {
+vector<Territory *> HumanPlayerStrategy::toAttack() {
     return vector<Territory *>();
 }
 
@@ -56,7 +56,7 @@ void AggressivePlayerStrategy::issueOrder() {
 
 }
 
-vector<Territory *> AggressivePlayerStrategy::toAttach() {
+vector<Territory *> AggressivePlayerStrategy::toAttack() {
     return vector<Territory *>();
 }
 
@@ -70,7 +70,7 @@ void BenevolentPlayerStrategy::issueOrder() {
 
 }
 
-vector<Territory *> BenevolentPlayerStrategy::toAttach() {
+vector<Territory *> BenevolentPlayerStrategy::toAttack() {
     return vector<Territory *>();
 }
 
