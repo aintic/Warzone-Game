@@ -1,16 +1,45 @@
 #include "PlayerStrategies.h"
 
+
+// Constant strategy names for subclasses
+const string NeutralPlayerStrategy::strategyName = "Neutral";
+const string CheaterPlayerStrategy::strategyName = "Cheater";
+const string HumanPlayerStrategy::strategyName = "Human";
+const string AggressivePlayerStrategy::strategyName = "Aggressive";
+const string BenevolentPlayerStrategy::strategyName = "Benevolent";
+
+
+//Player Strategy base class
+PlayerStrategy::PlayerStrategy() {
+    /* TO-DO */
+}
+
+PlayerStrategy::PlayerStrategy(const Player &p) {
+    /* TO-DO */
+}
+
+PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &) {
+    /* TO-DO */
+    return *this;
+}
+
+Player *PlayerStrategy::getPlayer() {
+    return player;
+}
+
+void PlayerStrategy::setPlayer(Player* p) {
+    this->player = p;
+}
+
 //Neutral Player
 //default constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
     this->player = player;
 }
 void NeutralPlayerStrategy::issueOrder() {
-
 }
 
 vector<Territory *> NeutralPlayerStrategy::toAttack() {
-
     return vector<Territory *>();
 }
 
@@ -20,6 +49,10 @@ vector<Territory *> NeutralPlayerStrategy::toDefend() {
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
         return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
     });
+}
+
+string NeutralPlayerStrategy::getStrategyName() const {
+    return strategyName;
 }
 
 
@@ -36,6 +69,10 @@ vector<Territory *> CheaterPlayerStrategy::toDefend() {
     return vector<Territory *>();
 }
 
+string CheaterPlayerStrategy::getStrategyName() const {
+    return strategyName;
+}
+
 
 //Human Player
 void HumanPlayerStrategy::issueOrder() {
@@ -48,6 +85,10 @@ vector<Territory *> HumanPlayerStrategy::toAttack() {
 
 vector<Territory *> HumanPlayerStrategy::toDefend() {
     return vector<Territory *>();
+}
+
+string HumanPlayerStrategy::getStrategyName() const {
+    return strategyName;
 }
 
 
@@ -64,16 +105,22 @@ vector<Territory *> AggressivePlayerStrategy::toDefend() {
     return vector<Territory *>();
 }
 
+string AggressivePlayerStrategy::getStrategyName() const {
+    return strategyName;
+}
+
+
 
 //Benevolent Player
 void BenevolentPlayerStrategy::issueOrder() {
-
 }
 
 vector<Territory *> BenevolentPlayerStrategy::toAttack() {
-    return vector<Territory *>();
 }
 
 vector<Territory *> BenevolentPlayerStrategy::toDefend() {
-    return vector<Territory *>();
+}
+
+string BenevolentPlayerStrategy::getStrategyName() const {
+    return strategyName;
 }
