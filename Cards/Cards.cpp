@@ -383,14 +383,17 @@ void Hand::addCard(Card *c){
  * @return Order created by playing card
  */
 void Hand::play(Deck &d, Player* player, int index){
-        if(index >= 0 && index < this->cards.size()){
-            this->cards.at(index)->play(player);
-            d.getCards().push_back(this->cards.at(index));
-            this->cards.erase(this->cards.begin() + index);
+        if (!cards.empty()) {
+            if(index >= 0 && index < this->cards.size()){
+                this->cards.at(index)->play(player);
+                d.getCards().push_back(this->cards.at(index));
+                this->cards.erase(this->cards.begin() + index);
+            }
+            else{
+                cout << "Play failed - Invalid Index: " << index;
+            }
         }
-        else{
-            cout << "Play failed - Invalid Index: " << index;
-        }
+        return;
     }
 
 /**
