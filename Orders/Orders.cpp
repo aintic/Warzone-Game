@@ -344,7 +344,7 @@ bool Advance::validate() const {
                 }
             }
         // return false, target territory IS NOT adjacent
-        cout << "Cannot attack a non-adjacent territory." << endl;
+        cout << "Cannot advance to a non-adjacent territory." << endl;
         return false;
     }
 }
