@@ -736,6 +736,7 @@ void Blockade::execute() {
         // remove target territory from current player
         Player *neutral = new Player("Neutral", game);
         neutral->neutralConquerTerritory(targetTer);
+        neutral->setStrategy(new NeutralPlayerStrategy(neutral));
         game->setPlayers(neutral);
         cout << "Player Neutral created." << endl;
         cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
