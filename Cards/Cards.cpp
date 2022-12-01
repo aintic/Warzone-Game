@@ -515,7 +515,7 @@ void Deck::draw(Player& p){
         Card *drawnCard = this->getCards().at(randomIndex);
 
         // if drawn card is not acceptable for player strategy, draw again
-        while (!acceptCard(p, drawnCard)) {
+        while (!acceptCard(p.getStrategy()->getStrategyName(), drawnCard->getCardType())) {
             randomIndex = dist(rd);
             drawnCard = this->getCards().at(randomIndex);
         }
@@ -537,10 +537,10 @@ void Deck::draw(Player& p){
  * Human - whatever
 * @return bool
 */
-bool Deck::acceptCard(Player &p, Card *drawnCard) {
-    if (p.getStrategy()->getStrategyName() == "Benevolent" && drawnCard->getCardType() == "Bomb")
+bool Deck::acceptCard(string ps, string cardType) {
+    if (ps == "Benevolent" && cardType == "Bomb")
         return false;
-    else if ((p.getStrategy()->getStrategyName() == "Aggressive" || p.getStrategy()->getStrategyName() == "Neutral") && (drawnCard->getCardType() == "Blockade" || drawnCard->getCardType() == "Diplomacy"))
+    else if ((ps == "Aggressive" || ps == "Neutral") && (cardType == "Blockade" || cardType == "Diplomacy"))
         return false;
     else {
         return true;
