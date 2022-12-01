@@ -403,9 +403,9 @@ bool GameEngine::executeOrdersPhase() {
     } while (!allOrdersDone);
     for (Player *p : players) {
         p->resetFriendlyList();
-        if (p->getConquerer()) {
-            Card *bonusCard = deck->draw(*p);
-            cout << "\n" << p->getName() << " wins " << *bonusCard << " from conquering a territory this turn!" << endl;
+        if (p->getStrategy()->getStrategyName() != "Cheater" && p->getConquerer()) {
+            deck->draw(*p);
+            cout << "\n" << p->getName() << " wins " << *p->getHand()->getCards().back() << " from conquering a territory this turn!" << endl;
             p->resetConquerer();
         }
     }

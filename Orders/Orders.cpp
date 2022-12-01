@@ -5,6 +5,7 @@
 #include "Orders.h"
 #include "../Player/Player.h"
 #include "../GameEngine/GameEngine.h"
+#include "../Strategy/PlayerStrategies.h"
 
 using namespace std;
 
@@ -354,6 +355,8 @@ bool Advance::validate() const {
  */
 void Advance::execute() {
     // if order is valid,
+    Player* enemy = targetTer->get_owner();
+
     if (validate()) {
         // if both source and target territories belong to the current player (checked source territory in validate())
         if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
@@ -375,9 +378,24 @@ void Advance::execute() {
             currentPl->conquerTerritory(targetTer);
             cout << targetTer->get_owner()->getName() << "." << endl;
             targetTer->set_army_units(army_units);
+
+
+
+            //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
+
         }
         // if target territory belongs to enemy player and has >0 army units
         else {
+
+            //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
+
+
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
 
@@ -579,6 +597,16 @@ void Bomb::execute() {
     else {
         cout << "Invalid order. Order will not be executed." << endl;
     }
+
+    // defining enemy player
+    Player* enemy = targetTer->get_owner();
+
+    //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+    if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+    }
+
+
     Notify(this);
 
 }
@@ -704,10 +732,11 @@ void Blockade::execute() {
             }
         }
         // create player called Neutral if there isn't one, add to players list
-        // assign target territory to Neutral player, set reinforcement pool to 50
+        // assign target territory to Neutral player
         // remove target territory from current player
         Player *neutral = new Player("Neutral", game);
         neutral->neutralConquerTerritory(targetTer);
+        neutral->setStrategy(new NeutralPlayerStrategy(neutral));
         game->setPlayers(neutral);
         cout << "Player Neutral created." << endl;
         cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
@@ -998,39 +1027,38 @@ void Negotiate::execute() {
 /**
  * Constructor for OrdersList
  */
-    OrdersList::OrdersList() = default;
+OrdersList::OrdersList() = default;
 
-    OrdersList::OrdersList(GameEngine* game)
-    {
-        this->Attach(game->_observers);
-    }
+OrdersList::OrdersList(GameEngine* game)
+{
+    this->Attach(game->_observers);
+}
 /**
  * Destructor for OrdersList
  */
-    OrdersList::~OrdersList()
-    {
-        int size = _ordersList.size();
+OrdersList::~OrdersList()
+{
+    int size = _ordersList.size();
 
-        for (int i = 0; i < size; i++) {
-            delete _ordersList[i];
-        }
-        _ordersList.clear();
-        this->Detach();
-
-    };
+    for (int i = 0; i < size; i++) {
+        delete _ordersList[i];
+    }
+    _ordersList.clear();
+    this->Detach();
+};
 
 /**
  * Copy constructor for OrdersList - makes deep copy
  * @param ol - OrdersList object
  */
-    OrdersList::OrdersList(const OrdersList &ol) {
-        int size = ol._ordersList.size();
+OrdersList::OrdersList(const OrdersList &ol) {
+    int size = ol._ordersList.size();
 
-        _ordersList = vector<Order *>(size);
-        for (int i = 0; i < size; i++) {
-            _ordersList[i] = ol._ordersList[i]->clone();
-        }
+    _ordersList = vector<Order *>(size);
+    for (int i = 0; i < size; i++) {
+        _ordersList[i] = ol._ordersList[i]->clone();
     }
+}
 
 /**
  * Stream insertion operator for OrdersList
@@ -1038,69 +1066,69 @@ void Negotiate::execute() {
  * @param out - ostream object
  * @return ostream object
  */
-    ostream &operator<<(ostream &out, const OrdersList &ol) {
-        int size = ol._ordersList.size();
-        for (int i = 0; i < size; i++) {
-            out << "[ " << *ol._ordersList[i] << " ] \n";
-        }
-        return out;
+ostream &operator<<(ostream &out, const OrdersList &ol) {
+    int size = ol._ordersList.size();
+    for (int i = 0; i < size; i++) {
+        out << "[ " << *ol._ordersList[i] << " ] \n";
     }
+    return out;
+}
 
 /**
  * Assignment operator for OrdersList
  * @param ol - OrdersList object
  * @return OrdersList object
  */
-    OrdersList &OrdersList::operator=(const OrdersList &ol) {
-        // check self-assignment
-        if (this == &ol)
-            return *this;
-
-        // free memory of original orders list
-        for (int i = 0; i < _ordersList.size(); i++) {
-            delete _ordersList[i];
-        }
-
-        int size = ol._ordersList.size();
-        // set list size equal to target orders list
-        _ordersList = vector<Order *>(size);
-        // clone deep copy of target orders list
-        for (int i = 0; i < size; i++) {
-            _ordersList[i] = ol._ordersList[i]->clone();
-        }
-
+OrdersList &OrdersList::operator=(const OrdersList &ol) {
+    // check self-assignment
+    if (this == &ol)
         return *this;
+
+    // free memory of original orders list
+    for (int i = 0; i < _ordersList.size(); i++) {
+        delete _ordersList[i];
     }
+
+    int size = ol._ordersList.size();
+    // set list size equal to target orders list
+    _ordersList = vector<Order *>(size);
+    // clone deep copy of target orders list
+    for (int i = 0; i < size; i++) {
+        _ordersList[i] = ol._ordersList[i]->clone();
+    }
+
+    return *this;
+}
 
 /**
  * Method to add an order to the player's orders' list
  * @param o - order object
  */
-    void OrdersList::add(Order *o) {
-        // add new order to vector
-        _ordersList.push_back(o);
-        Notify(this);
+void OrdersList::add(Order *o) {
+    // add new order to vector
+    _ordersList.push_back(o);
+    Notify(this);
 
-    }
+}
 
 /**
  * Method to remove an order from the player's orders' list
  * @param pos - an int for the position of the order to be removed
  */
-    void OrdersList::remove(int pos) {
-        int size = _ordersList.size();
+void OrdersList::remove(int pos) {
+    int size = _ordersList.size();
 
-        if (size == 0)
-            cout << "No order in list." << endl;
-        else if (pos < 1 || pos > size)
-            cout << "Invalid order position." << endl;
-        else {
-            // delete object
-            delete _ordersList[pos - 1];
-            // resize vector
-            _ordersList.erase(_ordersList.begin() + pos - 1);
-        }
+    if (size == 0)
+        cout << "No order in list." << endl;
+    else if (pos < 1 || pos > size)
+        cout << "Invalid order position." << endl;
+    else {
+        // delete object
+        delete _ordersList[pos - 1];
+        // resize vector
+        _ordersList.erase(_ordersList.begin() + pos - 1);
     }
+}
 
 /**
  * Method to move an order from one position to another in the player's orders' list

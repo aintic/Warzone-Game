@@ -153,7 +153,9 @@ public:
     // Destructor
     ~Deck();
     // Draw method removes card from the deck and adds it to the players hand
-    Card* draw(Player& p);
+    void draw(Player& p);
+    // method to check if drawn card is acceptable for player strategy
+    bool acceptCard(string ps, string cardType);
     // Checks if deck is empty
     bool isEmpty();
     // Getter

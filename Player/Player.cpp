@@ -334,10 +334,29 @@ ostream& operator<<(ostream& os, Player& p){
 }
 //setter for strategy
 void Player::setStrategy(PlayerStrategy* newStrategy) {
-    delete this->strategy;
+    if(newStrategy != nullptr) {
+        delete this->strategy;
+    }
     this->strategy = newStrategy;
 }
+
+int Player::getIssuableReinforcementPool() const {
+    return issuableReinforcementPool;
+}
+
 //getter for strategy
 PlayerStrategy* Player::getStrategy() {
     return this->strategy;
+}
+
+int Player::getAdvanceDefendOrdersIssued() const {
+    return advanceDefendOrdersIssued;
+}
+
+const vector<int> &Player::getFriendlyList() const {
+    return friendlyList;
+}
+
+int Player::getAdvanceAttackOrdersIssued() const {
+    return advanceAttackOrdersIssued;
 }

@@ -384,14 +384,17 @@ void Hand::addCard(Card *c){
  * @return Order created by playing card
  */
 void Hand::play(Deck &d, Player* player, int index){
-        if(index >= 0 && index < this->cards.size()){
-            this->cards.at(index)->play(player);
-            d.getCards().push_back(this->cards.at(index));
-            this->cards.erase(this->cards.begin() + index);
+        if (!cards.empty()) {
+            if(index >= 0 && index < this->cards.size()){
+                this->cards.at(index)->play(player);
+                d.getCards().push_back(this->cards.at(index));
+                this->cards.erase(this->cards.begin() + index);
+            }
+            else{
+                cout << "Play failed - Invalid Index: " << index;
+            }
         }
-        else{
-            cout << "Play failed - Invalid Index: " << index;
-        }
+        return;
     }
 
 /**
@@ -500,19 +503,49 @@ Deck::~Deck() {
 * Removes random card from deck and places it in the Players Hand
 * @return Pointer to Drawn Card
 */
-Card* Deck::draw(Player& p){
+void Deck::draw(Player& p){
+    // Cheater doesn't use cards
+    if (p.getStrategy()->getStrategyName() == "Cheater") {
+        cout << "Cheater " << p << " does not draw a card.";
+        return;
+    }
     if (!cards.empty()){
         random_device rd;
         uniform_int_distribution<int> dist(0, cards.size() - 1);
         int randomIndex = dist(rd);
-        p.getHand()->getCards().push_back(this->getCards().at(randomIndex));
+        Card *drawnCard = this->getCards().at(randomIndex);
+
+        // if drawn card is not acceptable for player strategy, draw again
+        while (!acceptCard(p.getStrategy()->getStrategyName(), drawnCard->getCardType())) {
+            randomIndex = dist(rd);
+            drawnCard = this->getCards().at(randomIndex);
+        }
+        p.getHand()->getCards().push_back(drawnCard);
         this->cards.erase(this->cards.begin() + randomIndex);
-        return p.getHand()->getCards().back();
+        return;
     }
     else{
         cout << "Draw Failed: Deck is Empty";
     }
-    return nullptr;
+    return;
+}
+
+/**
+* Deck Class acceptCard method
+* Check if a drawn card is valid for the player strategy
+ * Neutral/Agressive - no Blockade/Diplomacy
+ * Benevolent - no Bomb
+ * Human - whatever
+* @return bool
+*/
+bool Deck::acceptCard(string ps, string cardType) {
+    if (ps == "Benevolent" && cardType == "Bomb")
+        return false;
+    else if ((ps == "Aggressive" || ps == "Neutral") && (cardType == "Blockade" || cardType == "Diplomacy"))
+        return false;
+    else {
+        return true;
+    }
 }
 
 /**

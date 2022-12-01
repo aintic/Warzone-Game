@@ -1,9 +1,12 @@
 #pragma once
+#include <string>
 #include <vector>
-#include "Player.h"
 using std::vector;
+using std::string;
+
 
 class Territory;
+class Player;
 
 class PlayerStrategy {
 
@@ -26,11 +29,15 @@ protected:
 class NeutralPlayerStrategy : public PlayerStrategy{
 
 public:
+    //default constructor
     NeutralPlayerStrategy(Player* player);
+    NeutralPlayerStrategy(const NeutralPlayerStrategy& neutralPlayerStrategy); // Copy constructor
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
+    NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
+
 private:
     const static string strategyName;
 };
@@ -63,6 +70,7 @@ private:
 class AggressivePlayerStrategy : public PlayerStrategy{
 
 public:
+    AggressivePlayerStrategy(Player* player);
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
