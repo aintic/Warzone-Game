@@ -35,12 +35,32 @@ void PlayerStrategy::setPlayer(Player* p) {
 //default constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
     this->player = player;
+    player->setStrategy(this);
+
 }
+// Copy constructor
+NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy &neutralPlayerStrategy) {
+    this->player = neutralPlayerStrategy.player;
+    this->player->setStrategy(this);
+}
+
+// Assignment operator
+NeutralPlayerStrategy &NeutralPlayerStrategy::operator=(const NeutralPlayerStrategy &neutralPlayerStrategy) {
+    this->player = neutralPlayerStrategy.player;
+    this->player->setStrategy(this);
+    return *this;
+}
+
+
 void NeutralPlayerStrategy::issueOrder() {
+    player->setIsDoneIssuingOrders(true);
+
 }
 
 vector<Territory *> NeutralPlayerStrategy::toAttack() {
-    return vector<Territory *>();
+    //return empty territories
+    vector<Territory*> territories;
+    return territories;
 }
 
 vector<Territory *> NeutralPlayerStrategy::toDefend() {
@@ -93,6 +113,11 @@ string HumanPlayerStrategy::getStrategyName() const {
 
 
 //Aggressive Player
+AggressivePlayerStrategy::AggressivePlayerStrategy(Player* player) {
+    this->player = player;
+    player->setStrategy(this);
+}
+
 void AggressivePlayerStrategy::issueOrder() {
 
 }

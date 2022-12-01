@@ -334,7 +334,9 @@ ostream& operator<<(ostream& os, Player& p){
 }
 //setter for strategy
 void Player::setStrategy(PlayerStrategy* newStrategy) {
-    delete this->strategy;
+    if(newStrategy != nullptr) {
+        delete this->strategy;
+    }
     this->strategy = newStrategy;
 }
 //getter for strategy

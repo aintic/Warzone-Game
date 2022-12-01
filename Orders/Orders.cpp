@@ -5,6 +5,7 @@
 #include "Orders.h"
 #include "../Player/Player.h"
 #include "../GameEngine/GameEngine.h"
+#include "../Strategy/PlayerStrategies.h"
 
 using namespace std;
 
@@ -354,6 +355,8 @@ bool Advance::validate() const {
  */
 void Advance::execute() {
     // if order is valid,
+    Player* enemy = targetTer->get_owner();
+
     if (validate()) {
         // if both source and target territories belong to the current player (checked source territory in validate())
         if (targetTer->get_owner()->getPlayerID() == currentPl->getPlayerID()) {
@@ -375,9 +378,24 @@ void Advance::execute() {
             currentPl->conquerTerritory(targetTer);
             cout << targetTer->get_owner()->getName() << "." << endl;
             targetTer->set_army_units(army_units);
+
+
+
+            //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
+
         }
         // if target territory belongs to enemy player and has >0 army units
         else {
+
+            //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
+
+
             // take army units from source territory
             sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
 
@@ -579,6 +597,16 @@ void Bomb::execute() {
     else {
         cout << "Invalid order. Order will not be executed." << endl;
     }
+
+    // defining enemy player
+    Player* enemy = targetTer->get_owner();
+
+    //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
+    if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+    }
+
+
     Notify(this);
 
 }
