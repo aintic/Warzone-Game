@@ -12,6 +12,7 @@ class PlayerStrategy {
 
 public:
     PlayerStrategy(); // Default constructor
+    PlayerStrategy(Player* p);
     PlayerStrategy(const Player& p); // Copy constructor
     PlayerStrategy& operator=(const PlayerStrategy&); // Assignment operator
     Player* getPlayer(); // Player getters and setters
@@ -83,10 +84,12 @@ private:
 class BenevolentPlayerStrategy : public PlayerStrategy{
 
 public:
+    BenevolentPlayerStrategy(Player* p);
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
+    bool onlyNonPlayableCards(Player* p);
 private:
     const static string strategyName;
 };
