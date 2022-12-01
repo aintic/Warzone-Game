@@ -499,19 +499,49 @@ Deck::~Deck() {
 * Removes random card from deck and places it in the Players Hand
 * @return Pointer to Drawn Card
 */
-Card* Deck::draw(Player& p){
+void Deck::draw(Player& p){
+    // Cheater doesn't use cards
+    if (p.getStrategy()->getStrategyName() == "Cheater") {
+        cout << "Cheater " << p << " does not draw a card.";
+        return;
+    }
     if (!cards.empty()){
         random_device rd;
         uniform_int_distribution<int> dist(0, cards.size() - 1);
         int randomIndex = dist(rd);
-        p.getHand()->getCards().push_back(this->getCards().at(randomIndex));
+        Card *drawnCard = this->getCards().at(randomIndex);
+
+        // if drawn card is not acceptable for player strategy, draw again
+        while (!acceptCard(p, drawnCard)) {
+            randomIndex = dist(rd);
+            drawnCard = this->getCards().at(randomIndex);
+        }
+        p.getHand()->getCards().push_back(drawnCard);
         this->cards.erase(this->cards.begin() + randomIndex);
-        return p.getHand()->getCards().back();
+        return;
     }
     else{
         cout << "Draw Failed: Deck is Empty";
     }
-    return nullptr;
+    return;
+}
+
+/**
+* Deck Class acceptCard method
+* Check if a drawn card is valid for the player strategy
+ * Neutral/Agressive - no Blockade/Diplomacy
+ * Benevolent - no Bomb
+ * Human - whatever
+* @return bool
+*/
+bool Deck::acceptCard(Player &p, Card *drawnCard) {
+    if (p.getStrategy()->getStrategyName() == "Benevolent" && drawnCard->getCardType() == "Bomb")
+        return false;
+    else if ((p.getStrategy()->getStrategyName() == "Aggressive" || p.getStrategy()->getStrategyName() == "Neutral") && (drawnCard->getCardType() == "Blockade" || drawnCard->getCardType() == "Diplomacy"))
+        return false;
+    else {
+        return true;
+    }
 }
 
 /**

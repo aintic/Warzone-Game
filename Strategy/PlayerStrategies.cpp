@@ -1,4 +1,8 @@
 #include "PlayerStrategies.h"
+#include "../GameEngine/GameEngine.h"
+#include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
+#include "Player.h"
 
 
 // Constant strategy names for subclasses
@@ -119,20 +123,49 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(Player* player) {
 }
 
 void AggressivePlayerStrategy::issueOrder() {
-
+    return;
 }
 
+// returns neighbouring enemy territories from weakest to strongest
 vector<Territory *> AggressivePlayerStrategy::toAttack() {
-    return vector<Territory *>();
+    vector<Territory*> territories = player->getTerritories();
+    vector<Territory*> toAttackTerritories;
+    for (Territory *ownedTerritory : territories){ //for each owned territory
+        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) { //for each owned territory's neighbour
+            if (neighborTerritory->get_owner()->getPlayerID() != player->getPlayerID()) {  //if the current player does not own the neighbor territory
+                // check if territory is already in toAttackTerritories
+                auto it = find_if(toAttackTerritories.begin(), toAttackTerritories.end(),
+                                  [&neighborTerritory](Territory *t) {
+                                      return t->get_id() == neighborTerritory->get_id();
+                                  });
+                if (it == toAttackTerritories.end()) { //if territory is not already in toAttackTerritories add it
+                    toAttackTerritories.push_back(neighborTerritory);
+                }
+            }
+        }
+    }
+    // sort toAttack territories by # of army units ascending
+    sort(toAttackTerritories.begin(), toAttackTerritories.end(), [](Territory *lhs, Territory *rhs){
+        return  lhs->get_army_units() < rhs->get_army_units();
+    });
+    return toAttackTerritories;
 }
 
+// returns own territories from weakest to strongest
 vector<Territory *> AggressivePlayerStrategy::toDefend() {
-    return vector<Territory *>();
+    vector<Territory *> territories = player->getTerritories();
+    sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs) {
+        return (lhs->get_army_units() + lhs->get_issued_army_units()) <
+               (rhs->get_army_units() + rhs->get_issued_army_units());
+    });
+    return territories;
 }
 
 string AggressivePlayerStrategy::getStrategyName() const {
     return strategyName;
 }
+
+
 
 
 

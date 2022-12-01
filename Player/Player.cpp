@@ -339,7 +339,24 @@ void Player::setStrategy(PlayerStrategy* newStrategy) {
     }
     this->strategy = newStrategy;
 }
+
+int Player::getIssuableReinforcementPool() const {
+    return issuableReinforcementPool;
+}
+
 //getter for strategy
 PlayerStrategy* Player::getStrategy() {
     return this->strategy;
+}
+
+int Player::getAdvanceDefendOrdersIssued() const {
+    return advanceDefendOrdersIssued;
+}
+
+const vector<int> &Player::getFriendlyList() const {
+    return friendlyList;
+}
+
+int Player::getAdvanceAttackOrdersIssued() const {
+    return advanceAttackOrdersIssued;
 }

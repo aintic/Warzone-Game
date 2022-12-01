@@ -1,9 +1,12 @@
 #pragma once
+#include <string>
 #include <vector>
-#include "Player.h"
 using std::vector;
+using std::string;
+
 
 class Territory;
+class Player;
 
 class PlayerStrategy {
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include "PlayerStrategies.h"
+
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
 #include <algorithm>
@@ -47,6 +49,10 @@ public:
     void setAdvanceDefendOrdersIssued(int numOrders);
     void setIsDoneIssuingOrders(bool b);
     bool getIsDoneIssuingOrders();
+    int getIssuableReinforcementPool() const;
+    int getAdvanceAttackOrdersIssued() const;
+    int getAdvanceDefendOrdersIssued() const;
+    const vector<int> &getFriendlyList() const;
     void addOrder(Order *o);
 
     vector<Territory*> toDefend(); //player territories to defend
