@@ -40,6 +40,8 @@ public:
     vector<Territory*> getTerritories();
     int getNumTerritories();
     int getReinforcementPool();
+    int getIssuableReinforcementPool();
+    int getAdvanceDefendOrdersIssued();
     void setGame(GameEngine* game);
     void setPlayerOrderList(OrdersList* orders);
     void setTerritories(vector<Territory*> t);
@@ -80,7 +82,6 @@ public:
     void setStrategy(PlayerStrategy* strategy);
 
 private:
-    PlayerStrategy* ps;
     string name;
     Hand* hand;
     vector<Territory*> territories; //list of owned territories
@@ -94,6 +95,5 @@ private:
     vector<int> friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
     GameEngine *game;
-    PlayerStrategy *strategy;
-
+    PlayerStrategy *strategy = nullptr;
 };
