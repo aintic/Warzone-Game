@@ -260,7 +260,8 @@ void AirliftCard::play(Player *player) {
     Territory *targetTerr = toDefendTerritories.front();
     Territory *sourceTerr = toDefendTerritories.back();
     // send half the armies of the most populated territory to the least populated
-    player->addOrder(new Airlift(sourceTerr, targetTerr, player, toDefendTerritories.back()->get_army_units() / 2, player->getGame()));
+    player->addOrder(new Airlift(sourceTerr, targetTerr, player,
+                                 (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, player->getGame()));
     cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
 }
 
