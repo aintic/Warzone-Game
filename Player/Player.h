@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "PlayerStrategies.h"
+#include "../Strategy/PlayerStrategies.h"
 
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
@@ -40,7 +40,6 @@ public:
     vector<Territory*> getTerritories();
     int getNumTerritories();
     int getReinforcementPool();
-    int getIssuableReinforcementPool();
     int getAdvanceDefendOrdersIssued();
     void setGame(GameEngine* game);
     void setPlayerOrderList(OrdersList* orders);
