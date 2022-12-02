@@ -154,6 +154,7 @@ public:
     ~Deck();
     // Draw method removes card from the deck and adds it to the players hand
     void draw(Player& p);
+    void drawStrategy(Player &p);
     // method to check if drawn card is acceptable for player strategy
     bool acceptCard(string ps, string cardType);
     // Checks if deck is empty

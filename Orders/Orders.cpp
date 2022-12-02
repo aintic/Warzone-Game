@@ -382,18 +382,18 @@ void Advance::execute() {
 
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
-                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-            }
+//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+//            }
 
         }
         // if target territory belongs to enemy player and has >0 army units
         else {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
-                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-            }
+//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+//            }
 
 
             // take army units from source territory
@@ -601,11 +601,10 @@ void Bomb::execute() {
     // defining enemy player
     Player* enemy = targetTer->get_owner();
 
-    //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-    if(enemy->getStrategy()->getStrategyName() == "Neutral"){
-        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-    }
-
+    //if enemy player is Neutral player, then the neutral player becomes an aggressive player
+//    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+//        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+//    }
 
     Notify(this);
 
@@ -724,7 +723,7 @@ void Blockade::execute() {
         for (Player *p : game->getPlayers()) {
             // if there's already a player called Neutral, assign the target territory to them
             // remove target territory from current player and exit
-            if (p->getName().compare("Neutral") == 0) {
+            if (p->getStrategy() != NULL && p->getStrategy()->getStrategyName() == "Neutral") {
                 p->neutralConquerTerritory(targetTer);
                 cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
                 cout << *this << " order executed." << endl;
@@ -735,9 +734,8 @@ void Blockade::execute() {
         // assign target territory to Neutral player
         // remove target territory from current player
         Player *neutral = new Player("Neutral", game);
-        neutral->neutralConquerTerritory(targetTer);
         neutral->setStrategy(new NeutralPlayerStrategy(neutral));
-        game->setPlayers(neutral);
+        neutral->neutralConquerTerritory(targetTer);
         cout << "Player Neutral created." << endl;
         cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
         cout << *this << " order executed." << endl;

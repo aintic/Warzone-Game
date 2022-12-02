@@ -257,13 +257,24 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
-    vector<Territory*> toDefendTerritories = player->toDefend();
-    Territory *targetTerr = toDefendTerritories.front();
-    Territory *sourceTerr = toDefendTerritories.back();
-    // send half the armies of the most populated territory to the least populated
-    player->addOrder(new Airlift(sourceTerr, targetTerr, player,
-                                 (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, player->getGame()));
-    cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
+    if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
+            vector<Territory*> ownedTerr = player->toDefend();
+            Territory *sourceTerr = ownedTerr.at(ownedTerr.size() - 2);
+            Territory *targetTerr = ownedTerr.back();
+            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units(), player->getGame()));
+            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
+                 << endl;
+    }
+    else {
+        vector<Territory *> toDefendTerritories = player->toDefend();
+        Territory *targetTerr = toDefendTerritories.front();
+        Territory *sourceTerr = toDefendTerritories.back();
+        // send half the armies of the most populated territory to the least populated
+        player->addOrder(new Airlift(sourceTerr, targetTerr, player,
+                                     (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, player->getGame()));
+        cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
+             << endl;
+    }
 }
 
 /**
@@ -505,23 +516,14 @@ Deck::~Deck() {
 * @return Pointer to Drawn Card
 */
 void Deck::draw(Player& p){
-    // Cheater doesn't use cards
-    if (p.getStrategy()->getStrategyName() == "Cheater") {
-        cout << "Cheater " << p << " does not draw a card.";
-        return;
+    if (p.getStrategy() != nullptr) {
+        drawStrategy(p);
     }
-    if (!cards.empty()){
+    else if (!cards.empty()) {
         random_device rd;
         uniform_int_distribution<int> dist(0, cards.size() - 1);
         int randomIndex = dist(rd);
-        Card *drawnCard = this->getCards().at(randomIndex);
-
-        // if drawn card is not acceptable for player strategy, draw again
-        while (!acceptCard(p.getStrategy()->getStrategyName(), drawnCard->getCardType())) {
-            randomIndex = dist(rd);
-            drawnCard = this->getCards().at(randomIndex);
-        }
-        p.getHand()->getCards().push_back(drawnCard);
+        p.getHand()->getCards().push_back(this->getCards().at(randomIndex));
         this->cards.erase(this->cards.begin() + randomIndex);
         return;
     }
@@ -546,6 +548,34 @@ bool Deck::acceptCard(string ps, string cardType) {
         return false;
     else {
         return true;
+    }
+}
+
+void Deck::drawStrategy(Player &p) {
+    // Cheater doesn't use cards
+    if (p.getStrategy()->getStrategyName() == "Cheater") {
+        cout << "Cheater " << p << " does not draw a card.";
+        return;
+    }
+    else if (!cards.empty()){
+        random_device rd;
+        uniform_int_distribution<int> dist(0, cards.size() - 1);
+        int randomIndex = dist(rd);
+        Card *drawnCard = this->getCards().at(randomIndex);
+
+        // if drawn card is not acceptable for player strategy, draw again
+        while (!acceptCard(p.getStrategy()->getStrategyName(), drawnCard->getCardType())) {
+            randomIndex = dist(rd);
+            drawnCard = this->getCards().at(randomIndex);
+        }
+
+        p.getHand()->getCards().push_back(drawnCard);
+        this->cards.erase(this->cards.begin() + randomIndex);
+        return;
+    }
+    else{
+        cout << "Draw Failed: Deck is Empty";
+        return;
     }
 }
 
