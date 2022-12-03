@@ -57,6 +57,7 @@ public:
     void mainGameLoop(int turns);
     void issueOrderPhase();
 
+    vector<string> stringToVector(const char &delimiter, const string &str);
 
     GameEngine(Observer* _obs);
     string stringToLog();
