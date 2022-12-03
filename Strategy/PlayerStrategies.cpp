@@ -71,7 +71,7 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
     player->setStrategy(this);
 
 }
-// Copy constructor
+//copy constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy &neutralPlayerStrategy) {
     this->player = neutralPlayerStrategy.player;
     this->player->setStrategy(this);
