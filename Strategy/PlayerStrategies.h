@@ -66,7 +66,12 @@ private:
 class HumanPlayerStrategy : public PlayerStrategy{
 
 public:
+    HumanPlayerStrategy(); // default constructor
+    HumanPlayerStrategy(Player* player); // parametized constructor
+    HumanPlayerStrategy(const HumanPlayerStrategy& humanPlayerStrategy); // Copy constructor
     ~HumanPlayerStrategy() override;
+    HumanPlayerStrategy& operator=(const HumanPlayerStrategy& humanPlayerStrategy); // Assignment operator
+    friend ostream& operator << (ostream& out,  const HumanPlayerStrategy& nps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
