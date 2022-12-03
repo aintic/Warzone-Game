@@ -257,13 +257,17 @@ Card* AirliftCard::clone() {
  */
 void AirliftCard::play(Player *player) {
     if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
-            vector<Territory*> ownedTerr = player->toDefend();
+            vector<Territory*> ownedTers = player->toDefend();
+            int defendListSize = ownedTers.size();
             int airliftCardIssued = dynamic_cast<AggressivePlayerStrategy &>(*player->getStrategy()).getAirliftCardIssued();
+            Territory *sourceTerr = ownedTers.front();
             // move all armies from nth strongest terr to strongest terr
-            // n starts at 2nd strongest terr, going down as more airlift cards are issued
-            Territory *sourceTerr = ownedTerr.at(ownedTerr.size() - 1 - airliftCardIssued);
-            Territory *targetTerr = ownedTerr.back();
-            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units(), player->getGame()));
+            // n starts at 2nd strongest terr, going down the list if more airlift cards are issued
+            if (defendListSize >=3 ) {
+                sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
+            }
+            Territory *targetTerr = ownedTers.back();
+            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), player->getGame()));
             dynamic_cast<AggressivePlayerStrategy&>(*player->getStrategy()).setAirliftCardIssued(++airliftCardIssued);
             cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
                  << endl;
