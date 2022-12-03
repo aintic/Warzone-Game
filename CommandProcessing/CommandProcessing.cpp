@@ -249,6 +249,8 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     // for example loadmap examplemap --> valid token is loadmap
     string delimiter = " ";
     string token_command = typed_command.substr(0, typed_command.find(delimiter));
+    string command_after_token = typed_command.substr(token_command.length() + delimiter.length());
+
 
     State* currentState = game->getCurrentState();
 
@@ -260,8 +262,39 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     if (std::find(valid_commands.begin(), valid_commands.end(), token_command) != valid_commands.end())
     {
         // if loadmap or addplayer, we need a name for the map and the player
-        if(token_command == "loadmap" || token_command == "addplayer"){
+        if(token_command == "loadmap" || token_command == "addplayer" ){
             if(typed_command.length() <= (token_command.length() + 1)){
+
+                // command is incomplete. ex: loadmap instead of loadmap <mapname>
+                string error = currentState->getWrongCommandError();
+                command->set_command_effect(error);
+                cout << "Validating: Command is NOT VALID" << endl;
+                return false;
+            }
+        }
+
+        if(token_command == "tournament"){
+
+            bool has_list_of_map_files = false;
+            if (command_after_token.find('-M ') != std::string::npos) {
+                has_list_of_map_files = true;
+            }
+            bool has_list_of_player_strategies = false;
+            if (command_after_token.find(' -P') != std::string::npos) {
+                has_list_of_player_strategies = true;
+            }
+            bool has_number_of_games = false;
+            if (command_after_token.find(' -G ') != std::string::npos) {
+                has_number_of_games = true;
+            }
+            bool has_max_number_of_turns = false;
+            if (command_after_token.find(' -D ') != std::string::npos) {
+                has_max_number_of_turns = true;
+            }
+
+            bool has_all_four = has_list_of_map_files and has_list_of_player_strategies and has_number_of_games and has_max_number_of_turns;
+
+            if(not has_all_four){
 
                 // command is incomplete. ex: loadmap instead of loadmap <mapname>
                 string error = currentState->getWrongCommandError();

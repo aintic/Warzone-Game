@@ -152,6 +152,33 @@ void GameEngine::startupPhase(CommandProcessor* c) {
         string delimiter = " ";
         string token_command = typed_command.substr(0, typed_command.find(delimiter));
 
+        if(token_command == "tournament"){
+
+            string tournament_string = typed_command.substr(token_command.length() + delimiter.length());
+
+            unsigned M = tournament_string.find(" -M ") + 4;
+            unsigned P = tournament_string.find(" -P ") + 4;
+
+            string map_string = tournament_string.substr (M,P-M - 4);
+
+            unsigned G = tournament_string.find(" -G ") + 4;
+            string players_string = tournament_string.substr (P,G-P - 4);
+
+            unsigned D = tournament_string.find(" -D ") + 4;
+            string games_string = tournament_string.substr (G,D-G - 4);
+
+            string turns_string = tournament_string.substr (D);
+
+
+            cout << map_string << endl;
+            cout << players_string << endl;
+            cout << games_string << endl;
+            cout << turns_string << endl;
+
+
+
+        }
+
         // MAP LOADING
         if(token_command == "loadmap"){
 
@@ -592,7 +619,7 @@ startupState &startupState::operator=(const startupState &s) {
 
 //method that holds all valid commands
 vector<string> startupState::getValidCommand() {
-    vector<string> vect = {"loadmap", "validatemap", "addplayer", "gamestart"};
+    vector<string> vect = {"loadmap", "validatemap", "addplayer", "gamestart", "tournament"};
     return vect;
 }
 
@@ -623,6 +650,7 @@ vector<string> startupState::getSpecificValidCommands() { //method to get valid 
     switch (step) {
         case 0:
             valid_commands.push_back(getValidCommand()[0]);
+            valid_commands.push_back(getValidCommand()[4]);
             break;
         case 1:
             valid_commands.push_back(getValidCommand()[0]);
