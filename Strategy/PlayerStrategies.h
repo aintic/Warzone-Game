@@ -43,8 +43,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
-    NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
-
+    NeutralPlayerStrategy* clone() const override;
 private:
     const static string strategyName;
 };
@@ -53,6 +52,7 @@ private:
 class CheaterPlayerStrategy : public PlayerStrategy{
 
 public:
+    ~CheaterPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -66,6 +66,7 @@ private:
 class HumanPlayerStrategy : public PlayerStrategy{
 
 public:
+    ~HumanPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -104,6 +105,7 @@ class BenevolentPlayerStrategy : public PlayerStrategy{
 
 public:
     BenevolentPlayerStrategy(Player* p);
+    ~BenevolentPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;

@@ -36,6 +36,8 @@ PlayerStrategy::PlayerStrategy(const PlayerStrategy& ps) {
     player->setStrategy(this);
 }
 
+PlayerStrategy::~PlayerStrategy() = default;
+
 // assignment operator
 PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &ps) {
     if (&ps != this) {
@@ -115,6 +117,8 @@ string NeutralPlayerStrategy::getStrategyName() const {
 // CHEATER PLAYER STRATEGY
 // *****************************************************************************************************************
 
+CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
+
 // clone method
 CheaterPlayerStrategy* CheaterPlayerStrategy::clone() const {
     return new CheaterPlayerStrategy(*this);
@@ -138,6 +142,8 @@ string CheaterPlayerStrategy::getStrategyName() const {
 // *****************************************************************************************************************
 // HUMAN PLAYER STRATEGY
 // *****************************************************************************************************************
+
+HumanPlayerStrategy::~HumanPlayerStrategy() = default;
 
 // clone method
 HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
@@ -365,6 +371,8 @@ void AggressivePlayerStrategy::setAirliftCardIssued(int airliftCardIssued) {
 // *****************************************************************************************************************
 // BENEVOLENT PLAYER STRATEGY
 // *****************************************************************************************************************
+
+BenevolentPlayerStrategy::~BenevolentPlayerStrategy() = default;
 
 BenevolentPlayerStrategy* BenevolentPlayerStrategy::clone() const {
     return new BenevolentPlayerStrategy(*this);
