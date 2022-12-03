@@ -372,15 +372,35 @@ void AggressivePlayerStrategy::setAirliftCardIssued(int airliftCardIssued) {
 // BENEVOLENT PLAYER STRATEGY
 // *****************************************************************************************************************
 
+// Default constructor
+BenevolentPlayerStrategy::BenevolentPlayerStrategy() : PlayerStrategy() {
+}
+
+// Parametrized constructor
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *p) : PlayerStrategy(p) {
 }
 
+// Destructor
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() = default;
 
+// Clone method
 BenevolentPlayerStrategy* BenevolentPlayerStrategy::clone() const {
     return new BenevolentPlayerStrategy(*this);
 }
 
+// Assignment operator
+BenevolentPlayerStrategy &BenevolentPlayerStrategy::operator=(const BenevolentPlayerStrategy &bps) {
+    PlayerStrategy::operator = (bps);
+    return *this;
+}
+
+// Stream insertion operator
+ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &bps) {
+    cout << bps.getStrategyName();
+    return out;
+}
+
+// Benevolent player issueOrder method
 void BenevolentPlayerStrategy::issueOrder() {
 
     Hand* playerHand = player->getHand();
@@ -427,7 +447,8 @@ void BenevolentPlayerStrategy::issueOrder() {
     }
 }
 
-//Only used to issue Negotiate orders. Player will prioritize the winning player to Negotiate with.
+// Benevolent player toAttack method
+// Only used to issue Negotiate orders. Player will prioritize the winning player to Negotiate with.
 vector<Territory *> BenevolentPlayerStrategy::toAttack() {
     vector<Territory *> toAttackTerritories;
     for (Territory *ownedTerritory: player->getTerritories()) { //for each owned territory
@@ -451,6 +472,7 @@ vector<Territory *> BenevolentPlayerStrategy::toAttack() {
     return toAttackTerritories;
 }
 
+// Benevolent player toDefend method
 vector<Territory *> BenevolentPlayerStrategy::toDefend() {
     auto territories = player->getTerritories();
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
@@ -459,6 +481,7 @@ vector<Territory *> BenevolentPlayerStrategy::toDefend() {
     return territories;
 }
 
+// getStrategyName method
 string BenevolentPlayerStrategy::getStrategyName() const {
     return strategyName;
 }

@@ -104,8 +104,11 @@ private:
 class BenevolentPlayerStrategy : public PlayerStrategy{
 
 public:
-    BenevolentPlayerStrategy(Player* p);
-    ~BenevolentPlayerStrategy() override;
+    BenevolentPlayerStrategy(); // default constructor
+    explicit BenevolentPlayerStrategy(Player* p); // parametrized constructor
+    ~BenevolentPlayerStrategy() override; // destructor
+    BenevolentPlayerStrategy& operator=(const BenevolentPlayerStrategy &bps); // assignment operator
+    friend ostream& operator<<(ostream& out, const BenevolentPlayerStrategy& bps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
