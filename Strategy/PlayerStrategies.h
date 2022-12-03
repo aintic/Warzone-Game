@@ -52,7 +52,12 @@ private:
 class CheaterPlayerStrategy : public PlayerStrategy{
 
 public:
+    CheaterPlayerStrategy();
+    CheaterPlayerStrategy(Player* player);
+    CheaterPlayerStrategy(const CheaterPlayerStrategy &cps);
+    CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy &cps);
     ~CheaterPlayerStrategy() override;
+    friend ostream& operator << (ostream& os,  const CheaterPlayerStrategy& cps);
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -109,8 +114,11 @@ private:
 class BenevolentPlayerStrategy : public PlayerStrategy{
 
 public:
-    BenevolentPlayerStrategy(Player* p);
-    ~BenevolentPlayerStrategy() override;
+    BenevolentPlayerStrategy(); // default constructor
+    explicit BenevolentPlayerStrategy(Player* p); // parametrized constructor
+    ~BenevolentPlayerStrategy() override; // destructor
+    BenevolentPlayerStrategy& operator=(const BenevolentPlayerStrategy &bps); // assignment operator
+    friend ostream& operator<<(ostream& out, const BenevolentPlayerStrategy& bps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;

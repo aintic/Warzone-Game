@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <sstream>
 
 
 using namespace std;
@@ -130,6 +131,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
 
     this->commandProcessor = c;
     bool quit_game = false;
+    bool tournamentDone = false;
 
     Command *command;
 
@@ -159,7 +161,7 @@ void GameEngine::startupPhase(CommandProcessor* c) {
             unsigned M = tournament_string.find(" -M ") + 4;
             unsigned P = tournament_string.find(" -P ") + 4;
 
-            string map_string = tournament_string.substr (M,P-M - 4);
+            string map_string = tournament_string.substr(M,P-M - 4);
 
             unsigned G = tournament_string.find(" -G ") + 4;
             string players_string = tournament_string.substr (P,G-P - 4);
@@ -170,10 +172,20 @@ void GameEngine::startupPhase(CommandProcessor* c) {
             string turns_string = tournament_string.substr (D);
 
 
+
             cout << map_string << endl;
             cout << players_string << endl;
             cout << games_string << endl;
             cout << turns_string << endl;
+
+            vector<string> map_vector = stringToVector(',', map_string);
+
+            for(int i = 0; i < map_vector.size(); i++){
+                cout << map_vector[i] << endl;
+            }
+
+
+
 
 
 
@@ -366,6 +378,18 @@ void GameEngine::startupPhase(CommandProcessor* c) {
             mainGameLoop();
         }
     }while(!quit_game);
+}
+
+vector<string> GameEngine::stringToVector(const char &delimiter, const string &str)
+{
+    string tmp;
+    stringstream ss(str);
+    vector<string> result;
+
+    while(getline(ss, tmp, delimiter)){
+        result.push_back(tmp);
+    }
+    return result;
 }
 
 void GameEngine::reinforcementPhase() {

@@ -1,6 +1,6 @@
 #include "PlayerStrategies.h"
-#include "GameEngine.h"
-#include "Cards.h"
+#include "../GameEngine/GameEngine.h"
+#include "../Cards/Cards.h"
 #include <string>
 using std::cout;
 using std::endl;
@@ -11,17 +11,21 @@ void testPlayerStrategies(){
     Player *p2 = new Player("Daria", game);
     Player *p3 = new Player("Hongsuk", game);
     Player *p4 = new Player("Michael", game);
+    Player *p5 = new Player("Linus", game);
 
     PlayerStrategy *s1 = new AggressivePlayerStrategy(p1);
     PlayerStrategy *s2 = new BenevolentPlayerStrategy(p2);
     PlayerStrategy *s3 = new NeutralPlayerStrategy(p3);
     PlayerStrategy *s4 = new HumanPlayerStrategy(p4);
+    PlayerStrategy *s5 = new CheaterPlayerStrategy(p5);
+
 
     //Adding players to game
     game->players.push_back(p1);
     game->players.push_back(p2);
     game->players.push_back(p3);
     game->players.push_back(p4);
+    game->players.push_back(p5);
 
 
     // load the testing map
@@ -59,6 +63,7 @@ void testPlayerStrategies(){
     cout << *p2->getHand() << endl;
     cout << *p3->getHand() << endl;
     cout << *p4->getHand() << endl;
+    cout << *p5->getHand() << endl;
 
 
     for (Player *p : game->players) {
