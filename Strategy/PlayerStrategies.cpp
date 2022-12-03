@@ -29,6 +29,8 @@ PlayerStrategy::PlayerStrategy(const Player &p) {
     /* TO-DO */
 }
 
+PlayerStrategy::~PlayerStrategy() = default;
+
 PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &) {
     /* TO-DO */
     return *this;
@@ -47,8 +49,10 @@ void PlayerStrategy::setPlayer(Player* p) {
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) {
     this->player = player;
     player->setStrategy(this);
-
 }
+
+NeutralPlayerStrategy::~NeutralPlayerStrategy() = default;
+
 // Copy constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(const NeutralPlayerStrategy &neutralPlayerStrategy) {
     this->player = neutralPlayerStrategy.player;
@@ -128,6 +132,8 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(Player* player) {
     this->player = player;
     player->setStrategy(this);
 }
+
+AggressivePlayerStrategy::~AggressivePlayerStrategy() = default;
 
 void AggressivePlayerStrategy::issueOrder() {
     return;
