@@ -15,6 +15,7 @@ public:
     PlayerStrategy(Player* p);
     PlayerStrategy(const Player& p); // Copy constructor
     PlayerStrategy& operator=(const PlayerStrategy&); // Assignment operator
+    virtual ~PlayerStrategy();
     Player* getPlayer(); // Player getters and setters
     void setPlayer(Player*);
     virtual void issueOrder() = 0;
@@ -32,6 +33,7 @@ class NeutralPlayerStrategy : public PlayerStrategy{
 public:
     //default constructor
     NeutralPlayerStrategy(Player* player);
+    ~NeutralPlayerStrategy() override;
     NeutralPlayerStrategy(const NeutralPlayerStrategy& neutralPlayerStrategy); // Copy constructor
     void issueOrder() override;
     vector<Territory*> toAttack() override;
@@ -72,6 +74,7 @@ class AggressivePlayerStrategy : public PlayerStrategy{
 
 public:
     AggressivePlayerStrategy(Player* player);
+    ~AggressivePlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
