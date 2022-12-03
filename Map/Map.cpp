@@ -70,8 +70,12 @@ ostream& operator <<(ostream& stream, const Territory& t){
     for(string neighbour: t.neighbours_strings){
         neighbours.append(neighbour + " ");
     }
-    stream << "Territory: "<< t.name << ", ID:"<< t.id <<", Continent: " 
-    << t.continent_name << ", \n\t\t\tNeighbours: " << neighbours<< endl;
+    stream << "Territory: "<< t.name
+    << ", ID:"<< t.id
+    <<", Continent: "<< t.continent_name
+    << ", Neighbours: " << neighbours
+    << ", Owner: "<< t.owner->getName()
+    << ", Army Units: " << t.army_units << endl;
     return stream;
 }
 
