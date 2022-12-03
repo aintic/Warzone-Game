@@ -52,7 +52,12 @@ private:
 class CheaterPlayerStrategy : public PlayerStrategy{
 
 public:
+    CheaterPlayerStrategy();
+    CheaterPlayerStrategy(Player* player);
+    CheaterPlayerStrategy(const CheaterPlayerStrategy &cps);
+    CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy &cps);
     ~CheaterPlayerStrategy() override;
+    friend ostream& operator << (ostream& os,  const CheaterPlayerStrategy& cps);
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;

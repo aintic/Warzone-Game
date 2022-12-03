@@ -1,6 +1,6 @@
 #include "PlayerStrategies.h"
-#include "GameEngine.h"
-#include "Cards.h"
+#include "../GameEngine/GameEngine.h"
+#include "../Cards/Cards.h"
 #include <string>
 using std::cout;
 using std::endl;
@@ -12,7 +12,7 @@ void testPlayerStrategies(){
     Player *p3 = new Player("GHI", game);
     PlayerStrategy *s1 = new AggressivePlayerStrategy(p1);
     PlayerStrategy *s2 = new BenevolentPlayerStrategy(p2);
-    PlayerStrategy *s3 = new NeutralPlayerStrategy(p3);
+    PlayerStrategy *s3 = new CheaterPlayerStrategy(p3);
 
     //Adding players to game
     game->players.push_back(p1);
