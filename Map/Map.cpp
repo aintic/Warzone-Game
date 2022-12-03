@@ -82,18 +82,19 @@ ostream& operator <<(ostream& stream, const Territory& t){
  * @return Territory& 
  */
 Territory& Territory::operator=(const Territory& t){
-    owner = t.owner;
-    id = t.id;
-	army_units = t.army_units;
-    issuedArmyUnits = t.issuedArmyUnits;
-	name = t.name;
-	x = t.x;
-	y = t.y;
-    continent_id = t.continent_id;
-	continent_name = t.continent_id;
-	neighbours_strings = t.neighbours_strings;
-    neighbours = t.neighbours;
-
+    if(&t != this) {
+        owner = t.owner;
+        id = t.id;
+        army_units = t.army_units;
+        issuedArmyUnits = t.issuedArmyUnits;
+        name = t.name;
+        x = t.x;
+        y = t.y;
+        continent_id = t.continent_id;
+        continent_name = t.continent_name;
+        neighbours_strings = t.neighbours_strings;
+        neighbours = t.neighbours;
+    }
     return *this;
 }
 

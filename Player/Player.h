@@ -80,7 +80,7 @@ public:
     void setStrategy(PlayerStrategy* strategy);
 
 private:
-    PlayerStrategy* ps;
+    PlayerStrategy *strategy = nullptr;
     string name;
     Hand* hand;
     vector<Territory*> territories; //list of owned territories
@@ -94,6 +94,4 @@ private:
     vector<int> friendlyList; // list of IDs of friendly players
     bool conquerer; // whether the player conquered a territory during this turn
     GameEngine *game;
-    PlayerStrategy *strategy;
-
 };

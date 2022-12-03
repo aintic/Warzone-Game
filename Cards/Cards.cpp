@@ -203,7 +203,6 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-
     Territory *targetTerr = player->toDefend().back();
     player->addOrder(new Blockade(targetTerr, player, player->getGame()));
     cout << *player << " played a Blockade card on " << targetTerr->get_name() << endl;
@@ -259,9 +258,13 @@ Card* AirliftCard::clone() {
 void AirliftCard::play(Player *player) {
     if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
             vector<Territory*> ownedTerr = player->toDefend();
-            Territory *sourceTerr = ownedTerr.at(ownedTerr.size() - 2);
+            int airliftCardIssued = dynamic_cast<AggressivePlayerStrategy &>(*player->getStrategy()).getAirliftCardIssued();
+            // move all armies from nth strongest terr to strongest terr
+            // n starts at 2nd strongest terr, going down as more airlift cards are issued
+            Territory *sourceTerr = ownedTerr.at(ownedTerr.size() - 1 - airliftCardIssued);
             Territory *targetTerr = ownedTerr.back();
             player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units(), player->getGame()));
+            dynamic_cast<AggressivePlayerStrategy&>(*player->getStrategy()).setAirliftCardIssued(++airliftCardIssued);
             cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
                  << endl;
     }
@@ -538,7 +541,6 @@ void Deck::draw(Player& p){
 * Check if a drawn card is valid for the player strategy
  * Neutral/Agressive - no Blockade/Diplomacy
  * Benevolent - no Bomb
- * Human - whatever
 * @return bool
 */
 bool Deck::acceptCard(string ps, string cardType) {
