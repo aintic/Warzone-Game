@@ -19,7 +19,6 @@ class Player;
 class Deck;
 class Command;
 class CommandProcessor;
-
 //
 //GAME ENGINE CLASS
 //
@@ -57,6 +56,7 @@ public:
     void mainGameLoop();
     void mainGameLoop(int turns);
     void issueOrderPhase();
+
 
     GameEngine(Observer* _obs);
     string stringToLog();

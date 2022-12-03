@@ -5,6 +5,7 @@
 #include "../Orders/Orders.h"
 #include "../Player/Player.h"
 #include "../GameEngine/GameEngine.h"
+#include "PlayerStrategies.h"
 using namespace std;
 
 // Set constant Card Type members
@@ -202,7 +203,6 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-
     Territory *targetTerr = player->toDefend().back();
     player->addOrder(new Blockade(targetTerr, player, player->getGame()));
     cout << *player << " played a Blockade card on " << targetTerr->get_name() << endl;
@@ -256,13 +256,36 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
-    vector<Territory*> toDefendTerritories = player->toDefend();
-    Territory *targetTerr = toDefendTerritories.front();
-    Territory *sourceTerr = toDefendTerritories.back();
-    // send half the armies of the most populated territory to the least populated
-    player->addOrder(new Airlift(sourceTerr, targetTerr, player,
-                                 (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, player->getGame()));
-    cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
+    // if player is agressive
+    if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
+        // get player's owned territories, # of owned territories and # of airlift card order issued this turn
+            vector<Territory*> ownedTers = player->toDefend();
+            int defendListSize = ownedTers.size();
+            int airliftCardIssued = dynamic_cast<AggressivePlayerStrategy &>(*player->getStrategy()).getAirliftCardIssued();
+            // default source territory is the weakest owned territory
+            Territory *sourceTerr = ownedTers.front();
+            // if there are 3+ territories, source territory is the nth strongest
+            // n starts at 2nd, going down the list as more airlift card orders are issued
+            if (defendListSize >=3) {
+                sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
+            }
+            // target is the strongest territory
+            Territory *targetTerr = ownedTers.back();
+            // add airlift order to player's orderlist, increment # airlift order issued
+            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), player->getGame()));
+            dynamic_cast<AggressivePlayerStrategy&>(*player->getStrategy()).setAirliftCardIssued(++airliftCardIssued);
+            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
+    }
+    else {
+        vector<Territory *> toDefendTerritories = player->toDefend();
+        Territory *targetTerr = toDefendTerritories.front();
+        Territory *sourceTerr = toDefendTerritories.back();
+        // send half the armies of the most populated territory to the least populated
+        player->addOrder(new Airlift(sourceTerr, targetTerr, player,
+                                     (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) / 2, player->getGame()));
+        cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
+             << endl;
+    }
 }
 
 /**
@@ -384,14 +407,17 @@ void Hand::addCard(Card *c){
  * @return Order created by playing card
  */
 void Hand::play(Deck &d, Player* player, int index){
-        if(index >= 0 && index < this->cards.size()){
-            this->cards.at(index)->play(player);
-            d.getCards().push_back(this->cards.at(index));
-            this->cards.erase(this->cards.begin() + index);
+        if (!cards.empty()) {
+            if(index >= 0 && index < this->cards.size()){
+                this->cards.at(index)->play(player);
+                d.getCards().push_back(this->cards.at(index));
+                this->cards.erase(this->cards.begin() + index);
+            }
+            else{
+                cout << "Play failed - Invalid Index: " << index;
+            }
         }
-        else{
-            cout << "Play failed - Invalid Index: " << index;
-        }
+        return;
     }
 
 /**
@@ -498,21 +524,73 @@ Deck::~Deck() {
 /**
 * Deck Class Draw method
 * Removes random card from deck and places it in the Players Hand
-* @return Pointer to Drawn Card
 */
-Card* Deck::draw(Player& p){
-    if (!cards.empty()){
+void Deck::draw(Player& p){
+    // if player has a strategy, call drawStrategy method
+    if (p.getStrategy() != nullptr) {
+        drawStrategy(p);
+    }
+    else if (!cards.empty()) {
         random_device rd;
         uniform_int_distribution<int> dist(0, cards.size() - 1);
         int randomIndex = dist(rd);
         p.getHand()->getCards().push_back(this->getCards().at(randomIndex));
         this->cards.erase(this->cards.begin() + randomIndex);
-        return p.getHand()->getCards().back();
+        return;
     }
     else{
         cout << "Draw Failed: Deck is Empty";
     }
-    return nullptr;
+    return;
+}
+
+/**
+* Deck Class acceptCard method
+* Check if a drawn card is valid for the player strategy
+ * Neutral/Agressive - no Blockade/Diplomacy
+ * Benevolent - no Bomb
+* @return bool
+*/
+bool Deck::acceptCard(string ps, string cardType) {
+    if (ps == "Benevolent" && cardType == "Bomb")
+        return false;
+    else if ((ps == "Aggressive" || ps == "Neutral") && (cardType == "Blockade" || cardType == "Diplomacy"))
+        return false;
+    else {
+        return true;
+    }
+}
+
+/**
+* Deck Class drawStrategy method
+ * draw appropriate cards for players with strategies
+*/
+void Deck::drawStrategy(Player &p) {
+    // Cheater doesn't use cards
+    if (p.getStrategy()->getStrategyName() == "Cheater") {
+        cout << "Cheater " << p << " does not draw a card.";
+        return;
+    }
+    else if (!cards.empty()){
+        random_device rd;
+        uniform_int_distribution<int> dist(0, cards.size() - 1);
+        int randomIndex = dist(rd);
+        Card *drawnCard = this->getCards().at(randomIndex);
+
+        // if drawn card is not acceptable for player strategy, draw again
+        while (!acceptCard(p.getStrategy()->getStrategyName(), drawnCard->getCardType())) {
+            randomIndex = dist(rd);
+            drawnCard = this->getCards().at(randomIndex);
+        }
+
+        p.getHand()->getCards().push_back(drawnCard);
+        this->cards.erase(this->cards.begin() + randomIndex);
+        return;
+    }
+    else{
+        cout << "Draw Failed: Deck is Empty";
+        return;
+    }
 }
 
 /**
