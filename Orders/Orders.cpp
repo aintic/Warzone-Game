@@ -602,9 +602,10 @@ void Bomb::execute() {
     Player* enemy = targetTer->get_owner();
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
-//    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//    }
+    if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+        PlayerStrategy * newStrat = new AggressivePlayerStrategy(enemy);
+        //enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+    }
 
     Notify(this);
 
