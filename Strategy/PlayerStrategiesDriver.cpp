@@ -11,8 +11,8 @@ void testPlayerStrategies(){
     Player *p2 = new Player("DEF", game);
     Player *p3 = new Player("GHI", game);
     PlayerStrategy *s1 = new AggressivePlayerStrategy(p1);
-    PlayerStrategy *s2 = new AggressivePlayerStrategy(p2);
-    PlayerStrategy *s3 = new AggressivePlayerStrategy(p3);
+    PlayerStrategy *s2 = new BenevolentPlayerStrategy(p2);
+    PlayerStrategy *s3 = new NeutralPlayerStrategy(p3);
 
     //Adding players to game
     game->players.push_back(p1);
