@@ -162,17 +162,24 @@ string HumanPlayerStrategy::getStrategyName() const {
 // *****************************************************************************************************************
 
 // default constructor
-AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {}
+AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {
+    this->airliftCardIssued = 0;
+}
 
 // parametized constructor
-AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {}
+AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {
+    this->airliftCardIssued = 0;
+}
 
 // copy constructor
-AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrategy &aps) : PlayerStrategy(aps) {};
+AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrategy &aps) : PlayerStrategy(aps) {
+    this->airliftCardIssued = aps.getAirliftCardIssued();
+};
 
 // assignment operator
 AggressivePlayerStrategy& AggressivePlayerStrategy::operator=(const AggressivePlayerStrategy &aps) {
     PlayerStrategy::operator = (aps);
+    this->airliftCardIssued = aps.getAirliftCardIssued();
     return *this;
 }
 
