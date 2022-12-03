@@ -372,6 +372,9 @@ void AggressivePlayerStrategy::setAirliftCardIssued(int airliftCardIssued) {
 // BENEVOLENT PLAYER STRATEGY
 // *****************************************************************************************************************
 
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *p) : PlayerStrategy(p) {
+}
+
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() = default;
 
 BenevolentPlayerStrategy* BenevolentPlayerStrategy::clone() const {
@@ -406,15 +409,10 @@ void BenevolentPlayerStrategy::issueOrder() {
         weakestT->set_issued_army_units(weakestT->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
         cout << *player << " issued a new deploy order of " << armiesToDeploy << " armies to "
              << weakestT->get_name() << endl;
-    }else if(!playerCards.empty() && !onlyNonPlayableCards(player)){
+    }else if(!playerCards.empty()){
         for(int i = 0; i < playerCards.size(); i++){
             playerHand->play(*deck, player, i);
             break;
-//            player->getHand()->play(*player->getGame()->getDeck(), player, 0);
-//            if(playerCards.at(i)->getCardType() != "Bomb" && playerCards.at(i)->getCardType() != "Blockade"){
-//                playerHand->play(*deck, player, i);
-//                break;
-//            }
         }
     }else if (player->getAdvanceDefendOrdersIssued() < 1 && toDefend().size() > 1) { // issue at most 1 advance defend order
         // send half source territory army units
@@ -463,19 +461,4 @@ vector<Territory *> BenevolentPlayerStrategy::toDefend() {
 
 string BenevolentPlayerStrategy::getStrategyName() const {
     return strategyName;
-}
-
-BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *p) : PlayerStrategy(p) {
-}
-
-bool BenevolentPlayerStrategy::onlyNonPlayableCards(Player *p) {
-    Hand* playerHand = player->getHand();
-    vector<Card *> playerCards = playerHand->getCards();
-    bool onlyNonPlayable = true;
-    for(int i = 0; i < playerCards.size(); i++){
-        if(playerCards.at(i)->getCardType() != "Bomb" && playerCards.at(i)->getCardType() != "Blockade"){
-            onlyNonPlayable = false;
-        }
-    }
-    return onlyNonPlayable;
 }

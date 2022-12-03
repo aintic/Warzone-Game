@@ -111,7 +111,6 @@ public:
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
     BenevolentPlayerStrategy* clone() const override;
-    bool onlyNonPlayableCards(Player* p);
 private:
     const static string strategyName;
 };
