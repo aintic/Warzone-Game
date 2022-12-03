@@ -20,12 +20,14 @@ const string BenevolentPlayerStrategy::strategyName = "Benevolent";
 // *****************************************************************************************************************
 
 // default constructor
-PlayerStrategy::PlayerStrategy() {};
+PlayerStrategy::PlayerStrategy() {
+    this->player = nullptr;
+};
 
 // parametized constructor
 PlayerStrategy::PlayerStrategy(Player *p) {
     this->player = p;
-    p->setStrategy(this);
+    player->setStrategy(this);
 }
 
 // copy constructor
@@ -78,6 +80,11 @@ NeutralPlayerStrategy &NeutralPlayerStrategy::operator=(const NeutralPlayerStrat
     return *this;
 }
 
+// clone method
+NeutralPlayerStrategy* NeutralPlayerStrategy::clone() const {
+    return new NeutralPlayerStrategy(*this);
+}
+
 void NeutralPlayerStrategy::issueOrder() {
     player->setIsDoneIssuingOrders(true);
 
@@ -106,6 +113,11 @@ string NeutralPlayerStrategy::getStrategyName() const {
 // CHEATER PLAYER STRATEGY
 // *****************************************************************************************************************
 
+// clone method
+CheaterPlayerStrategy* CheaterPlayerStrategy::clone() const {
+    return new CheaterPlayerStrategy(*this);
+}
+
 void CheaterPlayerStrategy::issueOrder() {
 }
 
@@ -124,6 +136,11 @@ string CheaterPlayerStrategy::getStrategyName() const {
 // *****************************************************************************************************************
 // HUMAN PLAYER STRATEGY
 // *****************************************************************************************************************
+
+// clone method
+HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
+    return new HumanPlayerStrategy(*this);
+}
 
 void HumanPlayerStrategy::issueOrder() {
 }
@@ -159,12 +176,18 @@ AggressivePlayerStrategy& AggressivePlayerStrategy::operator=(const AggressivePl
     return *this;
 }
 
+// clone method
+AggressivePlayerStrategy* AggressivePlayerStrategy::clone() const {
+    return new AggressivePlayerStrategy(*this);
+}
+
 // stream insertion operator
 ostream& operator << (ostream& out,  const AggressivePlayerStrategy& aps) {
     cout << aps.getStrategyName();
     return out;
 }
 
+// issue order method - either issue 1 deploy order, 1 card order, 1 advance defend, 1 advance attack or no order
 void AggressivePlayerStrategy::issueOrder() {
     int issuableReinforcementPool = player->getIssuableReinforcementPool();
     int advanceAttackOrdersIssued = player->getAdvanceAttackOrdersIssued();
@@ -172,6 +195,7 @@ void AggressivePlayerStrategy::issueOrder() {
     int defendListSize = toDefend().size();
     int attackListSize = toAttack().size();
 
+    // issue deploy order
     if(issuableReinforcementPool != 0) {
         int armiesToDeploy = issuableReinforcementPool;
         Territory *targetTerr;
@@ -188,10 +212,12 @@ void AggressivePlayerStrategy::issueOrder() {
         targetTerr->set_issued_army_units(targetTerr->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
         cout << *player << " issued a new deploy order of " << armiesToDeploy << " armies to " << targetTerr->get_name() << endl;
     }
+    // or issue card order
     else if (!player->getHand()->getCards().empty()) {
         // issue any card orders
         player->getHand()->play(*player->getGame()->getDeck(), player, 0);
     }
+    // or issue advance defend order - move armies from own territories
     else if (advanceDefendOrdersIssued < 1 && defendListSize > 1){
         // if player owns >2 territories, move armies from 2nd strongest territory to strongest territory
         // if player owns <2 territories, move armies from one to the other
@@ -205,6 +231,7 @@ void AggressivePlayerStrategy::issueOrder() {
         player->setAdvanceDefendOrdersIssued(++advanceDefendOrdersIssued); // increment orders issued
         cout << *player << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
     }
+    // or issue advance attack order - move armies to strongest terr to enemy terr
     else if (player->getAdvanceAttackOrdersIssued() < 1 && advanceAttackOrdersIssued < attackListSize){ // issue at most 1 advance attack orders
         // move armies from the strongest terr
         Territory *sourceTerr = toDefend().back();
@@ -236,6 +263,7 @@ void AggressivePlayerStrategy::issueOrder() {
         }
 
     }
+    // no more order to issue
     else {
         cout << *player << " is done issuing orders" << endl;
         setAirliftCardIssued(0);
@@ -327,6 +355,10 @@ void AggressivePlayerStrategy::setAirliftCardIssued(int airliftCardIssued) {
 // BENEVOLENT PLAYER STRATEGY
 // *****************************************************************************************************************
 
+BenevolentPlayerStrategy* BenevolentPlayerStrategy::clone() const {
+    return new BenevolentPlayerStrategy(*this);
+}
+
 void BenevolentPlayerStrategy::issueOrder() {
 }
 
@@ -339,3 +371,4 @@ vector<Territory *> BenevolentPlayerStrategy::toDefend() {
 string BenevolentPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
+

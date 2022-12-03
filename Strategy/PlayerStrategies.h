@@ -22,6 +22,8 @@ public:
     virtual vector<Territory*> toAttack() = 0;
     virtual vector<Territory*> toDefend() = 0;
     virtual string getStrategyName() const = 0;
+    virtual PlayerStrategy* clone() const = 0;
+
 protected:
     Player* player;
 };
@@ -39,7 +41,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
-
+    NeutralPlayerStrategy* clone() const;
 private:
     const static string strategyName;
 };
@@ -52,7 +54,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
-
+    CheaterPlayerStrategy* clone() const;
 private:
     const static string strategyName;
 };
@@ -65,6 +67,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
+    HumanPlayerStrategy* clone() const;
 private:
     const static string strategyName;
 };
@@ -82,6 +85,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
+    AggressivePlayerStrategy* clone() const;
     int getAirliftCardIssued() const;
     void setAirliftCardIssued(int airliftCardIssued);
 private:
@@ -99,6 +103,7 @@ public:
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
+    BenevolentPlayerStrategy* clone() const;
 private:
     const static string strategyName;
 };

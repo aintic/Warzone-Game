@@ -75,8 +75,9 @@ Player::Player(string name, GameEngine* game) {
 //copy constructor
 Player::Player(const Player& p){
     this->playerID = ++uniqueID;
+    this->strategy = p.getStrategy()->clone();
     this->game = p.getGame();
-    name = p.getName();
+    this->name = p.getName();
     this->hand = new Hand(*(p.getHand()));
     this->territories = p.getTerritories();
     this->order_list = new OrdersList(*(p.getPlayerOrderList()));
@@ -94,6 +95,8 @@ Player& Player::operator=(const Player& p){
     if (&p != this) {
         delete this->hand;
         delete this->order_list;
+        delete this->strategy;
+        this->strategy = p.getStrategy()->clone();
         this->game = p.getGame();
         name = p.getName();
         this->hand = new Hand(*(p.getHand()));
@@ -124,6 +127,7 @@ Player::~Player()
             break;
         }
     }
+    delete strategy;
     delete hand;
     delete order_list;
     territories.clear();
