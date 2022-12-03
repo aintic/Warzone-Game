@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "PlayerStrategies.h"
+#include "../Strategy/PlayerStrategies.h"
 
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"

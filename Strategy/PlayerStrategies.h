@@ -16,6 +16,7 @@ public:
     PlayerStrategy(const PlayerStrategy& ps); // Copy constructor
     PlayerStrategy& operator=(const PlayerStrategy& ps); // Assignment operator
     friend ostream& operator << (ostream& out,  const PlayerStrategy& ps); // stream insertion operator
+    virtual ~PlayerStrategy();
     Player* getPlayer(); // Player getter
     void setPlayer(Player*); // Player setter
     virtual void issueOrder() = 0;
@@ -35,6 +36,7 @@ public:
     NeutralPlayerStrategy(); // default constructor
     NeutralPlayerStrategy(Player* player); // parametized constructor
     NeutralPlayerStrategy(const NeutralPlayerStrategy& neutralPlayerStrategy); // Copy constructor
+    ~NeutralPlayerStrategy() override;
     NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
     friend ostream& operator << (ostream& out,  const NeutralPlayerStrategy& nps); // stream insertion operator
     void issueOrder() override;
@@ -50,6 +52,7 @@ private:
 class CheaterPlayerStrategy : public PlayerStrategy{
 
 public:
+    ~CheaterPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -63,6 +66,7 @@ private:
 class HumanPlayerStrategy : public PlayerStrategy{
 
 public:
+    ~HumanPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -80,6 +84,7 @@ public:
     AggressivePlayerStrategy(Player* player); // parametized constructor
     AggressivePlayerStrategy(const AggressivePlayerStrategy &aps); // copy constructor
     AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy &aps); // assignment operator
+    ~AggressivePlayerStrategy() override;
     friend ostream& operator << (ostream& out,  const AggressivePlayerStrategy& aps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
@@ -99,6 +104,8 @@ private:
 class BenevolentPlayerStrategy : public PlayerStrategy{
 
 public:
+    BenevolentPlayerStrategy(Player* p);
+    ~BenevolentPlayerStrategy() override;
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;

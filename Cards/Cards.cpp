@@ -5,7 +5,7 @@
 #include "../Orders/Orders.h"
 #include "../Player/Player.h"
 #include "../GameEngine/GameEngine.h"
-#include "PlayerStrategies.h"
+#include "../Strategy/PlayerStrategies.h"
 using namespace std;
 
 // Set constant Card Type members
