@@ -149,7 +149,7 @@ Deploy& Deploy::operator = (const Deploy& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Deploy& o) {
-    out << o.getOrderType();
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " deploys " << o.army_units << " army units to " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -166,7 +166,7 @@ string Deploy::getOrderType() const {
  * @return boolean
  */
 bool Deploy::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if the target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "Cannot deploy to territories you don't own." << endl;
@@ -184,7 +184,7 @@ bool Deploy::validate() const {
     }
     // return true for valid order
     else {
-        cout << *this << " order validated." << endl;
+        cout << "Deploy order validated." << endl;
         return true;
     }
 }
@@ -201,7 +201,7 @@ void Deploy::execute() {
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
          cout << " to " << targetTer->get_army_units() << "." << endl;
-         cout << *this << " order executed." << endl;
+         cout << "Deploy order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -291,7 +291,9 @@ Advance& Advance::operator = (const Advance& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Advance& o) {
-    out << o.getOrderType();
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " advances " << o.army_units << " army units from " <<
+    o.sourceTer->get_owner()->getName() << "'s " << o.sourceTer->get_name() << " to " <<
+    o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -308,7 +310,7 @@ string Advance::getOrderType() const {
  * @return boolean
  */
 bool Advance::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if the target territory belongs to a friendly player
     if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
         cout << "You cannot attack this player until next turn." << endl;
@@ -340,7 +342,7 @@ bool Advance::validate() const {
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
                     // return true, target territory IS adjacent
-                    cout << *this << " order validated." << endl;
+                    cout << "Advance order validated." << endl;
                     return true;
                 }
             }
@@ -382,18 +384,18 @@ void Advance::execute() {
 
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//            }
+            if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
 
         }
         // if target territory belongs to enemy player and has >0 army units
         else {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//            }
+            if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
 
 
             // take army units from source territory
@@ -450,7 +452,7 @@ void Advance::execute() {
                 targetTer->set_army_units(survivingDefenders);
             }
         }
-        cout << *this << " order executed." << endl;
+        cout << "Advance order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -529,7 +531,8 @@ Bomb& Bomb::operator = (const Bomb& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Bomb& o) {
-    out << o.getOrderType();
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " bombs " <<
+        o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -546,7 +549,7 @@ string Bomb::getOrderType() const {
  * @return boolean
  */
 bool Bomb::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if the target territory belongs to a friendly player
     if (currentPl->isFriendly(targetTer->get_owner()->getPlayerID())) {
         cout << "Cannot attack this player until next turn." << endl;
@@ -571,7 +574,7 @@ bool Bomb::validate() const {
             for (Territory *neighbor : neighbors) {
                 if (neighbor->get_id() == targetTer->get_id()) {
                     // return true, target territory IS adjacent
-                    cout << *this << " order validated." << endl;
+                    cout << "Bomb order validated." << endl;
                     return true;
                 }
             }
@@ -591,7 +594,7 @@ void Bomb::execute() {
         // halve the army units in target territory
         targetTer->set_army_units(targetTer->get_army_units() / 2);
         cout << targetTer->get_name() << " was bombed! " << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units." << endl;
-        cout << *this << " order executed." << endl;
+        cout << "Bomb order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -602,9 +605,9 @@ void Bomb::execute() {
     Player* enemy = targetTer->get_owner();
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
-//    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//    }
+    if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+    }
 
     Notify(this);
 
@@ -679,7 +682,8 @@ Blockade& Blockade::operator = (const Blockade& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Blockade& o) {
-    out << o.getOrderType();
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " blockades " <<
+        o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -696,7 +700,7 @@ string Blockade::getOrderType() const {
  * @return boolean
  */
 bool Blockade::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if target territory doesn't belong to current player
     if (targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID()) {
         cout << "Cannot blockade territories you don't own." << endl;
@@ -704,7 +708,7 @@ bool Blockade::validate() const {
     }
     // return true if order is valid
     else {
-        cout << *this << " order validated." << endl;
+        cout << "Blockade order validated." << endl;
         return true;
     }
 }
@@ -723,10 +727,10 @@ void Blockade::execute() {
         for (Player *p : game->getPlayers()) {
             // if there's already a player called Neutral, assign the target territory to them
             // remove target territory from current player and exit
-            if (p->getStrategy() != NULL && p->getStrategy()->getStrategyName() == "Neutral") {
+            if (p->getStrategy() != nullptr && p->getStrategy()->getStrategyName() == "Neutral") {
                 p->neutralConquerTerritory(targetTer);
                 cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
-                cout << *this << " order executed." << endl;
+                cout << "Blockade order executed." << endl;
                 return;
             }
         }
@@ -738,7 +742,7 @@ void Blockade::execute() {
         neutral->neutralConquerTerritory(targetTer);
         cout << "Player Neutral created." << endl;
         cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
-        cout << *this << " order executed." << endl;
+        cout << "Blockade order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -829,7 +833,8 @@ Airlift& Airlift::operator = (const Airlift& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Airlift& o) {
-    out << o.getOrderType();
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " airlifts " << o.army_units << " army units from " <<
+        o.sourceTer->get_name() << " to " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -846,7 +851,7 @@ string Airlift::getOrderType() const {
  * @return boolean
  */
 bool Airlift::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if either the source or target territory do not belong to current player
     if (sourceTer->get_owner()->getPlayerID() != currentPl->getPlayerID() || targetTer->get_owner()->getPlayerID() != currentPl->getPlayerID() ) {
         cout << "Can only airlift between territories you own." << endl;
@@ -869,7 +874,7 @@ bool Airlift::validate() const {
     }
     // return true for valid order
     else {
-        cout << *this << " order validated." << endl;
+        cout << "Airlift order validated." << endl;
         return true;
     }
 }
@@ -884,8 +889,7 @@ void Airlift::execute() {
         sourceTer->set_army_units(sourceTer->get_army_units() - army_units);
         // move army units to target territory
         targetTer->set_army_units(targetTer->get_army_units() + army_units);
-        cout << "Moved " << army_units << " army units from " << currentPl->getName() << "'s " << sourceTer->get_name() << " to " << currentPl->getName() << "'s " << targetTer->get_name() << "." << endl;
-        cout << *this << " order executed." << endl;
+        cout << "Airlift order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -963,8 +967,9 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Ord
  * @return ostream object
  */
     ostream &operator<<(ostream &out, const Negotiate &o) {
-        out << o.getOrderType();
-        return out;
+    out << o.getOrderType() << ": " << o.currentPl->getName() << " negotiates with " <<
+        o.enemyPl->getName() << "." << endl;
+    return out;
     }
 
 /**
@@ -980,7 +985,7 @@ Negotiate::Negotiate(Player *currentPl, Player *enemyPl, GameEngine *game) : Ord
  * @return boolean
  */
 bool Negotiate::validate() const {
-    cout << "Validating " << *this << " order." << endl;
+    cout << *this << "Validating order." << endl;
     // return false, if the enemy player is also the current player
     if (enemyPl->getPlayerID() == currentPl->getPlayerID()) {
         cout << "You cannot negotiate with yourself." << endl;
@@ -993,7 +998,7 @@ bool Negotiate::validate() const {
     }
     // return true for valid order
     else {
-        cout << *this << " order validated." << endl;
+        cout << "Negotiate order validated." << endl;
         return true;
     }
 }
@@ -1008,7 +1013,7 @@ void Negotiate::execute() {
         currentPl->addFriendly(enemyPl->getPlayerID());
         enemyPl->addFriendly(currentPl->getPlayerID());
         cout << "Player " << currentPl->getName() << " negotiated with Player " << enemyPl->getName() << ". Both players cannot attack each other this turn." << endl;
-        cout << *this << " order executed." << endl;
+        cout << "Negotiate order executed." << endl;
     }
     // if order is invalid, display message
     else {
@@ -1173,8 +1178,9 @@ void OrdersList::remove(int pos) {
         }
     }
 
-//Method to execute a single order
-//maybe make it boolean? so if any more orders to execute it returns true
+/**
+ * Method to execute a single order
+ */
     void OrdersList::executeOrder() {
         int size = _ordersList.size();
 
@@ -1185,27 +1191,35 @@ void OrdersList::remove(int pos) {
     }
 
 
-//Make sure that it's never called on empty orderList
-    Order *OrdersList::getTopOrder() {
+/**
+ * Method to get top order
+ */
+ Order *OrdersList::getTopOrder() {
         cout << "Top order : ";
         Order *o = _ordersList.front();
         cout << *o << endl;
         return o;
-    }
+ }
 
-// getter for vector of orders
-vector<Order *> OrdersList::getOrderList() {
+/**
+ * Getter for order vector
+ */
+ vector<Order *> OrdersList::getOrderList() {
     return _ordersList;
 }
 
-
+/**
+ * StringToLog method for order
+ */
 string Order::stringToLog() {
         return "Order executed: " + getOrderType();
-    }
+}
 
-    string OrdersList::stringToLog() {
-        string lastOrder = _ordersList.back()->getOrderType();
-
-        return "Order added: " + lastOrder;
-    }
+/**
+ * StringToLog method for OrdersList
+ */
+string OrdersList::stringToLog() {
+    string lastOrder = _ordersList.back()->getOrderType();
+    return "Order added: " + lastOrder;
+}
 

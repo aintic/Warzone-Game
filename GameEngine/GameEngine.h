@@ -58,6 +58,7 @@ public:
     void mainGameLoop(int turns);
     void issueOrderPhase();
 
+
     GameEngine(Observer* _obs);
     string stringToLog();
     Observer* _observers = nullptr;

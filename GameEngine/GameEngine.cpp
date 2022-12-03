@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "../Cards/Cards.h"
+#include "PlayerStrategies.h"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -403,7 +404,7 @@ bool GameEngine::executeOrdersPhase() {
     } while (!allOrdersDone);
     for (Player *p : players) {
         p->resetFriendlyList();
-        if (p->getStrategy()->getStrategyName() != "Cheater" && p->getConquerer()) {
+        if ((p->getStrategy() == nullptr || p->getStrategy()->getStrategyName() != "Cheater") && p->getConquerer()) {
             deck->draw(*p);
             cout << "\n" << p->getName() << " wins " << *p->getHand()->getCards().back() << " from conquering a territory this turn!" << endl;
             p->resetConquerer();
