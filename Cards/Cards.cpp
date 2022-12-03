@@ -203,7 +203,6 @@ Card* BlockadeCard::clone() {
  * @return corresponding order instance
  */
 void BlockadeCard::play(Player *player) {
-
     Territory *targetTerr = player->toDefend().back();
     player->addOrder(new Blockade(targetTerr, player, player->getGame()));
     cout << *player << " played a Blockade card on " << targetTerr->get_name() << endl;
@@ -257,13 +256,25 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
+    // if player is agressive
     if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
-            vector<Territory*> ownedTerr = player->toDefend();
-            Territory *sourceTerr = ownedTerr.at(ownedTerr.size() - 2);
-            Territory *targetTerr = ownedTerr.back();
-            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units(), player->getGame()));
-            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
-                 << endl;
+        // get player's owned territories, # of owned territories and # of airlift card order issued this turn
+            vector<Territory*> ownedTers = player->toDefend();
+            int defendListSize = ownedTers.size();
+            int airliftCardIssued = dynamic_cast<AggressivePlayerStrategy &>(*player->getStrategy()).getAirliftCardIssued();
+            // default source territory is the weakest owned territory
+            Territory *sourceTerr = ownedTers.front();
+            // if there are 3+ territories, source territory is the nth strongest
+            // n starts at 2nd, going down the list as more airlift card orders are issued
+            if (defendListSize >=3) {
+                sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
+            }
+            // target is the strongest territory
+            Territory *targetTerr = ownedTers.back();
+            // add airlift order to player's orderlist, increment # airlift order issued
+            player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), player->getGame()));
+            dynamic_cast<AggressivePlayerStrategy&>(*player->getStrategy()).setAirliftCardIssued(++airliftCardIssued);
+            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
     }
     else {
         vector<Territory *> toDefendTerritories = player->toDefend();
@@ -513,9 +524,9 @@ Deck::~Deck() {
 /**
 * Deck Class Draw method
 * Removes random card from deck and places it in the Players Hand
-* @return Pointer to Drawn Card
 */
 void Deck::draw(Player& p){
+    // if player has a strategy, call drawStrategy method
     if (p.getStrategy() != nullptr) {
         drawStrategy(p);
     }
@@ -538,7 +549,6 @@ void Deck::draw(Player& p){
 * Check if a drawn card is valid for the player strategy
  * Neutral/Agressive - no Blockade/Diplomacy
  * Benevolent - no Bomb
- * Human - whatever
 * @return bool
 */
 bool Deck::acceptCard(string ps, string cardType) {
@@ -551,6 +561,10 @@ bool Deck::acceptCard(string ps, string cardType) {
     }
 }
 
+/**
+* Deck Class drawStrategy method
+ * draw appropriate cards for players with strategies
+*/
 void Deck::drawStrategy(Player &p) {
     // Cheater doesn't use cards
     if (p.getStrategy()->getStrategyName() == "Cheater") {
