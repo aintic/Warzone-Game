@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include "../Cards/Cards.h"
-#include "PlayerStrategies.h"
+#include "../Strategy/PlayerStrategies.h"
 #include <iostream>
 #include <vector>
 #include <map>
