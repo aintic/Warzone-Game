@@ -19,7 +19,6 @@ class Player;
 class Deck;
 class Command;
 class CommandProcessor;
-
 //
 //GAME ENGINE CLASS
 //

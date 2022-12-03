@@ -382,18 +382,20 @@ void Advance::execute() {
 
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//            }
+            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                PlayerStrategy* newStrat = new AggressivePlayerStrategy(enemy);
+                //enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
 
         }
         // if target territory belongs to enemy player and has >0 army units
         else {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-//            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//            }
+            if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                PlayerStrategy* newStrat = new AggressivePlayerStrategy(enemy);
+                //enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+            }
 
 
             // take army units from source territory
@@ -602,9 +604,10 @@ void Bomb::execute() {
     Player* enemy = targetTer->get_owner();
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
-//    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
-//        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
-//    }
+    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+        PlayerStrategy* newStrat = new AggressivePlayerStrategy(enemy);
+        //enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+    }
 
     Notify(this);
 
