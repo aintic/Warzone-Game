@@ -385,7 +385,7 @@ void Advance::execute() {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
             if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
-                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+                PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
             }
 
         }
@@ -394,7 +394,7 @@ void Advance::execute() {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
             if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
-                enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+                PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
             }
 
 
@@ -606,7 +606,7 @@ void Bomb::execute() {
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
     if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
-        enemy->setStrategy(new AggressivePlayerStrategy(enemy));
+        PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
     }
 
     Notify(this);
