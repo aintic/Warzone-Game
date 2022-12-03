@@ -225,7 +225,7 @@ void AggressivePlayerStrategy::issueOrder() {
     }
     else {
         cout << *player << " is done issuing orders" << endl;
-        airliftCardIssued = 0;
+        setAirliftCardIssued(0);
         player->setIsDoneIssuingOrders(true);
     }
 }
