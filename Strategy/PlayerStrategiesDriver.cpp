@@ -7,17 +7,22 @@ using std::endl;
 
 void testPlayerStrategies(){
     GameEngine* game = new GameEngine();
-    Player *p1 = new Player("ABC", game);
-    Player *p2 = new Player("DEF", game);
-    Player *p3 = new Player("GHI", game);
+    Player *p1 = new Player("Alice", game);
+    Player *p2 = new Player("Daria", game);
+    Player *p3 = new Player("Hongsuk", game);
+    Player *p4 = new Player("Michael", game);
+
     PlayerStrategy *s1 = new AggressivePlayerStrategy(p1);
     PlayerStrategy *s2 = new BenevolentPlayerStrategy(p2);
     PlayerStrategy *s3 = new NeutralPlayerStrategy(p3);
+    PlayerStrategy *s4 = new HumanPlayerStrategy(p4);
 
     //Adding players to game
     game->players.push_back(p1);
     game->players.push_back(p2);
     game->players.push_back(p3);
+    game->players.push_back(p4);
+
 
     // load the testing map
     string mapName = "testingMap";
@@ -53,6 +58,8 @@ void testPlayerStrategies(){
     cout << *p1->getHand() << endl;
     cout << *p2->getHand() << endl;
     cout << *p3->getHand() << endl;
+    cout << *p4->getHand() << endl;
+
 
     for (Player *p : game->players) {
         cout << p->getName() << ": " << *p->getStrategy() << endl;
