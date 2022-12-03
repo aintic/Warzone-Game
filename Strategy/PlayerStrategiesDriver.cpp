@@ -55,7 +55,7 @@ void testPlayerStrategies(){
     cout << *p3->getHand() << endl;
 
     for (Player *p : game->players) {
-        cout << p->getName() << ": " << p->getStrategy()->getStrategyName() << endl;
+        cout << p->getName() << ": " << *p->getStrategy() << endl;
         for(int i = 0; i < p->getNumTerritories(); i++){
             cout << *p->getTerritories()[i];
             cout << "army units: " << p->getTerritories()[i]->get_army_units() << endl;
@@ -69,7 +69,7 @@ void testPlayerStrategies(){
     }
 
     for (Player *p : game->players) {
-        cout << p->getName() << ": " << p->getStrategy()->getStrategyName() << endl;
+        cout << p->getName() << ": " << *p->getStrategy() << endl;
         for(int i = 0; i < p->getNumTerritories(); i++){
             cout << *p->getTerritories()[i] << endl;
             cout << "army units: " << p->getTerritories()[i]->get_army_units() << endl;

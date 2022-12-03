@@ -12,18 +12,16 @@ class PlayerStrategy {
 
 public:
     PlayerStrategy(); // Default constructor
+    PlayerStrategy(Player *p); // Parametized constructor
     PlayerStrategy(const PlayerStrategy& ps); // Copy constructor
-    PlayerStrategy(Player *p);
     PlayerStrategy& operator=(const PlayerStrategy& ps); // Assignment operator
-    // stream insertion operator
-    friend ostream& operator << (ostream& out,  const PlayerStrategy& ps);
-    Player* getPlayer(); // Player getters and setters
-    void setPlayer(Player*);
+    friend ostream& operator << (ostream& out,  const PlayerStrategy& ps); // stream insertion operator
+    Player* getPlayer(); // Player getter
+    void setPlayer(Player*); // Player setter
     virtual void issueOrder() = 0;
     virtual vector<Territory*> toAttack() = 0;
     virtual vector<Territory*> toDefend() = 0;
     virtual string getStrategyName() const = 0;
-
 protected:
     Player* player;
 };
@@ -32,16 +30,15 @@ protected:
 class NeutralPlayerStrategy : public PlayerStrategy{
 
 public:
-    //default constructor
-    NeutralPlayerStrategy(Player* player);
+    NeutralPlayerStrategy(); // default constructor
+    NeutralPlayerStrategy(Player* player); // parametized constructor
     NeutralPlayerStrategy(const NeutralPlayerStrategy& neutralPlayerStrategy); // Copy constructor
-    // stream insertion operator
-    friend ostream& operator << (ostream& out,  const NeutralPlayerStrategy& nps);
+    NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
+    friend ostream& operator << (ostream& out,  const NeutralPlayerStrategy& nps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
-    NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
 
 private:
     const static string strategyName;
@@ -76,22 +73,22 @@ private:
 class AggressivePlayerStrategy : public PlayerStrategy{
 
 public:
-    AggressivePlayerStrategy(Player* player);
-    AggressivePlayerStrategy(const AggressivePlayerStrategy &aps);
-    AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy &aps);
-    // stream insertion operator
-    friend ostream& operator << (ostream& out,  const AggressivePlayerStrategy& aps);
+    AggressivePlayerStrategy(); // default constructor
+    AggressivePlayerStrategy(Player* player); // parametized constructor
+    AggressivePlayerStrategy(const AggressivePlayerStrategy &aps); // copy constructor
+    AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy &aps); // assignment operator
+    friend ostream& operator << (ostream& out,  const AggressivePlayerStrategy& aps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
     string getStrategyName() const override;
-    Territory* terrMostSurroundedByEnemies() const;
     int getAirliftCardIssued() const;
     void setAirliftCardIssued(int airliftCardIssued);
-    bool targetIsAdjacent(Territory *source, Territory *target) const;
 private:
     const static string strategyName;
     int airliftCardIssued;
+    Territory* terrMostSurroundedByEnemies() const;
+    bool targetIsAdjacent(Territory *source, Territory *target) const;
 };
 
 

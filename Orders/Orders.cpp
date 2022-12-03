@@ -384,7 +384,7 @@ void Advance::execute() {
 
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+            if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
                 enemy->setStrategy(new AggressivePlayerStrategy(enemy));
             }
 
@@ -393,7 +393,7 @@ void Advance::execute() {
         else {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
-            if(enemy->getStrategy()->getStrategyName() == "Neutral"){
+            if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
                 enemy->setStrategy(new AggressivePlayerStrategy(enemy));
             }
 
@@ -605,7 +605,7 @@ void Bomb::execute() {
     Player* enemy = targetTer->get_owner();
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
-    if(enemy->getStrategy() != NULL && enemy->getStrategy()->getStrategyName() == "Neutral"){
+    if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
         enemy->setStrategy(new AggressivePlayerStrategy(enemy));
     }
 
@@ -727,7 +727,7 @@ void Blockade::execute() {
         for (Player *p : game->getPlayers()) {
             // if there's already a player called Neutral, assign the target territory to them
             // remove target territory from current player and exit
-            if (p->getStrategy() != NULL && p->getStrategy()->getStrategyName() == "Neutral") {
+            if (p->getStrategy() != nullptr && p->getStrategy()->getStrategyName() == "Neutral") {
                 p->neutralConquerTerritory(targetTer);
                 cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
                 cout << "Blockade order executed." << endl;
@@ -1178,8 +1178,9 @@ void OrdersList::remove(int pos) {
         }
     }
 
-//Method to execute a single order
-//maybe make it boolean? so if any more orders to execute it returns true
+/**
+ * Method to execute a single order
+ */
     void OrdersList::executeOrder() {
         int size = _ordersList.size();
 
@@ -1190,27 +1191,35 @@ void OrdersList::remove(int pos) {
     }
 
 
-//Make sure that it's never called on empty orderList
-    Order *OrdersList::getTopOrder() {
+/**
+ * Method to get top order
+ */
+ Order *OrdersList::getTopOrder() {
         cout << "Top order : ";
         Order *o = _ordersList.front();
         cout << *o << endl;
         return o;
-    }
+ }
 
-// getter for vector of orders
-vector<Order *> OrdersList::getOrderList() {
+/**
+ * Getter for order vector
+ */
+ vector<Order *> OrdersList::getOrderList() {
     return _ordersList;
 }
 
-
+/**
+ * StringToLog method for order
+ */
 string Order::stringToLog() {
         return "Order executed: " + getOrderType();
-    }
+}
 
-    string OrdersList::stringToLog() {
-        string lastOrder = _ordersList.back()->getOrderType();
-
-        return "Order added: " + lastOrder;
-    }
+/**
+ * StringToLog method for OrdersList
+ */
+string OrdersList::stringToLog() {
+    string lastOrder = _ordersList.back()->getOrderType();
+    return "Order added: " + lastOrder;
+}
 

@@ -256,21 +256,25 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
+    // if player is agressive
     if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
+        // get player's owned territories, # of owned territories and # of airlift card order issued this turn
             vector<Territory*> ownedTers = player->toDefend();
             int defendListSize = ownedTers.size();
             int airliftCardIssued = dynamic_cast<AggressivePlayerStrategy &>(*player->getStrategy()).getAirliftCardIssued();
+            // default source territory is the weakest owned territory
             Territory *sourceTerr = ownedTers.front();
-            // move all armies from nth strongest terr to strongest terr
-            // n starts at 2nd strongest terr, going down the list if more airlift cards are issued
+            // if there are 3+ territories, source territory is the nth strongest
+            // n starts at 2nd, going down the list as more airlift card orders are issued
             if (defendListSize >=3) {
                 sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
             }
+            // target is the strongest territory
             Territory *targetTerr = ownedTers.back();
+            // add airlift order to player's orderlist, increment # airlift order issued
             player->addOrder(new Airlift(sourceTerr, targetTerr, player, sourceTerr->get_army_units() + sourceTerr->get_issued_army_units(), player->getGame()));
             dynamic_cast<AggressivePlayerStrategy&>(*player->getStrategy()).setAirliftCardIssued(++airliftCardIssued);
-            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name()
-                 << endl;
+            cout << *player << " played a Airlift card from " << sourceTerr->get_name() << " to " << targetTerr->get_name() << endl;
     }
     else {
         vector<Territory *> toDefendTerritories = player->toDefend();
@@ -520,9 +524,9 @@ Deck::~Deck() {
 /**
 * Deck Class Draw method
 * Removes random card from deck and places it in the Players Hand
-* @return Pointer to Drawn Card
 */
 void Deck::draw(Player& p){
+    // if player has a strategy, call drawStrategy method
     if (p.getStrategy() != nullptr) {
         drawStrategy(p);
     }
@@ -557,6 +561,10 @@ bool Deck::acceptCard(string ps, string cardType) {
     }
 }
 
+/**
+* Deck Class drawStrategy method
+ * draw appropriate cards for players with strategies
+*/
 void Deck::drawStrategy(Player &p) {
     // Cheater doesn't use cards
     if (p.getStrategy()->getStrategyName() == "Cheater") {

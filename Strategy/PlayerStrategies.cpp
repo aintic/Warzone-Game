@@ -4,7 +4,6 @@
 #include "Player.h"
 #include <vector>
 #include <algorithm>
-#include <map>
 
 class Territory;
 
@@ -20,18 +19,22 @@ const string BenevolentPlayerStrategy::strategyName = "Benevolent";
 // PLAYER STRATEGY (ABSTRACT BASE CLASS)
 // *****************************************************************************************************************
 
+// default constructor
 PlayerStrategy::PlayerStrategy() {};
 
+// parametized constructor
 PlayerStrategy::PlayerStrategy(Player *p) {
     this->player = p;
     p->setStrategy(this);
 }
 
+// copy constructor
 PlayerStrategy::PlayerStrategy(const PlayerStrategy& ps) {
     this->player = ps.player;
     player->setStrategy(this);
 }
 
+// assignment operator
 PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &ps) {
     if (&ps != this) {
         this->player = ps.player;
@@ -40,16 +43,18 @@ PlayerStrategy &PlayerStrategy::operator=(const PlayerStrategy &ps) {
     return *this;
 }
 
+// stream insertion operator
 ostream& operator << (ostream& out,  const PlayerStrategy& ps) {
-    cout << ps.getStrategyName();
+    cout <<  ps.getStrategyName();
     return out;
 }
 
-
+// player getter
 Player *PlayerStrategy::getPlayer() {
     return player;
 }
 
+// player setter
 void PlayerStrategy::setPlayer(Player* p) {
     this->player = p;
 }
@@ -59,6 +64,9 @@ void PlayerStrategy::setPlayer(Player* p) {
 // *****************************************************************************************************************
 
 //default constructor
+NeutralPlayerStrategy::NeutralPlayerStrategy() : PlayerStrategy() {}
+
+// parametized constructor
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player* player) : PlayerStrategy(player) {}
 
 // Copy constructor
@@ -136,11 +144,16 @@ string HumanPlayerStrategy::getStrategyName() const {
 // AGGRESSIVE PLAYER STRATEGY
 // *****************************************************************************************************************
 
-AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {
-}
+// default constructor
+AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {}
 
+// parametized constructor
+AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {}
+
+// copy constructor
 AggressivePlayerStrategy::AggressivePlayerStrategy(const AggressivePlayerStrategy &aps) : PlayerStrategy(aps) {};
 
+// assignment operator
 AggressivePlayerStrategy& AggressivePlayerStrategy::operator=(const AggressivePlayerStrategy &aps) {
     PlayerStrategy::operator = (aps);
     return *this;
@@ -148,7 +161,7 @@ AggressivePlayerStrategy& AggressivePlayerStrategy::operator=(const AggressivePl
 
 // stream insertion operator
 ostream& operator << (ostream& out,  const AggressivePlayerStrategy& aps) {
-    out << aps.getStrategyName();
+    cout << aps.getStrategyName();
     return out;
 }
 
@@ -156,6 +169,8 @@ void AggressivePlayerStrategy::issueOrder() {
     int issuableReinforcementPool = player->getIssuableReinforcementPool();
     int advanceAttackOrdersIssued = player->getAdvanceAttackOrdersIssued();
     int advanceDefendOrdersIssued = player->getAdvanceDefendOrdersIssued();
+    int defendListSize = toDefend().size();
+    int attackListSize = toAttack().size();
 
     if(issuableReinforcementPool != 0) {
         int armiesToDeploy = issuableReinforcementPool;
@@ -177,11 +192,10 @@ void AggressivePlayerStrategy::issueOrder() {
         // issue any card orders
         player->getHand()->play(*player->getGame()->getDeck(), player, 0);
     }
-    else if (advanceDefendOrdersIssued < 1 && toDefend().size() > 1){
-        // move armies from 2nd strongest territory to strongest territory
-        // if player owns >2 territories
+    else if (advanceDefendOrdersIssued < 1 && defendListSize > 1){
+        // if player owns >2 territories, move armies from 2nd strongest territory to strongest territory
+        // if player owns <2 territories, move armies from one to the other
         vector<Territory*> ownedTers = toDefend();
-        int defendListSize = ownedTers.size();
         Territory *targetTerr = ownedTers.back();
         Territory *sourceTerr = ownedTers.front();
         if (defendListSize > 2) {
@@ -191,15 +205,14 @@ void AggressivePlayerStrategy::issueOrder() {
         player->setAdvanceDefendOrdersIssued(++advanceDefendOrdersIssued); // increment orders issued
         cout << *player << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
     }
-    else if (player->getAdvanceAttackOrdersIssued() < 1 && advanceAttackOrdersIssued < toAttack().size()){ // issue at most 1 advance attack orders
+    else if (player->getAdvanceAttackOrdersIssued() < 1 && advanceAttackOrdersIssued < attackListSize){ // issue at most 1 advance attack orders
         // move armies from the strongest terr
         Territory *sourceTerr = toDefend().back();
         Territory *targetTerr = toAttack().front();
-        int attackListSize = toAttack().size();
         int index = 0;
         bool found = false;
         // go down attack list to find weakest *neighbouring* enemy territory
-        // if attack list is exhausted and no suitable target territory found, don't issue order
+        // if attack list is exhausted and no neighbouring enemy territory found, don't issue order
         while (index < attackListSize && !found) {
             if (targetIsAdjacent(sourceTerr, targetTerr)) {
                 found = true;
@@ -268,7 +281,7 @@ vector<Territory *> AggressivePlayerStrategy::toDefend() {
 // find the territory most surrounded by enemy territories
 Territory* AggressivePlayerStrategy::terrMostSurroundedByEnemies() const {
     vector<Territory*> territories = player->getTerritories();
-    map<Territory*, int> enemyCount;
+    std::map<Territory*, int> enemyCount;
     for (Territory *t : territories) {
         vector<Territory*> neighbors = t->get_neighbours();
         for (Territory *neighbor : neighbors) {
@@ -283,6 +296,7 @@ Territory* AggressivePlayerStrategy::terrMostSurroundedByEnemies() const {
     return mostEnemy->first;
 }
 
+// check if target territory is adjacent to source territory
 bool AggressivePlayerStrategy::targetIsAdjacent(Territory *source, Territory *target) const {
         vector<Territory*> neighbors = source->get_neighbours();
         for (Territory *neighbor : neighbors) {
@@ -294,14 +308,17 @@ bool AggressivePlayerStrategy::targetIsAdjacent(Territory *source, Territory *ta
         return false;
 }
 
+// strategy name getter
 string AggressivePlayerStrategy::getStrategyName() const {
     return strategyName;
 }
 
+// airliftCardIssued getter
 int AggressivePlayerStrategy::getAirliftCardIssued() const {
     return airliftCardIssued;
 }
 
+// airliftCardIssued setter
 void AggressivePlayerStrategy::setAirliftCardIssued(int airliftCardIssued) {
     this->airliftCardIssued = airliftCardIssued;
 }
