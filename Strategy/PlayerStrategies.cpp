@@ -181,7 +181,22 @@ string CheaterPlayerStrategy::getStrategyName() const {
 // HUMAN PLAYER STRATEGY
 // *****************************************************************************************************************
 
+//default constructor
+HumanPlayerStrategy::HumanPlayerStrategy() : PlayerStrategy() {}
+
+// parametized constructor
+HumanPlayerStrategy::HumanPlayerStrategy(Player* player) : PlayerStrategy(player) {}
+
 HumanPlayerStrategy::~HumanPlayerStrategy() = default;
+
+// Copy constructor
+HumanPlayerStrategy::HumanPlayerStrategy(const HumanPlayerStrategy &humanPlayerStrategy) : PlayerStrategy(humanPlayerStrategy){}
+
+// Assignment operator
+HumanPlayerStrategy &HumanPlayerStrategy::operator=(const HumanPlayerStrategy &humanPlayerStrategy) {
+    PlayerStrategy::operator = (humanPlayerStrategy);
+    return *this;
+}
 
 // clone method
 HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
@@ -189,14 +204,359 @@ HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
 }
 
 void HumanPlayerStrategy::issueOrder() {
+    // Deploying
+    if(player->getIssuableReinforcementPool() != 0) {
+
+        vector<Territory*> territoriesToDeploy = player->getTerritories();
+
+        cout << "To deploy territories: " << endl;
+
+        bool keep_asking = true;
+        Territory* targetTerr;
+        while(keep_asking) {
+            int count = 0;
+            for (Territory *t: territoriesToDeploy) {
+                cout << count << ": " << *t << endl;
+                count++;
+            }
+            cout << player->getName() << ", please enter a number corresponding to the territory where you wish to deploy armies." << endl;
+            int choice;
+            cin >> choice;
+
+            if (choice >= territoriesToDeploy.size() or choice < 0) {
+                cout << "invalid command, please try again. " << endl;
+                continue;
+            }
+
+            targetTerr = territoriesToDeploy[choice];
+            keep_asking = false;
+        }
+
+        int armiesToDeploy = player->getIssuableReinforcementPool();
+
+        keep_asking = true;
+
+        while(keep_asking) {
+
+            cout << "You have " << armiesToDeploy << " armies to deploy. Please enter the number of armies you wish to deploy." << endl;
+            int choice;
+            cin >> choice;
+
+            if (choice > armiesToDeploy or choice < 1) {
+                cout << "Invalid command, please try again. " << endl;
+                continue;
+            }
+
+            armiesToDeploy = choice;
+            keep_asking = false;
+        }
+
+        player->getPlayerOrderList()->add(new Deploy(targetTerr, player, armiesToDeploy, player->getGame())); // deploy armies to the weakest territory
+        player->setIssuableReinforcementPool(player->getIssuableReinforcementPool() - armiesToDeploy); // decrement player's reinforcement pool
+        targetTerr->set_issued_army_units(targetTerr->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
+        cout << player->getName() << " issued a new deploy order of " << armiesToDeploy << " armies to " << targetTerr->get_name() << endl;
+    }
+
+        // Cards
+    else if(!player->getHand()->getCards().empty()) {
+
+        int card_index;
+        cout << "Cards available: "<< endl;
+
+        bool keep_asking = true;
+        while(keep_asking) {
+            int count = 0;
+            for(Card* card : player->getHand()->getCards()){
+                cout << count << ": " << *card << endl;
+                count ++;
+            }
+            cout << player->getName() << ", please enter a number corresponding to the card you wish to play." << endl;
+
+            int choice;
+            cin >> choice;
+
+            if (choice >= player->getHand()->getCards().size() or choice < 0) {
+                cout << "invalid command, please try again. " << endl;
+                continue;
+            }
+
+            card_index = choice;
+            keep_asking = false;
+        }
+        player->getHand()->play(*player->getGame()->getDeck(), player, card_index); // play every card in player's hand
+    }
+
+        // Advance
+    else if (not this->player->getIsDoneIssuingOrders()) {
+        bool isToAttack = false;
+        bool doNothing = false;
+        bool keep_asking = true;
+
+        map<Territory*, int> availableArmies;
+        for(Territory* t: player->getTerritories()){
+            // add territories and currently available armies to advance
+            availableArmies.insert(pair<Territory*, int> (t, t->get_army_units() + t->get_issued_army_units()));
+        }
+
+        while(keep_asking and not this->player->getIsDoneIssuingOrders()){
+            int totalAvail = 0;
+            for(pair<Territory*, int> t: availableArmies){
+                totalAvail += t.second;
+            }
+            if(totalAvail == 0){
+                cout << player->getName() << ", you have no more available armies to advance. " << endl;
+                player->setIsDoneIssuingOrders(false);
+            }
+
+
+            // ask option (attack/ defend/ nothing)
+            keep_asking = true;
+            while(keep_asking) {
+                int choice;
+
+                if(player->getTerritories().size() < 2){
+                    choice = 0;
+                    keep_asking = false;
+                    continue;
+                }
+
+                cout << player->getName() << ", do you wish to attack opponents territories or to Defend your own? Enter <1> for attacking and <-1> for defending. Enter <0> to do nothing" << endl;
+
+                cin >> choice;
+
+                if (choice == -1) {
+                    keep_asking = false;
+                }
+                else if(choice == 1){
+                    isToAttack = true;
+                    keep_asking = false;
+                }
+                else if(choice == 0){
+                    doNothing = true;
+                    keep_asking = false;
+                }
+                else{
+                    cout << "invalid command, please try again. " << endl;
+                    continue;
+                }
+            }
+
+            // Attack
+            if (isToAttack){ // issue at most 2 advance attack orders
+
+                // choosing target
+                vector<Territory*> possibleTargets = toAttack();
+                cout << "To attack territories: " << endl;
+
+                keep_asking = true;
+                Territory* targetTerr;
+                while(keep_asking) {
+                    int count = 0;
+                    for (Territory *t: possibleTargets) {
+                        cout << count << ": " << *t << endl;
+                        count++;
+                    }
+                    cout << player->getName() << ", please enter a number corresponding to the target territory you wish to attack." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice >= possibleTargets.size() or choice < 0) {
+                        cout << "invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    targetTerr = possibleTargets[choice];
+                    keep_asking = false;
+                }
+
+                // Choosing source
+                vector<Territory*> targetNeighbours = targetTerr->get_neighbours();
+                vector<Territory*> possibleSource;
+
+                for(Territory* t : targetNeighbours){
+                    if(t->get_owner() == player){
+                        possibleSource.push_back(t);
+                    }
+                }
+
+
+                cout << "Territories neighbouring the target: " << endl;
+
+                keep_asking = true;
+                Territory* sourceTerr;
+                while(keep_asking) {
+                    int count = 0;
+                    for (Territory *t: possibleSource) {
+                        cout << count << ": " << *t << "Available army units: " << t->get_army_units() + t->get_issued_army_units() << endl;
+                        count++;
+                    }
+                    cout << player->getName() << ", please enter a number corresponding to the source territory that will attack the target." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice >= possibleSource.size() or choice < 0) {
+                        cout << "invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    sourceTerr = possibleSource[choice];
+                    keep_asking = false;
+                }
+
+                int available_units = availableArmies.at(sourceTerr);
+
+                keep_asking = true;
+                while(keep_asking) {
+
+                    cout << "You have " << available_units << " armies to advance. Please enter the number of armies you wish to advance." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice > available_units or choice < 0) {
+                        cout << "Invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    available_units = choice;
+                    keep_asking = false;
+                }
+
+                player->getPlayerOrderList()->add(new Advance(sourceTerr, targetTerr, player, available_units, player->getGame()));
+                availableArmies.at(sourceTerr) =  availableArmies.at(sourceTerr) - available_units;
+                player->setAdvanceAttackOrdersIssued(player->getAdvanceAttackOrdersIssued()+1); // increment orders issued
+                cout << player->getName() << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
+            }
+
+                // Defend
+            else if (not isToAttack and not doNothing){
+                // choosing target
+                vector<Territory*> possibleTargets = toDefend();
+                cout << "To defend territories: " << endl;
+
+                keep_asking = true;
+                Territory* targetTerr;
+                while(keep_asking) {
+                    int count = 0;
+                    for (Territory *t: possibleTargets) {
+                        cout << count << ": " << *t << endl;
+                        count++;
+                    }
+                    cout << player->getName() << ", please enter a number corresponding to the target territory you wish to defend." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice >= possibleTargets.size() or choice < 0) {
+                        cout << "invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    targetTerr = possibleTargets[choice];
+                    keep_asking = false;
+                }
+
+                // Choosing source
+                vector<Territory*> targetNeighbours = targetTerr->get_neighbours();
+                vector<Territory*> possibleSource;
+
+                for(Territory* t : targetNeighbours){
+                    if(t->get_owner() == player){
+                        possibleSource.push_back(t);
+                    }
+                }
+
+
+                cout << "Territories neighbouring the target: " << endl;
+
+                keep_asking = true;
+                Territory* sourceTerr;
+                while(keep_asking) {
+                    int count = 0;
+                    for (Territory *t: possibleSource) {
+                        cout << count << ": " << *t << "Available army units: " << t->get_army_units() + t->get_issued_army_units() << endl;
+                        count++;
+                    }
+                    cout << player->getName() << ", please enter a number corresponding to the source territory that will defend the target." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice >= possibleSource.size() or choice < 0) {
+                        cout << "invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    sourceTerr = possibleSource[choice];
+                    keep_asking = false;
+                }
+
+                int available_units = availableArmies.at(sourceTerr);
+
+                keep_asking = true;
+                while(keep_asking) {
+
+                    cout << "You have " << available_units << " armies to advance. Please enter the number of armies you wish to advance." << endl;
+                    int choice;
+                    cin >> choice;
+
+                    if (choice > available_units or choice < 0) {
+                        cout << "Invalid command, please try again. " << endl;
+                        continue;
+                    }
+
+                    available_units = choice;
+                    keep_asking = false;
+                }
+
+                player->getPlayerOrderList()->add(new Advance(sourceTerr, targetTerr, player, available_units, player->getGame()));
+                availableArmies.at(sourceTerr) =  availableArmies.at(sourceTerr) - available_units;
+                player->setAdvanceDefendOrdersIssued(player->getAdvanceDefendOrdersIssued()+1); // increment orders issued
+                cout << player->getName() << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
+            }
+            else if(doNothing){
+                keep_asking = false;
+                this->player->setIsDoneIssuingOrders(true);
+            }
+        }
+
+    }
+
+        // Done issuing
+    else {
+        cout << player->getName() << " is done issuing orders" << endl;
+        this->player->setIsDoneIssuingOrders(true);
+    }
 }
 
 vector<Territory *> HumanPlayerStrategy::toAttack() {
-    return vector<Territory *>();
+    vector<Territory*> toAttackTerritories;
+    for (Territory *ownedTerritory : player->getTerritories()){ //for each owned territory
+        for (Territory *neighborTerritory : ownedTerritory->get_neighbours()) { //for each owned territory's neighbour
+            if (neighborTerritory->get_owner() != player) {  //if the current player does not own the neighbor territory
+                // check if territory is already in toAttackTerritories
+                auto it = find_if(toAttackTerritories.begin(), toAttackTerritories.end(),
+                                  [&neighborTerritory](Territory *t) {
+                                      return t->get_id() == neighborTerritory->get_id();
+                                  });
+                if (it == toAttackTerritories.end()) { //if territory is not already in toAttackTerritories add it
+                    toAttackTerritories.push_back(neighborTerritory);
+                }
+            }
+        }
+    }
+    // sort toAttack territories by # of army units ascending
+    sort(toAttackTerritories.begin(), toAttackTerritories.end(), [](Territory *lhs, Territory *rhs){
+        return  lhs->get_army_units() < rhs->get_army_units();
+    });
+
+    return toAttackTerritories;
 }
 
 vector<Territory *> HumanPlayerStrategy::toDefend() {
-    return vector<Territory *>();
+    vector<Territory*> territoriesToDefend = player->getTerritories();
+
+    sort(territoriesToDefend.begin(), territoriesToDefend.end(), [](Territory *lhs, Territory *rhs){
+        return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
+    });
+    return territoriesToDefend;
 }
 
 string HumanPlayerStrategy::getStrategyName() const {
