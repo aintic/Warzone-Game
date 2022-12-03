@@ -179,8 +179,14 @@ void AggressivePlayerStrategy::issueOrder() {
     }
     else if (advanceDefendOrdersIssued < 1 && toDefend().size() > 1){
         // move armies from 2nd strongest territory to strongest territory
-        Territory *targetTerr = toDefend().back();
-        Territory *sourceTerr = toDefend().at(toDefend().size()-2);
+        // if player owns >2 territories
+        vector<Territory*> ownedTers = toDefend();
+        int defendListSize = ownedTers.size();
+        Territory *targetTerr = ownedTers.back();
+        Territory *sourceTerr = ownedTers.front();
+        if (defendListSize > 2) {
+            sourceTerr = ownedTers.at(defendListSize - 2);
+        }
         player->getPlayerOrderList()->add(new Advance(sourceTerr, targetTerr, player, (sourceTerr->get_army_units() + sourceTerr->get_issued_army_units()) , player->getGame()));
         player->setAdvanceDefendOrdersIssued(++advanceDefendOrdersIssued); // increment orders issued
         cout << *player << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;

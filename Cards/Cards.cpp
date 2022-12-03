@@ -263,7 +263,7 @@ void AirliftCard::play(Player *player) {
             Territory *sourceTerr = ownedTers.front();
             // move all armies from nth strongest terr to strongest terr
             // n starts at 2nd strongest terr, going down the list if more airlift cards are issued
-            if (defendListSize >=3 ) {
+            if (defendListSize >=3) {
                 sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
             }
             Territory *targetTerr = ownedTers.back();
