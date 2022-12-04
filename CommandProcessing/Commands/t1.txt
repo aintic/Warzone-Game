@@ -1,0 +1,1 @@
+tournament -M digdug LP MongolEmpire1294 -P c b a n -G 3 -D 30

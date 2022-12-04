@@ -1,0 +1,1 @@
+tournament -M digdug LP -P b a n -G 3 -D 50
