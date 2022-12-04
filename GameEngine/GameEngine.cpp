@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "../Cards/Cards.h"
 #include "../Strategy/PlayerStrategies.h"
+#include "../LoggingObserver/LoggingObserver.h"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -156,33 +157,234 @@ void GameEngine::startupPhase(CommandProcessor* c) {
 
         if(token_command == "tournament"){
 
-            string tournament_string = typed_command.substr(token_command.length() + delimiter.length());
+            // TEST WITH THIS : tournament -M digdug LP MongolEmpire1294 -P c b a n -G 3 -D 30
 
+            // START TODO:
+            // This code can go in the command processor
+
+            // PARSING TOURNAMENT STRING
+            string tournament_string = typed_command.substr(token_command.length() + delimiter.length());
             unsigned M = tournament_string.find(" -M ") + 4;
             unsigned P = tournament_string.find(" -P ") + 4;
-
-            string map_string = tournament_string.substr(M,P-M - 4);
-
             unsigned G = tournament_string.find(" -G ") + 4;
-            string players_string = tournament_string.substr (P,G-P - 4);
-
             unsigned D = tournament_string.find(" -D ") + 4;
-            string games_string = tournament_string.substr (G,D-G - 4);
 
+            // get 4 string (maps, players)
+            string maps_string = tournament_string.substr(M,P-M - 4);
+            string players_string = tournament_string.substr (P,G-P - 4);
+            string games_string = tournament_string.substr (G,D-G - 4);
             string turns_string = tournament_string.substr (D);
 
+            // END TODO
 
 
-            cout << map_string << endl;
-            cout << players_string << endl;
-            cout << games_string << endl;
-            cout << turns_string << endl;
+            // CREATING AND LOADING TOURNAMENT MAPS
+            cout << maps_string << endl;
+            vector<string> list_maps_string;
+            vector<Map*> maps;
+            while(true){
+                // get map name
+                string map_string = maps_string.substr(0, maps_string.find(delimiter));
+                // get remainder of string
 
-            vector<string> map_vector = stringToVector(',', map_string);
-
-            for(int i = 0; i < map_vector.size(); i++){
-                cout << map_vector[i] << endl;
+                list_maps_string.push_back(map_string);
+                if(maps_string.length() > map_string.length() + delimiter.length() ){
+                    maps_string = maps_string.substr(map_string.length() + delimiter.length());
+                }
+                else{
+                    break;
+                }
             }
+
+//            Map* tMap;
+//            for(string map_str : list_maps_string){
+//
+//                cout << "\n<<Loading the map "<< map_str << ">>" << endl;
+//
+//                // load the new map
+//                string map_path = "Maps/" + map_str + ".map";
+//                tMap = MapLoader::loadMap(map_path);
+//
+//                if(tMap != nullptr){
+//                    maps.push_back(tMap);
+//                }
+//            }
+
+
+            // CREATING THE PLAYERS
+            cout << players_string << endl;
+            vector<string> list_players_string;
+            while(true){
+                // get player name
+                string player_string = players_string.substr(0, players_string.find(delimiter));
+                // get remainder of string
+
+                list_players_string.push_back(player_string);
+                if(players_string.length() > player_string.length() + delimiter.length() ){
+                    players_string = players_string.substr(player_string.length() + delimiter.length());
+                }
+                else{
+                    break;
+                }
+            }
+
+            // NUMBER OF GAMES
+            int gamesNum;
+            stringstream ss;
+            ss << games_string;
+            ss >> gamesNum;
+
+            cout << gamesNum << endl;
+
+            // NUMBER OF TURNS
+            int turnsNum;
+            stringstream sss;
+            sss << turns_string;
+            sss >> turnsNum;
+
+            cout << turnsNum << endl;
+
+
+
+            // start tournament:
+
+            // observer
+            Observer* observer = new LogObserver();
+
+            // new game for each map x number of games
+            GameEngine * game = new GameEngine(observer);
+
+            for(string mapStr: list_maps_string){
+
+                cout << "\n<<Loading the map "<< mapStr << ">>" << endl;
+
+                // load the new map
+                Map* map;
+                string map_path = "Maps/" + mapStr + ".map";
+                map = MapLoader::loadMap(map_path);
+
+                for(int i=0; i < gamesNum; i++){
+
+                    Player* p;
+                    for(string plr_str : list_players_string){
+                        if(plr_str == "a"){
+                            p = new Player("Aggressive", nullptr);
+                            PlayerStrategy *s1 = new AggressivePlayerStrategy(p);
+                        }
+                        if(plr_str == "n"){
+                            p = new Player("Neutral", nullptr);
+                            PlayerStrategy *s1 = new NeutralPlayerStrategy(p);
+                        }
+                        if(plr_str == "b"){
+                            p = new Player("Benevolent", nullptr);
+                            PlayerStrategy *s1 = new BenevolentPlayerStrategy(p);
+                        }
+                        if(plr_str == "c"){
+                            p = new Player("Cheater", nullptr);
+                            PlayerStrategy *s1 = new CheaterPlayerStrategy(p);
+                        }
+
+                        players.push_back(p);
+                        cout << "\n<<Created the player "<< p->getName() << ">>" << endl;
+                    }
+
+                    // add players
+                    for(Player* p: players){
+                        game->setPlayers(p);
+                        p->setGame(game);
+                    }
+
+                    // Add current map
+                    game->map = map;
+
+                    cout << "\n<<Starting the game " << i << ">>\\n"<< endl;
+
+                    // start the game
+                    cout << "a) fairly distributing all the territories to the players: " << endl;
+
+                    int counter = 0;
+                    ::map<int, Territory *> territories = game->map->get_territories();
+
+                    // Assign each territory to a player in a round-robin fashion as to ensure that
+                    // no player should have more than one territory more than any other player.
+                    for(pair<int,Territory*> territory : territories){
+                        int player_index = counter % game->players.size();
+                        game->players[player_index]->addTerritory(territory.second);
+                        counter++;
+                    }
+
+                    for(Player *player : game->players){
+                        cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
+                    }
+
+
+                    cout << "\nb) determining randomly the order of play of the players in the game: " << endl;
+
+                    // shuffle the order of players
+                    std::random_shuffle(game->players.begin(), game->players.end());
+
+                    counter = 1;
+                    for(Player *player : game->players){
+                        cout << counter << ": " << player->getName() << endl;
+                        counter++;
+                    }
+
+                    cout << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: " << endl;
+                    for(Player* player : game->players){
+                        player->setReinforcementPool(50);
+                        cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
+                    }
+
+                    cout << "\nd) players draw 2 initial cards from the deck using the deck’s draw() method: " << endl;
+                    // delete if any
+                    delete game->deck;
+                    deck = nullptr;
+                    game->deck = new Deck;
+
+                    cout<< *(game->deck) << endl << endl;
+
+                    for(Player* player : game->players){
+                        game->deck->draw(*player);
+                        game->deck->draw(*player);
+
+                        cout << player->getName() << "'s hand: " << *player->getHand() << endl;
+                    }
+
+                    cout << "\ne) switching the game to the play phase: " << endl;
+
+
+                    command->saveEffect("a) fairly distributing all the territories to the players"
+                                        "\n\t\t\t b) determining randomly the order of play of the players in the game"
+                                        "\n\t\t\t c) giving 50 initial army units to the players, placed in their respective reinforcement pool"
+                                        "\n\t\t\t d) players draw 2 initial cards from the deck using the deck's draw() method"
+                                        "\n\t\t\t e) switch the game to the play phase");
+
+                    game->mainGameLoop(turnsNum);
+
+                    // players
+                    for(Player* p: players){
+                        if(p != nullptr){
+                            delete p;
+                            p = nullptr;
+                        }
+                    }
+
+                }
+                // map
+                delete map;
+                map = nullptr;
+
+            }
+
+            delete game;
+            game = nullptr;
+
+
+
+
+
+
+
 
 
 
@@ -481,10 +683,17 @@ void GameEngine::mainGameLoop() {
 // Main game loop method for testing purposes that runs the indicated
 // number of turns
 void GameEngine::mainGameLoop(int turns) {
+    bool stillPlaying;
     for(int i = 0; i < turns; i++){
         reinforcementPhase();
         issueOrderPhase();
-        executeOrdersPhase();
+        stillPlaying = executeOrdersPhase();
+
+        if(!stillPlaying){
+            //
+            cout << "exited main loop. ";
+            break;
+        }
     }
 }
 

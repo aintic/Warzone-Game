@@ -35,10 +35,10 @@ int main()
     //Assignment 2:
 
     //Part 1
-    //testCommandProcessor();
+    testCommandProcessor();
 
     //Part 2
-    testStartupPhase();
+    //testStartupPhase();
 
     //Part 3
     //testMainGameLoop();
@@ -52,7 +52,7 @@ int main()
     //Assignment 3:
 
     //Part 1
-    //testPlayerStrategies();
+    // testPlayerStrategies();
 
 }
 
