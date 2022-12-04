@@ -84,6 +84,12 @@ NeutralPlayerStrategy &NeutralPlayerStrategy::operator=(const NeutralPlayerStrat
     return *this;
 }
 
+// stream insertion operator
+ostream& operator << (ostream& out,  const NeutralPlayerStrategy& ps) {
+    cout <<  ps.getStrategyName();
+    return out;
+}
+
 // clone method
 NeutralPlayerStrategy* NeutralPlayerStrategy::clone() const {
     return new NeutralPlayerStrategy(*this);
@@ -127,7 +133,7 @@ CheaterPlayerStrategy::CheaterPlayerStrategy(Player* player) : PlayerStrategy(pl
 // copy constructor
 CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy &cps) : PlayerStrategy(cps) {}
 
-// dstructor
+// destructor
 CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
 
 // assignment operator
@@ -195,7 +201,7 @@ string CheaterPlayerStrategy::getStrategyName() const {
 //default constructor
 HumanPlayerStrategy::HumanPlayerStrategy() : PlayerStrategy() {}
 
-// parametized constructor
+// parametrized constructor
 HumanPlayerStrategy::HumanPlayerStrategy(Player* player) : PlayerStrategy(player) {}
 
 HumanPlayerStrategy::~HumanPlayerStrategy() = default;
@@ -209,12 +215,18 @@ HumanPlayerStrategy &HumanPlayerStrategy::operator=(const HumanPlayerStrategy &h
     return *this;
 }
 
+// stream insertion operator
+ostream& operator << (ostream& out,  const HumanPlayerStrategy& ps) {
+    cout <<  ps.getStrategyName();
+    return out;
+}
+
 // clone method
 HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
     return new HumanPlayerStrategy(*this);
 }
 
-// prompts user for deploy and card orders parametrs, then for a choice of attack/defend advance orders or do nothing
+// prompts user for deploy and card orders parameters, then for a choice of attack/defend advance orders or do nothing
 void HumanPlayerStrategy::issueOrder() {
 
     // Deploying
@@ -284,8 +296,8 @@ void HumanPlayerStrategy::issueOrder() {
         while(keep_asking) {
             int count = 0;
             for(Card* card : player->getHand()->getCards()){
-                cout << count << ": " << *card << endl;
-                count ++;
+                cout << count << ": " << card->getCardType() << endl;
+                count++;
             }
             cout << player->getName() << ", please enter a number corresponding to the card you wish to play." << endl;
 
@@ -614,7 +626,7 @@ AggressivePlayerStrategy::AggressivePlayerStrategy() : PlayerStrategy() {
     this->airliftCardIssued = 0;
 }
 
-// parametized constructor
+// parametrized constructor
 AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {
     this->airliftCardIssued = 0;
 }
@@ -859,6 +871,7 @@ ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &bps) {
 // Benevolent player issueOrder method
 void BenevolentPlayerStrategy::issueOrder() {
 
+    //Checks that cheater didn't take all his territories during issue order phase
     if (!player->getTerritories().empty()) {
         Hand *playerHand = player->getHand();
         vector<Card *> playerCards = playerHand->getCards();
@@ -941,6 +954,7 @@ vector<Territory *> BenevolentPlayerStrategy::toAttack() {
 }
 
 // Benevolent player toDefend method
+// returns sorted vector of territories from weakest to strongest in army/issued army units
 vector<Territory *> BenevolentPlayerStrategy::toDefend() {
     auto territories = player->getTerritories();
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
