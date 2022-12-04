@@ -250,7 +250,8 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     string token_command = typed_command.substr(0, typed_command.find(delimiter));
     bool possibly_turnament;
     string command_after_token;
-    if(token_command.length() <= typed_command.length() + delimiter.length()){
+
+    if(typed_command.length() <= token_command.length() + delimiter.length()){
         possibly_turnament = false;
         command_after_token = "";
     }
