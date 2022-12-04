@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include "../GameEngine/GameEngine.h"
-#include "../Tournament/TournamentDriver.h"
 
 using std::cout;
 using std::cin;
@@ -15,6 +14,11 @@ void testTournament(){
     const string FILE_STRING = "-file";
 
     cout << "\nTESTING TOURNAMENT MODE:\n\n";
+
+    // clear gamelog file
+    std::ofstream ofs;
+    ofs.open("../gamelog.txt", std::ofstream::out | std::ofstream::trunc);
+    ofs.close();
 
     bool valid_initial_command = false;
     CommandProcessor * processor;

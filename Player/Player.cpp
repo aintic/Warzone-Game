@@ -145,12 +145,12 @@ vector<Territory*> Player:: toDefend(){
 
 //returns a list of territories to be attacked
 vector<Territory*> Player:: toAttack(){
-    return strategy->toAttack();
+    return this->strategy->toAttack();
 }
 
 //creates an order object and adds it to the list of orders
 void Player::issueOrder() {
-    return strategy->issueOrder();
+    return this->strategy->issueOrder();
 }
 
 //makes the territory exchange between 2 players, when territory gets conquered

@@ -140,6 +140,7 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
     cout << "TOURNAMENT START" << endl;
     cout << "#######################################################################################\n" << endl;
 
+    // add tournament info to a string
     string report = "\n\nTournament Mode\nM: ";
     for (string m : maps) {
         report += m + " ";
@@ -154,6 +155,7 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
     report += "\nG: " + std::to_string(gamesNum);
     report += "\nD: " + std::to_string(maxTurns) + "\n\n";
 
+    // create a 2d array for game results
     string results[maps.size()][gamesNum];
 
     for (int i = 0; i < maps.size(); i++) {
@@ -287,6 +289,8 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
     cout << "\n#######################################################################################" << endl;
     cout << "TOURNAMENT END" << endl;
     cout << "#######################################################################################\n" << endl;
+
+    // add game results to tournament info string
     report += "\n" + pad_right(" ", 19);
     for (int i = 1; i <= gamesNum; i++) {
         report += pad_right("Game " + to_string(i), 19);
@@ -299,6 +303,8 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
         }
         report += "\n";
     }
+
+    // print tournament info string to log file
     command->saveEffect(report);
 }
 

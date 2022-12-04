@@ -89,26 +89,27 @@ NeutralPlayerStrategy* NeutralPlayerStrategy::clone() const {
     return new NeutralPlayerStrategy(*this);
 }
 
+// neutral player doesn't issue order
 void NeutralPlayerStrategy::issueOrder() {
-    player->setIsDoneIssuingOrders(true);
-
+    cout << *player << " is done issuing orders" << endl;
+    this->player->setIsDoneIssuingOrders(true);
 }
 
+// does not do anything - neutral player doesn't attack
 vector<Territory *> NeutralPlayerStrategy::toAttack() {
-    //return empty territories
-    vector<Territory*> territories;
-    return territories;
+    return player->getTerritories();
 }
 
+// return sorted list of owned territories from weskest to strongest
 vector<Territory *> NeutralPlayerStrategy::toDefend() {
     vector<Territory *> territories = player->getTerritories();
-
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
         return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
     });
     return territories;
 }
 
+// strategy name getter
 string NeutralPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
@@ -146,15 +147,18 @@ ostream &operator<<(ostream &os, const CheaterPlayerStrategy &cps) {
     return os;
 }
 
+// conquers all neighbouring territories
 void CheaterPlayerStrategy::issueOrder() {
     vector<Territory*> enemy_adjacent_territories = this->toAttack();
     for (Territory* terr : enemy_adjacent_territories){
         //terr->set_owner(this->player);
         player->conquerTerritory(terr);
     }
-    player->setIsDoneIssuingOrders(true);
+    cout << "Cheater " << *player << " conquered every neighbouring territory!" << endl;
+    this->player->setIsDoneIssuingOrders(true);
 }
 
+// return list of all enemy territories neighbouring player's own
 vector<Territory *> CheaterPlayerStrategy::toAttack() {
     vector<Territory *> toAttackTerritories;
     for (Territory *ownedTerritory: player->getTerritories()) { //for each owned territory
@@ -174,9 +178,12 @@ vector<Territory *> CheaterPlayerStrategy::toAttack() {
     return toAttackTerritories;
 }
 
+// cheater does not defend
 vector<Territory *> CheaterPlayerStrategy::toDefend() {
-    return player->getTerritories();}
+    return player->getTerritories();
+}
 
+// strategy name getter
 string CheaterPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
@@ -207,11 +214,15 @@ HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
     return new HumanPlayerStrategy(*this);
 }
 
+// prompts user for deploy and card orders parametrs, then for a choice of attack/defend advance orders or do nothing
 void HumanPlayerStrategy::issueOrder() {
+
     // Deploying
     if(player->getIssuableReinforcementPool() != 0) {
 
         vector<Territory*> territoriesToDeploy = player->getTerritories();
+
+        cout << "\n==============================================================================================================\n" << endl;
 
         cout << "To deploy territories: " << endl;
 
@@ -258,14 +269,16 @@ void HumanPlayerStrategy::issueOrder() {
         player->getPlayerOrderList()->add(new Deploy(targetTerr, player, armiesToDeploy, player->getGame())); // deploy armies to the weakest territory
         player->setIssuableReinforcementPool(player->getIssuableReinforcementPool() - armiesToDeploy); // decrement player's reinforcement pool
         targetTerr->set_issued_army_units(targetTerr->get_issued_army_units() + armiesToDeploy); // increment territory's issued army units
-        cout << player->getName() << " issued a new deploy order of " << armiesToDeploy << " armies to " << targetTerr->get_name() << endl;
+        cout << "\n==============================================================================================================\n" << endl;
+        cout << *player << " issued a new deploy order of " << armiesToDeploy << " armies to " << targetTerr->get_name() << endl;
     }
 
         // Cards
     else if(!player->getHand()->getCards().empty()) {
 
+        cout << "\n==============================================================================================================\n" << endl;
         int card_index;
-        cout << "Cards available: "<< endl;
+        cout << "\nCards available: "<< endl;
 
         bool keep_asking = true;
         while(keep_asking) {
@@ -287,6 +300,8 @@ void HumanPlayerStrategy::issueOrder() {
             card_index = choice;
             keep_asking = false;
         }
+        cout << "\n==============================================================================================================\n" << endl;
+
         player->getHand()->play(*player->getGame()->getDeck(), player, card_index); // play every card in player's hand
     }
 
@@ -323,6 +338,8 @@ void HumanPlayerStrategy::issueOrder() {
                     keep_asking = false;
                     continue;
                 }
+
+                cout << "\n==============================================================================================================\n" << endl;
 
                 cout << player->getName() << ", do you wish to attack opponents territories or to Defend your own? Enter <1> for attacking and <-1> for defending. Enter <0> to do nothing" << endl;
 
@@ -383,6 +400,10 @@ void HumanPlayerStrategy::issueOrder() {
                     }
                 }
 
+                if (possibleSource.empty()) {
+                    cout << "You have no territory adjacent to this target territory!" << endl;
+                    return;
+                }
 
                 cout << "Territories neighbouring the target: " << endl;
 
@@ -428,7 +449,10 @@ void HumanPlayerStrategy::issueOrder() {
                 player->getPlayerOrderList()->add(new Advance(sourceTerr, targetTerr, player, available_units, player->getGame()));
                 availableArmies.at(sourceTerr) =  availableArmies.at(sourceTerr) - available_units;
                 player->setAdvanceAttackOrdersIssued(player->getAdvanceAttackOrdersIssued()+1); // increment orders issued
-                cout << player->getName() << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
+
+                cout << "\n==============================================================================================================\n" << endl;
+
+                cout << *player << " issued a new advance order from " << sourceTerr->get_name() << " to an enemy territory " << targetTerr->get_name() << endl;
             }
 
                 // Defend
@@ -466,6 +490,11 @@ void HumanPlayerStrategy::issueOrder() {
                     if(t->get_owner() == player){
                         possibleSource.push_back(t);
                     }
+                }
+
+                if (possibleSource.empty()) {
+                    cout << "You have no territory adjacent to this target territory!" << endl;
+                    return;
                 }
 
 
@@ -513,11 +542,15 @@ void HumanPlayerStrategy::issueOrder() {
                 player->getPlayerOrderList()->add(new Advance(sourceTerr, targetTerr, player, available_units, player->getGame()));
                 availableArmies.at(sourceTerr) =  availableArmies.at(sourceTerr) - available_units;
                 player->setAdvanceDefendOrdersIssued(player->getAdvanceDefendOrdersIssued()+1); // increment orders issued
-                cout << player->getName() << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
+                cout << "\n==============================================================================================================\n" << endl;
+                cout << *player << " issued a new advance order from " <<  sourceTerr->get_name() << " to their own territory " << targetTerr->get_name() << endl;
             }
             else if(doNothing){
                 keep_asking = false;
+                cout << "\n==============================================================================================================\n" << endl;
+                cout << *player << " is done issuing orders" << endl;
                 this->player->setIsDoneIssuingOrders(true);
+                cout << "\n==============================================================================================================\n" << endl;
             }
         }
 
@@ -525,11 +558,14 @@ void HumanPlayerStrategy::issueOrder() {
 
         // Done issuing
     else {
-        cout << player->getName() << " is done issuing orders" << endl;
+        cout << "\n==============================================================================================================\n" << endl;
+        cout << *player << " is done issuing orders" << endl;
         this->player->setIsDoneIssuingOrders(true);
+        cout << "\n==============================================================================================================\n" << endl;
     }
 }
 
+// returns list of enemy territories neighbouring player's own
 vector<Territory *> HumanPlayerStrategy::toAttack() {
     vector<Territory*> toAttackTerritories;
     for (Territory *ownedTerritory : player->getTerritories()){ //for each owned territory
@@ -554,6 +590,7 @@ vector<Territory *> HumanPlayerStrategy::toAttack() {
     return toAttackTerritories;
 }
 
+// return own territories sorted from weakest to strongest
 vector<Territory *> HumanPlayerStrategy::toDefend() {
     vector<Territory*> territoriesToDefend = player->getTerritories();
 
@@ -563,6 +600,7 @@ vector<Territory *> HumanPlayerStrategy::toDefend() {
     return territoriesToDefend;
 }
 
+// strategy name getter
 string HumanPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
