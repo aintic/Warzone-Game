@@ -55,10 +55,10 @@ public:
     void reinforcementPhase();
     bool executeOrdersPhase();
     void mainGameLoop();
-    void mainGameLoop(int turns);
+    string mainGameLoop(int turns);
     void issueOrderPhase();
 
-    vector<string> stringToVector(const char &delimiter, const string &str);
+    string pad_right(string const& str, size_t s);
 
     GameEngine(Observer* _obs);
     string stringToLog();
