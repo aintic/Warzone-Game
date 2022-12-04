@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "../GameEngine/GameEngine.h"
+#include "../Tournament/TournamentDriver.h"
 
 using std::cout;
 using std::cin;

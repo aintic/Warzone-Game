@@ -249,11 +249,8 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
                 }
             }
 
-            command->saveEffect("a) fairly distributing all the territories to the players"
-                                "\n\t\t\t b) determining randomly the order of play of the players in the game"
-                                "\n\t\t\t c) giving 50 initial army units to the players, placed in their respective reinforcement pool"
-                                "\n\t\t\t d) players draw 2 initial cards from the deck using the deck's draw() method"
-                                "\n\t\t\t e) switch the game to the play phase");
+            string effect = "Starting tournament with map: " + map->get_name();
+            command->saveEffect(effect);
 
             string result = this->mainGameLoop(maxTurns);
 

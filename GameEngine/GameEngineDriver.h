@@ -7,5 +7,3 @@ void testStartupPhase();
 void testMainGameLoop();
 
 void testGameStates();
-
-void testTournament();
