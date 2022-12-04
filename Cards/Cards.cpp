@@ -266,7 +266,7 @@ void AirliftCard::play(Player *player) {
             Territory *sourceTerr = ownedTers.front();
             // if there are 3+ territories, source territory is the nth strongest
             // n starts at 2nd, going down the list as more airlift card orders are issued
-            if ((defendListSize + 2 + airliftCardIssued) >= 0) {
+            if ((defendListSize - 2 - airliftCardIssued) >= 0) {
                 sourceTerr = ownedTers.at(defendListSize - 2 - airliftCardIssued);
             }
             // target is the strongest territory
