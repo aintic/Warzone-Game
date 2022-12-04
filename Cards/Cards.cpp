@@ -62,7 +62,7 @@ Card& Card::operator=(const Card& c){
  * Prints id and cardType members
  */
 ostream& operator<<(ostream& os, Card& c){
-    os << "card " << c.getId() << ": " << c.getCardType();
+    os << "card : " << c.getCardType() << " [" << c.getId() << "]";
     return os;
 }
 
