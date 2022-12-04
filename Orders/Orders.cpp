@@ -732,7 +732,7 @@ void Blockade::execute() {
             // remove target territory from current player and exit
             if (p->getStrategy() != nullptr && p->getStrategy()->getStrategyName() == "Neutral") {
                 p->neutralConquerTerritory(targetTer);
-                cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to player Neutral." << endl;
+                cout << targetTer->get_name() << " now has " << targetTer->get_army_units() << " army units and belongs to Neutral player " << p->getName() << "." << endl;
                 cout << "Blockade order executed." << endl;
                 return;
             }
