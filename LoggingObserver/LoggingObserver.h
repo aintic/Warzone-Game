@@ -71,7 +71,7 @@ public:
     LogObserver();
     //copy constructor
     LogObserver(const LogObserver& s);
-    //Assignemnt operator
+    //Assignment operator
     LogObserver& operator=(const LogObserver& s);
     //stream insertion operator
     friend ostream& operator<<(ostream& os, LogObserver& s);

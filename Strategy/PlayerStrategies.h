@@ -12,7 +12,7 @@ class PlayerStrategy {
 
 public:
     PlayerStrategy(); // Default constructor
-    PlayerStrategy(Player *p); // Parametized constructor
+    explicit PlayerStrategy(Player *p); // Parametrized constructor
     PlayerStrategy(const PlayerStrategy& ps); // Copy constructor
     PlayerStrategy& operator=(const PlayerStrategy& ps); // Assignment operator
     friend ostream& operator << (ostream& out,  const PlayerStrategy& ps); // stream insertion operator
@@ -34,7 +34,7 @@ class NeutralPlayerStrategy : public PlayerStrategy{
 
 public:
     NeutralPlayerStrategy(); // default constructor
-    NeutralPlayerStrategy(Player* player); // parametized constructor
+    explicit NeutralPlayerStrategy(Player* player); // parametrized constructor
     NeutralPlayerStrategy(const NeutralPlayerStrategy& neutralPlayerStrategy); // Copy constructor
     ~NeutralPlayerStrategy() override;
     NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& neutralPlayerStrategy); // Assignment operator
@@ -52,12 +52,12 @@ private:
 class CheaterPlayerStrategy : public PlayerStrategy{
 
 public:
-    CheaterPlayerStrategy();
-    CheaterPlayerStrategy(Player* player);
-    CheaterPlayerStrategy(const CheaterPlayerStrategy &cps);
-    CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy &cps);
+    CheaterPlayerStrategy(); // default constructor
+    explicit CheaterPlayerStrategy(Player* player); // parametrized constructor
+    CheaterPlayerStrategy(const CheaterPlayerStrategy &cps); // Copy constructor
+    CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy &cps); // Assignment operator
     ~CheaterPlayerStrategy() override;
-    friend ostream& operator << (ostream& os,  const CheaterPlayerStrategy& cps);
+    friend ostream& operator << (ostream& os,  const CheaterPlayerStrategy& cps); // stream insertion operator
     void issueOrder() override;
     vector<Territory*> toAttack() override;
     vector<Territory*> toDefend() override;
@@ -72,7 +72,7 @@ class HumanPlayerStrategy : public PlayerStrategy{
 
 public:
     HumanPlayerStrategy(); // default constructor
-    HumanPlayerStrategy(Player* player); // parametized constructor
+    explicit HumanPlayerStrategy(Player* player); // parametrized constructor
     HumanPlayerStrategy(const HumanPlayerStrategy& humanPlayerStrategy); // Copy constructor
     ~HumanPlayerStrategy() override;
     HumanPlayerStrategy& operator=(const HumanPlayerStrategy& humanPlayerStrategy); // Assignment operator
@@ -91,7 +91,7 @@ class AggressivePlayerStrategy : public PlayerStrategy{
 
 public:
     AggressivePlayerStrategy(); // default constructor
-    AggressivePlayerStrategy(Player* player); // parametized constructor
+    explicit AggressivePlayerStrategy(Player* player); // parametrized constructor
     AggressivePlayerStrategy(const AggressivePlayerStrategy &aps); // copy constructor
     AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy &aps); // assignment operator
     ~AggressivePlayerStrategy() override;
