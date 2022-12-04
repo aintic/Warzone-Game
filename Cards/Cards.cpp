@@ -256,7 +256,7 @@ Card* AirliftCard::clone() {
  * @return corresponding order instance
  */
 void AirliftCard::play(Player *player) {
-    // if player is agressive
+    // if player is aggressive
     if (player->getStrategy() != nullptr && player->getStrategy()->getStrategyName() == "Aggressive") {
         // get player's owned territories, # of owned territories and # of airlift card order issued this turn
             vector<Territory*> ownedTers = player->toDefend();
@@ -266,8 +266,8 @@ void AirliftCard::play(Player *player) {
             Territory *sourceTerr = ownedTers.front();
             // if there are 3+ territories, source territory is the nth strongest
             // n starts at 2nd, going down the list as more airlift card orders are issued
-            if (defendListSize >=3) {
-                sourceTerr = ownedTers.at(defendListSize - 1 - airliftCardIssued);
+            if ((defendListSize + 2 + airliftCardIssued) >= 0) {
+                sourceTerr = ownedTers.at(defendListSize - 2 - airliftCardIssued);
             }
             // target is the strongest territory
             Territory *targetTerr = ownedTers.back();
