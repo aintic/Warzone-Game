@@ -72,7 +72,6 @@ void testPlayerStrategies() {
         cout << "\n" << p->getName() << ": " << *p->getStrategy() << endl;
         for (int i = 0; i < p->getNumTerritories(); i++) {
             cout << *p->getTerritories()[i];
-            cout << "army units: " << p->getTerritories()[i]->get_army_units() << endl;
         }
     }
 
@@ -105,7 +104,8 @@ void testPlayerStrategies() {
         cout << "\n" << p->getName() << ": " << *p->getStrategy() << endl;
         for (int i = 0; i < p->getNumTerritories(); i++) {
             cout << *p->getTerritories()[i] << endl;
-            cout << "army units: " << p->getTerritories()[i]->get_army_units() << endl;
         }
     }
+
+    delete game;
 }
