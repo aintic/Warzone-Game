@@ -81,6 +81,19 @@ void testPlayerStrategies() {
         game->executeOrdersPhase();
     }
 
+    cout << "Player " << *p4 << " is now a Cheater!" << endl;
+    cout << "Player " << *p2 << " is now Aggressive!" << endl;
+
+    PlayerStrategy *s5 = new CheaterPlayerStrategy(p4);
+    PlayerStrategy *s6 = new AggressivePlayerStrategy(p2);
+
+    for (int i = 0; i < 2; i++) {
+        cout << endl;
+        game->reinforcementPhase();
+        game->issueOrderPhase();
+        game->executeOrdersPhase();
+    }
+
     cout << endl;
     for (Player *p: game->players) {
         cout << "\n" << p->getName() << ": " << *p->getStrategy() << endl;
@@ -88,15 +101,5 @@ void testPlayerStrategies() {
             cout << *p->getTerritories()[i] << endl;
             cout << "army units: " << p->getTerritories()[i]->get_army_units() << endl;
         }
-    }
-
-
-    PlayerStrategy *s5 = new CheaterPlayerStrategy(p4);
-
-    for (int i = 0; i < 1; i++) {
-        cout << endl;
-        game->reinforcementPhase();
-        game->issueOrderPhase();
-        game->executeOrdersPhase();
     }
 }
