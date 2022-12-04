@@ -72,9 +72,9 @@ public:
     void setAdvanceAttackOrdersIssued(int numOrders);
     void setAdvanceDefendOrdersIssued(int numOrders);
     void setIsDoneIssuingOrders(bool b);
-
+    static int uniqueID;
 protected:
-    static int uniqueID; // keeps track of # players, ensure each player gets a unique id
+     // keeps track of # players, ensure each player gets a unique id
 
 private:
     int playerID;

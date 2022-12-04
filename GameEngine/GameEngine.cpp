@@ -167,7 +167,7 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
             }
 
 
-            cout << "\n<<Starting the game " << i << ">>\\n" << endl;
+            cout << "\n<<Starting game " << i+1 << ">> for map " << map->get_name() << endl;
 
             // start the game
             cout << "a) fairly distributing all the territories to the players: " << endl;
@@ -230,6 +230,10 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
             this->mainGameLoop(maxTurns);
 
             //RESET CONTEXT
+
+            turn = 1;
+            Player::uniqueID = 0;
+            Card::numCreatedCards = 0;
 
             // delete players left alive
             for (int pl = 0; pl < players.size(); pl++) {
@@ -651,9 +655,12 @@ void GameEngine::mainGameLoop(int turns) {
 
         if (!stillPlaying) {
             cout << "exited main loop. ";
+            //Log result if someone won
             break;
         }
     }
+    //Log result for a draw
+
 }
 
 //method to issue orders in a round-robin fashion
