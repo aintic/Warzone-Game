@@ -115,12 +115,5 @@ void testPlayers() {
     t4->set_army_units(7);
     t5->set_army_units(4);
 
-    cout << "Strongest owned neighbor" << endl;
-    cout << *p2->strongestOwnedNeighbor(t1);
-    cout << *p2->strongestOwnedNeighbor(t2);
-    cout << *p1->strongestOwnedNeighbor(t3);
-    cout << *p1->strongestOwnedNeighbor(t4);
-    cout << *p2->strongestOwnedNeighbor(t5);
-
     game->mainGameLoop();
 }

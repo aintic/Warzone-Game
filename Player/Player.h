@@ -33,7 +33,6 @@ public:
     // methods
     vector<Territory*> toDefend(); //player territories to defend
     vector<Territory*> toAttack(); //player territories to attack
-    Territory* strongestOwnedNeighbor(Territory* territory);
     void issueOrder(); //creates order object and adds to list of orders
     void conquerTerritory(Territory* t); // player takes over a territory from advance order
     void neutralConquerTerritory(Territory* t); // neutral player takes over territory from blockade order
