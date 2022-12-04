@@ -99,7 +99,6 @@ void Command::set_typed_command(std::string typed_command)
  */
 void Command::saveEffect(std::string command_effect) {
     this->set_command_effect(command_effect);
-    cout<< "\n[[Saving command effect]]\n" << *this<< endl;
     Notify(this);
 }
 

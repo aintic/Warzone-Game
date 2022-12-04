@@ -117,16 +117,19 @@ string NeutralPlayerStrategy::getStrategyName() const {
 // CHEATER PLAYER STRATEGY
 // *****************************************************************************************************************
 
+// default constructor
 CheaterPlayerStrategy::CheaterPlayerStrategy() : PlayerStrategy(){}
 
-CheaterPlayerStrategy::CheaterPlayerStrategy(Player* player) : PlayerStrategy(player) {
+// parametized constructor
+CheaterPlayerStrategy::CheaterPlayerStrategy(Player* player) : PlayerStrategy(player) {}
 
-}
-
+// copy constructor
 CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy &cps) : PlayerStrategy(cps) {}
 
+// dstructor
 CheaterPlayerStrategy::~CheaterPlayerStrategy() = default;
 
+// assignment operator
 CheaterPlayerStrategy &CheaterPlayerStrategy::operator=(const CheaterPlayerStrategy &cps) {
     PlayerStrategy::operator = (cps);
     return *this;
@@ -137,6 +140,7 @@ CheaterPlayerStrategy* CheaterPlayerStrategy::clone() const {
     return new CheaterPlayerStrategy(*this);
 }
 
+// stream insertion operator
 ostream &operator<<(ostream &os, const CheaterPlayerStrategy &cps) {
     os << cps.getStrategyName();
     return os;
@@ -823,8 +827,8 @@ void BenevolentPlayerStrategy::issueOrder() {
         GameEngine *game = player->getGame();
         Deck *deck = game->getDeck();
         vector<Territory *> playerTerritories = player->getTerritories();
-        Territory *weakestT = player->toDefend().front();
-        Territory *strongestT = player->toDefend().back();
+        Territory *weakestT = toDefend().front();
+        Territory *strongestT = toDefend().back();
 
         if (player->getIssuableReinforcementPool() != 0) {
             vector<Territory *> toDefendTerritories = this->toDefend();

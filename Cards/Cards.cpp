@@ -568,7 +568,6 @@ bool Deck::acceptCard(string ps, string cardType) {
 void Deck::drawStrategy(Player &p) {
     // Cheater doesn't use cards
     if (p.getStrategy()->getStrategyName() == "Cheater") {
-        cout << "Cheater " << p << " does not draw a card.";
         return;
     }
     else if (!cards.empty()){

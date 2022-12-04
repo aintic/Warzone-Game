@@ -65,6 +65,4 @@ void testTournament(){
     //cout<< "\nCommand processor list of saved commands :\n" << *processor<< endl;
 
     delete game;
-
-    cout<< "See you next time!" << endl;
 }

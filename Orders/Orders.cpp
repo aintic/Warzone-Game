@@ -149,7 +149,7 @@ Deploy& Deploy::operator = (const Deploy& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Deploy& o) {
-    out << o.getOrderType() << ": " << o.currentPl->getName() << " deploys " << o.army_units << " army units to " << o.targetTer->get_name() << "." << endl;
+    out << "Order: " << o.currentPl->getName() << " deploys " << o.army_units << " army units to " << o.targetTer->get_name() << "." << endl;
     return out;
 }
 
@@ -291,7 +291,7 @@ Advance& Advance::operator = (const Advance& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Advance& o) {
-    out << o.getOrderType() << ": " << o.currentPl->getName() << " advances " << o.army_units << " army units from " <<
+    out << "Order: " << o.currentPl->getName() << " advances " << o.army_units << " army units from " <<
     o.sourceTer->get_owner()->getName() << "'s " << o.sourceTer->get_name() << " to " <<
     o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
@@ -385,6 +385,7 @@ void Advance::execute() {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
             if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                cout << "A Neutral player was attacked! The player is now Aggressive!" << endl;
                 PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
             }
 
@@ -394,6 +395,7 @@ void Advance::execute() {
 
             //if enemy player is Neutral player, then the neutral player becmoes an aggressive player
             if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+                cout << "A Neutral player was attacked! The player is now Aggressive!" << endl;
                 PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
             }
 
@@ -531,7 +533,7 @@ Bomb& Bomb::operator = (const Bomb& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Bomb& o) {
-    out << o.getOrderType() << ": " << o.currentPl->getName() << " bombs " <<
+    out << "Order: " << o.currentPl->getName() << " bombs " <<
         o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
 }
@@ -606,6 +608,7 @@ void Bomb::execute() {
 
     //if enemy player is Neutral player, then the neutral player becomes an aggressive player
     if(enemy->getStrategy() != nullptr && enemy->getStrategy()->getStrategyName() == "Neutral"){
+        cout << "A Neutral player was attacked! The player is now Aggressive!" << endl;
         PlayerStrategy* s1 = new AggressivePlayerStrategy(enemy);
     }
 
@@ -682,7 +685,7 @@ Blockade& Blockade::operator = (const Blockade& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Blockade& o) {
-    out << o.getOrderType() << ": " << o.currentPl->getName() << " blockades " <<
+    out << "Order: " << o.currentPl->getName() << " blockades " <<
         o.targetTer->get_owner()->getName() << "'s " << o.targetTer->get_name() << "." << endl;
     return out;
 }
@@ -834,7 +837,7 @@ Airlift& Airlift::operator = (const Airlift& o) {
  * @return ostream object
  */
 ostream& operator << (ostream& out,  const Airlift& o) {
-    out << o.getOrderType() << ": " << o.currentPl->getName() << " airlifts " << o.army_units << " army units from " <<
+    out << "Order: " << o.currentPl->getName() << " airlifts " << o.army_units << " army units from " <<
         o.sourceTer->get_name() << " to " << o.targetTer->get_name() << "." << endl;
     return out;
 }
@@ -1196,9 +1199,7 @@ void OrdersList::remove(int pos) {
  * Method to get top order
  */
  Order *OrdersList::getTopOrder() {
-        cout << "Top order : ";
         Order *o = _ordersList.front();
-        cout << *o << endl;
         return o;
  }
 

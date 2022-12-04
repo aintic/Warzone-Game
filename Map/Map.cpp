@@ -667,7 +667,7 @@ MapLoader& MapLoader::operator=(const MapLoader& t){
  */
 Map* MapLoader::loadMap(string filePath) {
 
-    std::cout << endl <<"Starting loadMap() for "<< filePath << endl;
+    std::cout <<"Starting loadMap() for "<< filePath << endl;
     // file variables
 	ifstream file(filePath);
 	string line;
@@ -846,6 +846,6 @@ Map* MapLoader::loadMap(string filePath) {
 
     // If file does not exist, return an empty map, otherwise return map with parsed information
     Map* map_result = new Map(filePath, continents, territories);
-    std::cout << endl << "Successfully created a map object for "<< filePath << endl;
+    std::cout << "Successfully created a map object for "<< filePath << endl;
     return map_result;
 }

@@ -16,7 +16,7 @@ public:
     PlayerStrategy(const PlayerStrategy& ps); // Copy constructor
     PlayerStrategy& operator=(const PlayerStrategy& ps); // Assignment operator
     friend ostream& operator << (ostream& out,  const PlayerStrategy& ps); // stream insertion operator
-    virtual ~PlayerStrategy();
+    virtual ~PlayerStrategy() = 0;
     Player* getPlayer(); // Player getter
     void setPlayer(Player*); // Player setter
     virtual void issueOrder() = 0;
