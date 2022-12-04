@@ -15,6 +15,7 @@ void testTournament(){
 
     cout << "\nTESTING TOURNAMENT MODE:\n\n";
 
+    // clear gamelog file
     std::ofstream ofs;
     ofs.open("../gamelog.txt", std::ofstream::out | std::ofstream::trunc);
     ofs.close();

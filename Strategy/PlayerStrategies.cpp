@@ -89,26 +89,27 @@ NeutralPlayerStrategy* NeutralPlayerStrategy::clone() const {
     return new NeutralPlayerStrategy(*this);
 }
 
+// neutral player doesn't issue order
 void NeutralPlayerStrategy::issueOrder() {
     cout << *player << " is done issuing orders" << endl;
     this->player->setIsDoneIssuingOrders(true);
 }
 
+// does not do anything - neutral player doesn't attack
 vector<Territory *> NeutralPlayerStrategy::toAttack() {
-    //return empty territories
-    vector<Territory*> territories;
-    return territories;
+    return player->getTerritories();
 }
 
+// return sorted list of owned territories from weskest to strongest
 vector<Territory *> NeutralPlayerStrategy::toDefend() {
     vector<Territory *> territories = player->getTerritories();
-
     sort(territories.begin(), territories.end(), [](Territory *lhs, Territory *rhs){
         return  (lhs->get_army_units() + lhs->get_issued_army_units()) < (rhs->get_army_units() + rhs->get_issued_army_units());
     });
     return territories;
 }
 
+// strategy name getter
 string NeutralPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
@@ -146,6 +147,7 @@ ostream &operator<<(ostream &os, const CheaterPlayerStrategy &cps) {
     return os;
 }
 
+// conquers all neighbouring territories
 void CheaterPlayerStrategy::issueOrder() {
     vector<Territory*> enemy_adjacent_territories = this->toAttack();
     for (Territory* terr : enemy_adjacent_territories){
@@ -156,6 +158,7 @@ void CheaterPlayerStrategy::issueOrder() {
     this->player->setIsDoneIssuingOrders(true);
 }
 
+// return list of all enemy territories neighbouring player's own
 vector<Territory *> CheaterPlayerStrategy::toAttack() {
     vector<Territory *> toAttackTerritories;
     for (Territory *ownedTerritory: player->getTerritories()) { //for each owned territory
@@ -175,9 +178,12 @@ vector<Territory *> CheaterPlayerStrategy::toAttack() {
     return toAttackTerritories;
 }
 
+// cheater does not defend
 vector<Territory *> CheaterPlayerStrategy::toDefend() {
-    return player->getTerritories();}
+    return player->getTerritories();
+}
 
+// strategy name getter
 string CheaterPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
@@ -208,6 +214,7 @@ HumanPlayerStrategy* HumanPlayerStrategy::clone() const {
     return new HumanPlayerStrategy(*this);
 }
 
+// prompts user for deploy and card orders parametrs, then for a choice of attack/defend advance orders or do nothing
 void HumanPlayerStrategy::issueOrder() {
 
     // Deploying
@@ -558,6 +565,7 @@ void HumanPlayerStrategy::issueOrder() {
     }
 }
 
+// returns list of enemy territories neighbouring player's own
 vector<Territory *> HumanPlayerStrategy::toAttack() {
     vector<Territory*> toAttackTerritories;
     for (Territory *ownedTerritory : player->getTerritories()){ //for each owned territory
@@ -582,6 +590,7 @@ vector<Territory *> HumanPlayerStrategy::toAttack() {
     return toAttackTerritories;
 }
 
+// return own territories sorted from weakest to strongest
 vector<Territory *> HumanPlayerStrategy::toDefend() {
     vector<Territory*> territoriesToDefend = player->getTerritories();
 
@@ -591,6 +600,7 @@ vector<Territory *> HumanPlayerStrategy::toDefend() {
     return territoriesToDefend;
 }
 
+// strategy name getter
 string HumanPlayerStrategy::getStrategyName() const {
     return strategyName;
 }
