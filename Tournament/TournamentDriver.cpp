@@ -64,10 +64,8 @@ void testTournament(){
         }
     }
 
-
     game->startupPhase(processor);
 
-    //cout<< "\nCommand processor list of saved commands :\n" << *processor<< endl;
-
     delete game;
+    delete _observers;
 }
