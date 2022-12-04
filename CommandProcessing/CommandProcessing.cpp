@@ -284,6 +284,18 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
 
         if(token_command == "tournament" and possibly_turnament){
 
+            string dummy_t = "tournament -M m -P m -G 1 -D 1";
+
+            // check length
+            if(typed_command.length() < dummy_t.length()){
+
+                // command is incomplete. ex: loadmap instead of loadmap <mapname>
+                string error = currentState->getWrongCommandError();
+                command->set_command_effect(error);
+                cout << "Validating: Command is NOT VALID" << endl;
+                return false;
+            }
+
             bool has_list_of_map_files = false;
             if (command_after_token.find('-M ') != std::string::npos) {
                 has_list_of_map_files = true;
@@ -311,6 +323,13 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
                 cout << "Validating: Command is NOT VALID" << endl;
                 return false;
             }
+        }
+
+        if(token_command == "tournament" and not possibly_turnament){
+            string error = currentState->getWrongCommandError();
+            command->set_command_effect(error);
+            cout << "Validating: Command is NOT VALID" << endl;
+            return false;
         }
 
         // if it is, return valid
