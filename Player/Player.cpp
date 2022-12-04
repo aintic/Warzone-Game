@@ -127,7 +127,7 @@ Player::~Player()
             break;
         }
     }
-    delete strategy;
+    //delete strategy;
     delete hand;
     delete order_list;
     territories.clear();

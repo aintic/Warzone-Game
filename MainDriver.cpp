@@ -35,7 +35,7 @@ int main()
     //Assignment 2:
 
     //Part 1
-    testCommandProcessor();
+    //testCommandProcessor();
 
     //Part 2
     //testStartupPhase();
@@ -54,5 +54,7 @@ int main()
     //Part 1
     // testPlayerStrategies();
 
+    //Part 2
+    testTournament();
 }
 

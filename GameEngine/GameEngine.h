@@ -51,6 +51,7 @@ public:
     vector<Player*> players;
     Map* map;
     void startupPhase(CommandProcessor* c);
+    void tournamentMode(vector<string> maps, vector<string> players, int numGames, int maxTurns);
     void reinforcementPhase();
     bool executeOrdersPhase();
     void mainGameLoop();
