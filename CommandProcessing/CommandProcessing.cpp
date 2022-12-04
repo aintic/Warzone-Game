@@ -248,7 +248,17 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
     // for example loadmap examplemap --> valid token is loadmap
     string delimiter = " ";
     string token_command = typed_command.substr(0, typed_command.find(delimiter));
-    string command_after_token = typed_command.substr(token_command.length() + delimiter.length());
+    bool possibly_turnament;
+    string command_after_token;
+    if(token_command.length() <= typed_command.length() + delimiter.length()){
+        possibly_turnament = false;
+        command_after_token = "";
+    }
+    else{
+        command_after_token = typed_command.substr(token_command.length() + delimiter.length());
+        possibly_turnament = true;
+    }
+
 
 
     State* currentState = game->getCurrentState();
@@ -272,7 +282,7 @@ bool CommandProcessor::validate(Command* command, GameEngine* game){
             }
         }
 
-        if(token_command == "tournament"){
+        if(token_command == "tournament" and possibly_turnament){
 
             bool has_list_of_map_files = false;
             if (command_after_token.find('-M ') != std::string::npos) {
