@@ -160,125 +160,134 @@ void GameEngine::tournamentMode(vector<string> maps, vector<string> list_players
 
     for (int i = 0; i < maps.size(); i++) {
 
-        cout << "<<Loading the map " << maps[i] << ">>" << endl;
+        cout << "\n<<Loading the map " << maps[i] << ">>" << endl;
 
         // load the new map
         string map_path = "Maps/" + maps[i] + ".map";
         map = MapLoader::loadMap(map_path);
-
         cout << endl;
+
         //Starting the tournament
-        for (int j = 0; j < gamesNum; j++) {
+        if(map != nullptr) {
+            for (int j = 0; j < gamesNum; j++) {
 
-            cout << "\n\nSTARTUP PHASE\n" << endl;
+                cout << "\n\nSTARTUP PHASE\n" << endl;
 
-            Player *p;
-            for (string plr_str: list_players_string) {
-                if (plr_str == "a") {
-                    p = new Player("Aggressive", this);
-                    PlayerStrategy *s1 = new AggressivePlayerStrategy(p);
-                    this->setPlayers(p);
+                Player *p;
+                for (string plr_str: list_players_string) {
+                    if (plr_str == "a") {
+                        p = new Player("Aggressive", this);
+                        PlayerStrategy *s1 = new AggressivePlayerStrategy(p);
+                        this->setPlayers(p);
 
+                    }
+                    if (plr_str == "n") {
+                        p = new Player("Neutral", this);
+                        PlayerStrategy *s1 = new NeutralPlayerStrategy(p);
+                        this->setPlayers(p);
+                    }
+                    if (plr_str == "b") {
+                        p = new Player("Benevolent", this);
+                        PlayerStrategy *s1 = new BenevolentPlayerStrategy(p);
+                        this->setPlayers(p);
+                    }
+                    if (plr_str == "c") {
+                        p = new Player("Cheater", this);
+                        PlayerStrategy *s1 = new CheaterPlayerStrategy(p);
+                        this->setPlayers(p);
+                    }
+                    cout << "<<Created the player " << p->getName() << ">>" << endl;
                 }
-                if (plr_str == "n") {
-                    p = new Player("Neutral", this);
-                    PlayerStrategy *s1 = new NeutralPlayerStrategy(p);
-                    this->setPlayers(p);
+
+                cout << "\n<<Setup game " << j + 1 << " for map " << maps[i] << ">>" << endl;
+
+                // start the game
+                cout << "\na) fairly distributing all the territories to the players: " << endl;
+
+                int counter = 0;
+                ::map<int, Territory *> territories = this->map->get_territories();
+
+                // Assign each territory to a player in a round-robin fashion as to ensure that
+                // no player should have more than one territory more than any other player.
+                for (pair<int, Territory *> territory: territories) {
+                    int player_index = counter % this->players.size();
+                    this->players[player_index]->addTerritory(territory.second);
+                    counter++;
                 }
-                if (plr_str == "b") {
-                    p = new Player("Benevolent", this);
-                    PlayerStrategy *s1 = new BenevolentPlayerStrategy(p);
-                    this->setPlayers(p);
+
+                for (Player *player: this->players) {
+                    cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
                 }
-                if (plr_str == "c") {
-                    p = new Player("Cheater", this);
-                    PlayerStrategy *s1 = new CheaterPlayerStrategy(p);
-                    this->setPlayers(p);
+
+
+                cout << "\nb) determining randomly the order of play of the players in the game: " << endl;
+
+                // shuffle the order of players
+                std::random_shuffle(this->players.begin(), this->players.end());
+
+                counter = 1;
+                for (Player *player: this->players) {
+                    cout << counter << ": " << player->getName() << endl;
+                    counter++;
                 }
-                cout << "<<Created the player " << p->getName() << ">>" << endl;
-            }
 
-            cout << "\n<<Setup game " << j+1 << " for map " << maps[i] << ">>" << endl;
-
-            // start the game
-            cout << "\na) fairly distributing all the territories to the players: " << endl;
-
-            int counter = 0;
-            ::map<int, Territory *> territories = this->map->get_territories();
-
-            // Assign each territory to a player in a round-robin fashion as to ensure that
-            // no player should have more than one territory more than any other player.
-            for (pair<int, Territory *> territory: territories) {
-                int player_index = counter % this->players.size();
-                this->players[player_index]->addTerritory(territory.second);
-                counter++;
-            }
-
-            for (Player *player: this->players) {
-                cout << *player << ", Number of territories: " << player->getNumTerritories() << endl;
-            }
-
-
-            cout << "\nb) determining randomly the order of play of the players in the game: " << endl;
-
-            // shuffle the order of players
-            std::random_shuffle(this->players.begin(), this->players.end());
-
-            counter = 1;
-            for (Player *player: this->players) {
-                cout << counter << ": " << player->getName() << endl;
-                counter++;
-            }
-
-            cout << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: " << endl;
-            for (Player *player: this->players) {
-                player->setReinforcementPool(50);
-                cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
-            }
-
-            cout << "\nd) players draw 2 initial cards from the deck using the deck/’s draw() method: " << endl;
-
-            cout << *(this->deck) << endl << endl;
-
-            for (Player *player: this->players) {
-                this->deck->draw(*player);
-                this->deck->draw(*player);
-                if (player->getStrategy()->getStrategyName() == "Cheater") {
-                    cout << player->getName() << " does not draw cards." << endl;
+                cout
+                        << "\nc) giving 50 initial army units to the players, which are placed in their respective reinforcement pool: "
+                        << endl;
+                for (Player *player: this->players) {
+                    player->setReinforcementPool(50);
+                    cout << player->getName() << "'s reinforcement pool: " << player->getReinforcementPool() << endl;
                 }
-                else {
-                    cout << player->getName() << "'s hand: " << *player->getHand() << endl;
+
+                cout << "\nd) players draw 2 initial cards from the deck using the deck/’s draw() method: " << endl;
+
+                cout << *(this->deck) << endl << endl;
+
+                for (Player *player: this->players) {
+                    this->deck->draw(*player);
+                    this->deck->draw(*player);
+                    if (player->getStrategy()->getStrategyName() == "Cheater") {
+                        cout << player->getName() << " does not draw cards." << endl;
+                    } else {
+                        cout << player->getName() << "'s hand: " << *player->getHand() << endl;
+                    }
+                }
+
+                string effect = "Starting tournament with map: " + map->get_name();
+                command->saveEffect(effect);
+
+                string result = this->mainGameLoop(maxTurns);
+
+                results[i][j] = result;
+
+                //RESET CONTEXT
+
+                turn = 1;
+                Player::uniqueID = 0;
+                Card::numCreatedCards = 0;
+
+                // delete players left alive
+                for (int pl = 0; pl < players.size(); pl++) {
+                    delete players[pl];
+                    players[pl] = nullptr;
+                }
+                players.clear();
+
+                // Reset Deck
+                delete this->deck;
+                this->deck = nullptr;
+                this->deck = new Deck();
+
+                State *ns = new startupState();
+                this->setCurrentState(ns);
+
+            }
+        }else{
+            for(int m = i; m < i+1; m++){
+                for(int j = 0; j < gamesNum ; j++){
+                    results[m][j] = "invalid map";
                 }
             }
-
-            string effect = "Starting tournament with map: " + map->get_name();
-            command->saveEffect(effect);
-
-            string result = this->mainGameLoop(maxTurns);
-
-            results[i][j] = result;
-
-            //RESET CONTEXT
-
-            turn = 1;
-            Player::uniqueID = 0;
-            Card::numCreatedCards = 0;
-
-            // delete players left alive
-            for (int pl = 0; pl < players.size(); pl++) {
-                delete players[pl];
-                players[pl] = nullptr;
-            }
-            players.clear();
-
-            // Reset Deck
-            delete this->deck;
-            this->deck = nullptr;
-            this->deck = new Deck();
-
-            State *ns = new startupState();
-            this->setCurrentState(ns);
-
         }
         // map
         delete map;
