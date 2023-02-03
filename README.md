@@ -19,10 +19,13 @@ Each player, in round-robin turn order, gives one of their orders, or signify th
 
 The possible orders are:
 
-Attack: an attacking territory (owned by the player issuing the order) attacks an adjacent defending territory (owned by another player).
-Defend: armies from a source territory (owned by the player issuing the order) are transferred to an adjacent destination territory (also owned by the player).
-Orders Execution Phase
-All the orders are executed in the order they were issued, using a first-in, first-out execution order
+Deploy: dispatch armies from a player's reinforcement pool to their own territories.  
+Attack: an attacking territory (owned by the player issuing the order) attacks an adjacent defending territory (owned by another player).  
+Defend: armies from a source territory (owned by the player issuing the order) are transferred to an adjacent destination territory (also owned by the player).  
+Play a card: bomb another player's territory (halve the armies on target territory), blockade one of their own territories (double the armies in target territory and make it neutral), negotiate a truce for 1 turn with another player, get 5 armies added to the player's reinforcement pool, airlift armies between 2 territories (can be non-adjacent) owned by the player playing the card.  
+
+Orders Execution Phase  
+All the orders are executed in the order they were issued, using a first-in, first-out execution order  
 
 For more information, please visit:
 https://users.encs.concordia.ca/~paquet/wiki/images/0/02/Project.COMP345.2022.2.pdf
